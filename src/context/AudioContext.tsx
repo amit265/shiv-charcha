@@ -33,7 +33,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Configure audio session for background/devotional play
     Audio.setAudioModeAsync({
       playsInSilentModeIOS: true,
-      staysActiveInBackground: true,
+      staysActiveInBackground: false,
       shouldDuckAndroid: true,
     }).catch(err => console.warn('Audio mode setup error:', err));
 
