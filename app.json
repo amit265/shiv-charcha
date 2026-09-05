@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "शिव चर्चा — Shiv Charcha",
+    "name": "शिव चर्चा",
     "slug": "shiv-charcha",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,10 +9,10 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mahavyoma.shivcharcha"
+      "bundleIdentifier": "com.mahavyomastudio.shivcharcha"
     },
     "android": {
-      "package": "com.mahavyoma.shivcharcha",
+      "package": "com.mahavyomastudio.shivcharcha",
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
