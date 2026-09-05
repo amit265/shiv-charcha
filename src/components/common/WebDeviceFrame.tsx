@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   webWrapper: {
     flex: 1,
     backgroundColor: '#1E1417',
-    minHeight: '100vh' as any,
+    ...(Platform.OS === 'web' ? { minHeight: '100vh' as any } : {}),
     width: '100%',
   },
   switcherBar: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 10,
-    overflow: 'auto' as any,
+    ...(Platform.OS === 'web' ? { overflow: 'auto' as any } : {}),
   },
   fullScreenFrame: {
     width: '100%',
@@ -189,12 +189,12 @@ const styles = StyleSheet.create({
   iphoneDimensions: {
     width: 393,
     height: 852,
-    maxWidth: '100%' as any,
+    maxWidth: '100%',
   },
   ipadDimensions: {
     width: 820,
     height: 1080,
-    maxWidth: '100%' as any,
+    maxWidth: '100%',
   },
   iphoneNotch: {
     position: 'absolute',

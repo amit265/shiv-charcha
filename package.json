@@ -38,8 +38,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "postinstall": "node -e \"const fs = require('fs'); const p = './node_modules/react-native/Libraries/Renderer/shims/ReactNative.js'; if (!fs.existsSync(p)) fs.writeFileSync(p, \\\"'use strict';\\nmodule.exports = require('./ReactFabric');\\n\\\");\""
+    "lint": "expo lint"
   },
   "private": true
 }
