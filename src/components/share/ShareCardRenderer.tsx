@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Share, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform } from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import { ShareTemplate } from '../../types';
 import { colors, shadows } from '../../theme/colors';
+import { safeShare } from '../../services/shareService';
 
 interface ShareCardRendererProps {
   template: ShareTemplate;
@@ -23,25 +24,50 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
   );
 
   const handleShare = async () => {
+    const message = `"${customMessage}"\n— ${userName || 'शिव शिष्य'}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो 🙏`;
+
     try {
       if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
         const uri = await viewShotRef.current.capture();
+
+        if (Platform.OS === 'web' && typeof document !== 'undefined') {
+          // Web direct image download
+          try {
+            const link = document.createElement('a');
+            link.href = uri;
+            link.download = `shiv-charcha-card-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } catch (webErr) {}
+
+          await safeShare({
+            title: 'शिव चर्चा शेयर कार्ड',
+            message: message,
+          });
+          return;
+        }
+
+        // Native iOS/Android Sharing
         if (await Sharing.isAvailableAsync()) {
           await Sharing.shareAsync(uri);
         } else {
-          await Share.share({
-            message: `"${customMessage}"\n— ${userName}\n\nशिव चर्चा ऐप`,
+          await safeShare({
+            title: 'शिव चर्चा शेयर कार्ड',
+            message: message,
             url: uri,
           });
         }
       } else {
-        await Share.share({
-          message: `"${customMessage}"\n— ${userName}\n\nशिव चर्चा ऐप से शेयर किया गया 🙏`,
+        await safeShare({
+          title: 'शिव चर्चा शेयर कार्ड',
+          message: message,
         });
       }
     } catch (e) {
-      await Share.share({
-        message: `"${customMessage}"\n— ${userName}\n\nशिव चर्चा ऐप`,
+      await safeShare({
+        title: 'शिव चर्चा शेयर कार्ड',
+        message: message,
       });
     }
   };
@@ -104,7 +130,9 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
         />
 
         <TouchableOpacity style={styles.shareButton} onPress={handleShare} activeOpacity={0.8}>
-          <Text style={styles.shareButtonText}>🖼️ शेयर कार्ड साझा करें</Text>
+          <Text style={styles.shareButtonText}>
+            {Platform.OS === 'web' ? '📥 कार्ड डाउनलोड व शेयर करें' : '🖼️ शेयर कार्ड साझा करें'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

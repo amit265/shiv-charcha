@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Share, Platform } from 'react-native';
 import { useAudio } from '../../context/AudioContext';
 import { colors, shadows } from '../../theme/colors';
+import { safeShare } from '../../services/shareService';
 
 interface AudioPlayerModalProps {
   visible: boolean;
@@ -20,11 +21,10 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
   };
 
   const handleShare = async () => {
-    try {
-      await Share.share({
-        message: `🎧 शिव चर्चा ऑडियो सुनें: "${currentTrack.title}" — ${currentTrack.artist || 'शिव गुरु संदेश'}\n\nशिव चर्चा ऐप डाउनलोड करें।`,
-      });
-    } catch (e) {}
+    await safeShare({
+      title: currentTrack.title,
+      message: `🎧 शिव चर्चा ऑडियो सुनें: "${currentTrack.title}" — ${currentTrack.artist || 'शिव गुरु संदेश'}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+    });
   };
 
   return (

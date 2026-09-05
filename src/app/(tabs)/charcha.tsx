@@ -7,6 +7,7 @@ import { teachingTopics } from '../../content/teachings';
 import { booksLibrary } from '../../content/books';
 import { audioLibrary } from '../../content/audioLibrary';
 import { useAudio } from '../../context/AudioContext';
+import { safeShare } from '../../services/shareService';
 
 type SubSection = 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -16,11 +17,10 @@ export default function ShivCharchaScreen() {
   const [activeTab, setActiveTab] = useState<SubSection>('understand');
 
   const handleShareTopic = async (title: string, summary: string) => {
-    try {
-      await Share.share({
-        message: `📖 *शिव चर्चा सीखें*: "${title}"\n\n${summary}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
-      });
-    } catch (e) {}
+    await safeShare({
+      title: title,
+      message: `📖 *शिव चर्चा सीखें*: "${title}"\n\n${summary}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+    });
   };
 
   return (

@@ -7,6 +7,7 @@ import { dailyMessages } from '../../content/dailyMessages';
 import { audioLibrary } from '../../content/audioLibrary';
 import { sacredDates } from '../../content/dates';
 import { useAudio } from '../../context/AudioContext';
+import { safeShare } from '../../services/shareService';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -17,11 +18,10 @@ export default function HomeScreen() {
   const specialDate = sacredDates[0];
 
   const handleShareMessage = async () => {
-    try {
-      await Share.share({
-        message: `🌸 *आज का शिव गुरु संदेश* 🌸\n\n"${todayMsg.title}"\n${todayMsg.shortMessage}\n\n${todayMsg.shareCardPrompt}\n\nशिव चर्चा ऐप डाउनलोड करें — महाव्योम स्टूडियो`,
-      });
-    } catch (e) {}
+    await safeShare({
+      title: todayMsg.title,
+      message: `🌸 *आज का शिव गुरु संदेश* 🌸\n\n"${todayMsg.title}"\n${todayMsg.shortMessage}\n\n${todayMsg.shareCardPrompt}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+    });
   };
 
   return (

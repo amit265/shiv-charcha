@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { teachingTopics } from '../../content/teachings';
 import { colors, shadows } from '../../theme/colors';
 import { useAudio } from '../../context/AudioContext';
+import { safeShare } from '../../services/shareService';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -11,11 +12,10 @@ export default function TeachingDetailScreen() {
   const topic = teachingTopics.find(t => t.id === id) || teachingTopics[0];
 
   const handleShare = async () => {
-    try {
-      await Share.share({
-        message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप डाउनलोड करें — महाव्योम स्टूडियो`,
-      });
-    } catch (e) {}
+    await safeShare({
+      title: topic.title,
+      message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+    });
   };
 
   return (

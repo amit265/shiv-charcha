@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { sacredDates } from '../../content/dates';
 import { colors, shadows } from '../../theme/colors';
 import { useAudio } from '../../context/AudioContext';
+import { safeShare } from '../../services/shareService';
 
 export default function SacredDateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -12,11 +13,10 @@ export default function SacredDateDetailScreen() {
   const dateItem = sacredDates.find(d => d.id === id) || sacredDates[0];
 
   const handleShare = async () => {
-    try {
-      await Share.share({
-        message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
-      });
-    } catch (e) {}
+    await safeShare({
+      title: dateItem.title,
+      message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+    });
   };
 
   return (
