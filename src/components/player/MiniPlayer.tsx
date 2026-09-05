@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
 import { colors, shadows } from '../../theme/colors';
 import { AudioPlayerModal } from './AudioPlayerModal';
@@ -7,17 +8,20 @@ import { AudioPlayerModal } from './AudioPlayerModal';
 export const MiniPlayer: React.FC = () => {
   const { currentTrack, isPlaying, position, duration, isMiniPlayerVisible, togglePlayPause, dismissMiniPlayer } = useAudio();
   const [isFullModalVisible, setIsFullModalVisible] = useState(false);
+  const insets = useSafeAreaInsets();
 
   if (!isMiniPlayerVisible || !currentTrack) {
     return null;
   }
 
   const progressPercent = duration > 0 ? (position / duration) * 100 : 0;
+  const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 14 : 0);
+  const miniPlayerBottom = 58 + bottomInset + 8;
 
   return (
     <>
       <TouchableOpacity
-        style={styles.container}
+        style={[styles.container, { bottom: miniPlayerBottom }]}
         activeOpacity={0.9}
         onPress={() => setIsFullModalVisible(true)}
       >
@@ -62,7 +66,6 @@ export const MiniPlayer: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 82 : 62,
     left: 12,
     right: 12,
     backgroundColor: colors.maroonPrimary,

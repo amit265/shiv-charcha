@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 
 interface HeaderProps {
@@ -17,8 +18,14 @@ export const Header: React.FC<HeaderProps> = ({
   onSearchPress,
   rightAction,
 }) => {
+  const insets = useSafeAreaInsets();
+  const topPadding = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44
+  ) + 8;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: topPadding }]}>
       <View style={styles.topRow}>
         <View style={styles.logoRow}>
           <View style={styles.omBadge}>
@@ -46,7 +53,6 @@ export const Header: React.FC<HeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.maroonPrimary,
-    paddingTop: Platform.OS === 'ios' ? 44 : 12,
     paddingBottom: 14,
     paddingHorizontal: 18,
     borderBottomWidth: 2,

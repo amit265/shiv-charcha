@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Share, Platform } from 'react-native';
+import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Share, Platform, StatusBar } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
 import { colors, shadows } from '../../theme/colors';
 import { safeShare } from '../../services/shareService';
@@ -11,8 +12,14 @@ interface AudioPlayerModalProps {
 
 export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onClose }) => {
   const { currentTrack, isPlaying, position, duration, togglePlayPause, seekTo } = useAudio();
+  const insets = useSafeAreaInsets();
 
   if (!currentTrack) return null;
+
+  const topPadding = Math.max(
+    insets.top,
+    Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44
+  ) + 8;
 
   const formatTime = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -29,7 +36,7 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
 
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: topPadding }]}>
         {/* Header Bar */}
         <View style={styles.headerRow}>
           <TouchableOpacity onPress={onClose} style={styles.backBtn} activeOpacity={0.7}>
@@ -121,7 +128,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.maroonDark,
-    paddingTop: Platform.OS === 'ios' ? 44 : 20,
   },
   headerRow: {
     flexDirection: 'row',
