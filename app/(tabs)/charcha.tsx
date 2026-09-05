@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Header } from '../../components/common/Header';
-import { colors, shadows } from '../../theme/colors';
-import { teachingTopics } from '../../content/teachings';
-import { booksLibrary } from '../../content/books';
-import { audioLibrary } from '../../content/audioLibrary';
-import { useAudio } from '../../context/AudioContext';
-import { safeShare } from '../../services/shareService';
+import { Header } from '@/components/common/Header';
+import { colors, shadows } from '@/theme/colors';
+import { teachingTopics } from '@/content/teachings';
+import { booksLibrary } from '@/content/books';
+import { audioLibrary } from '@/content/audioLibrary';
+import { useAudio } from '@/context/AudioContext';
+import { safeShare } from '@/services/shareService';
 
 type SubSection = 'understand' | 'books' | 'audio' | 'sadhna';
 

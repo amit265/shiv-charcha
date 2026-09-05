@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import { JapCounter } from '../components/jap/JapCounter';
-import { colors } from '../theme/colors';
+import { JapCounter } from '@/components/jap/JapCounter';
+import { colors } from '@/theme/colors';
 
 export default function JapScreen() {
   return (

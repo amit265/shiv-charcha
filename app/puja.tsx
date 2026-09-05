@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import { ShivlingPujaCanvas } from '../components/puja/ShivlingPujaCanvas';
-import { colors } from '../theme/colors';
+import { ShivlingPujaCanvas } from '@/components/puja/ShivlingPujaCanvas';
+import { colors } from '@/theme/colors';
 
 export default function PujaScreen() {
   return (

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Header } from '../../components/common/Header';
-import { colors, shadows } from '../../theme/colors';
-import { StorageService, defaultPreferences, defaultStats } from '../../services/storage';
-import { UserPreferences, UserStats } from '../../types';
+import { Header } from '@/components/common/Header';
+import { colors, shadows } from '@/theme/colors';
+import { StorageService, defaultPreferences, defaultStats } from '@/services/storage';
+import { UserPreferences, UserStats } from '@/types';
 
 export default function ProfileScreen() {
   const router = useRouter();

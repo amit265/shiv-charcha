@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Header } from '../../components/common/Header';
-import { colors, shadows } from '../../theme/colors';
-import { dailyMessages } from '../../content/dailyMessages';
-import { audioLibrary } from '../../content/audioLibrary';
-import { sacredDates } from '../../content/dates';
-import { useAudio } from '../../context/AudioContext';
-import { safeShare } from '../../services/shareService';
+import { Header } from '@/components/common/Header';
+import { colors, shadows } from '@/theme/colors';
+import { dailyMessages } from '@/content/dailyMessages';
+import { audioLibrary } from '@/content/audioLibrary';
+import { sacredDates } from '@/content/dates';
+import { useAudio } from '@/context/AudioContext';
+import { safeShare } from '@/services/shareService';
 
 export default function HomeScreen() {
   const router = useRouter();

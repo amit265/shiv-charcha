@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { booksLibrary } from '../../content/books';
-import { colors, shadows } from '../../theme/colors';
-import { useAudio } from '../../context/AudioContext';
+import { booksLibrary } from '@/content/books';
+import { colors, shadows } from '@/theme/colors';
+import { useAudio } from '@/context/AudioContext';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

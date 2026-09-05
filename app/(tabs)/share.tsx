@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import { Header } from '../../components/common/Header';
-import { colors } from '../../theme/colors';
-import { shareTemplates } from '../../content/shareTemplates';
-import { ShareCardRenderer } from '../../components/share/ShareCardRenderer';
-import { ShareTemplate } from '../../types';
+import { Header } from '@/components/common/Header';
+import { colors } from '@/theme/colors';
+import { shareTemplates } from '@/content/shareTemplates';
+import { ShareCardRenderer } from '@/components/share/ShareCardRenderer';
+import { ShareTemplate } from '@/types';
 
 export default function ShareStudioScreen() {
   const [selectedTemplate, setSelectedTemplate] = useState<ShareTemplate>(shareTemplates[0]);

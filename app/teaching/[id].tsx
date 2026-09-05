@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { teachingTopics } from '../../content/teachings';
-import { colors, shadows } from '../../theme/colors';
-import { useAudio } from '../../context/AudioContext';
-import { safeShare } from '../../services/shareService';
+import { teachingTopics } from '@/content/teachings';
+import { colors, shadows } from '@/theme/colors';
+import { useAudio } from '@/context/AudioContext';
+import { safeShare } from '@/services/shareService';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

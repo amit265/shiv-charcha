@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
-import { ringtonesData } from '../content/ringtones';
-import { colors, shadows } from '../theme/colors';
-import { useAudio } from '../context/AudioContext';
-import { RingtoneItem } from '../types';
+import { ringtonesData } from '@/content/ringtones';
+import { colors, shadows } from '@/theme/colors';
+import { useAudio } from '@/context/AudioContext';
+import { RingtoneItem } from '@/types';
 
 export default function RingtonesScreen() {
   const { playTrack } = useAudio();

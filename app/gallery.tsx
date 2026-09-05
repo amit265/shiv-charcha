@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Platform } from 'react-native';
-import { wallpapersData } from '../content/wallpapers';
-import { colors, shadows } from '../theme/colors';
-import { WallpaperItem } from '../types';
+import { wallpapersData } from '@/content/wallpapers';
+import { colors, shadows } from '@/theme/colors';
+import { WallpaperItem } from '@/types';
 
 export default function GalleryScreen() {
   const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Header } from '../../components/common/Header';
-import { colors, shadows } from '../../theme/colors';
-import { sacredDates } from '../../content/dates';
+import { Header } from '@/components/common/Header';
+import { colors, shadows } from '@/theme/colors';
+import { sacredDates } from '@/content/dates';
 
 export default function CalendarScreen() {
   const router = useRouter();

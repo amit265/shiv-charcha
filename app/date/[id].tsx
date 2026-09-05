@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { sacredDates } from '../../content/dates';
-import { colors, shadows } from '../../theme/colors';
-import { useAudio } from '../../context/AudioContext';
-import { safeShare } from '../../services/shareService';
+import { sacredDates } from '@/content/dates';
+import { colors, shadows } from '@/theme/colors';
+import { useAudio } from '@/context/AudioContext';
+import { safeShare } from '@/services/shareService';
 
 export default function SacredDateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

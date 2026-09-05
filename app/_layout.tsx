@@ -4,10 +4,10 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AudioProvider } from '../context/AudioContext';
-import { MiniPlayer } from '../components/player/MiniPlayer';
-import { WebDeviceFrame } from '../components/common/WebDeviceFrame';
-import { colors } from '../theme/colors';
+import { AudioProvider } from '@/context/AudioContext';
+import { MiniPlayer } from '@/components/player/MiniPlayer';
+import { WebDeviceFrame } from '@/components/common/WebDeviceFrame';
+import { colors } from '@/theme/colors';
 
 // Prevent splash screen from auto-hiding before ready
 SplashScreen.preventAutoHideAsync().catch(() => {});
