@@ -1,12 +1,17 @@
+import 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AudioProvider } from '@/context/AudioContext';
 import { MiniPlayer } from '@/components/player/MiniPlayer';
 import { WebDeviceFrame } from '@/components/common/WebDeviceFrame';
 import { colors } from '@/theme/colors';
+
+// Prevent native splash screen from auto-hiding until initial mount is done
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
   useEffect(() => {
@@ -15,38 +20,40 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <AudioProvider>
-        <WebDeviceFrame>
-          <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: colors.maroonPrimary,
-              },
-              headerTintColor: colors.goldLight,
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              contentStyle: {
-                backgroundColor: colors.bgIvory,
-              },
-            }}
-          >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="puja" options={{ title: '🌸 शिव लिंग पूजा सेवा', presentation: 'modal' }} />
-            <Stack.Screen name="jap" options={{ title: '📿 108 जाप साधना', presentation: 'card' }} />
-            <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
-            <Stack.Screen name="teaching/[id]" options={{ title: '💡 शिव गुरु ज्ञान' }} />
-            <Stack.Screen name="date/[id]" options={{ title: '📅 पावन दिवस स्मरण' }} />
-            <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
-            <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
-          </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AudioProvider>
+          <WebDeviceFrame>
+            <StatusBar style="light" />
+            <Stack
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: colors.maroonPrimary,
+                },
+                headerTintColor: colors.goldLight,
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+                contentStyle: {
+                  backgroundColor: colors.bgIvory,
+                },
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="puja" options={{ title: '🌸 शिव लिंग पूजा सेवा', presentation: 'modal' }} />
+              <Stack.Screen name="jap" options={{ title: '📿 108 जाप साधना', presentation: 'card' }} />
+              <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
+              <Stack.Screen name="teaching/[id]" options={{ title: '💡 शिव गुरु ज्ञान' }} />
+              <Stack.Screen name="date/[id]" options={{ title: '📅 पावन दिवस स्मरण' }} />
+              <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
+              <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
+            </Stack>
 
-          {/* Global Persistent Mini-Player */}
-          <MiniPlayer />
-        </WebDeviceFrame>
-      </AudioProvider>
-    </SafeAreaProvider>
+            {/* Global Persistent Mini-Player */}
+            <MiniPlayer />
+          </WebDeviceFrame>
+        </AudioProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { colors } from '../../theme/colors';
-import { SymbolView } from 'expo-symbols';
 
 interface HeaderProps {
   title?: string;
