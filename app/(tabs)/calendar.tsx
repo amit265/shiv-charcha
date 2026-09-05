@@ -5,12 +5,53 @@ import { Header } from '@/components/common/Header';
 import { colors, shadows } from '@/theme/colors';
 import { sacredDates } from '@/content/dates';
 
+const HINDI_MONTHS = [
+  'जनवरी',
+  'फरवरी',
+  'मार्च',
+  'अप्रैल',
+  'मई',
+  'जून',
+  'जुलाई',
+  'अगस्त',
+  'सितम्बर',
+  'अक्टूबर',
+  'नवम्बर',
+  'दिसम्बर',
+];
+
 export default function CalendarScreen() {
   const router = useRouter();
-  const [selectedMonth, setSelectedMonth] = useState<string>('सितम्बर 2026');
+  const [currentYear, setCurrentYear] = useState<number>(2026);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(8); // Default: September (8)
 
-  // Days simulation for calendar grid
-  const daysInMonth = Array.from({ length: 30 }, (_, i) => i + 1);
+  const handlePrevMonth = () => {
+    if (currentMonthIndex === 0) {
+      setCurrentMonthIndex(11);
+      setCurrentYear((prev) => prev - 1);
+    } else {
+      setCurrentMonthIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonthIndex === 11) {
+      setCurrentMonthIndex(0);
+      setCurrentYear((prev) => prev + 1);
+    } else {
+      setCurrentMonthIndex((prev) => prev + 1);
+    }
+  };
+
+  const selectedMonthText = `${HINDI_MONTHS[currentMonthIndex]} ${currentYear}`;
+
+  // Dynamic days calculation
+  const totalDays = new Date(currentYear, currentMonthIndex + 1, 0).getDate();
+  const daysInMonth = Array.from({ length: totalDays }, (_, i) => i + 1);
+
+  // Day of week of the 1st day of the month (0 = Sun, 1 = Mon, ... 6 = Sat)
+  const firstDayOfWeek = new Date(currentYear, currentMonthIndex, 1).getDay();
+  const leadingPaddingCells = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
   return (
     <View style={styles.container}>
@@ -19,11 +60,11 @@ export default function CalendarScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Month Selector Bar */}
         <View style={styles.monthHeader}>
-          <TouchableOpacity style={styles.monthArrow} activeOpacity={0.7}>
+          <TouchableOpacity style={styles.monthArrow} onPress={handlePrevMonth} activeOpacity={0.7}>
             <Text style={styles.arrowText}>◀</Text>
           </TouchableOpacity>
-          <Text style={styles.monthTitle}>{selectedMonth}</Text>
-          <TouchableOpacity style={styles.monthArrow} activeOpacity={0.7}>
+          <Text style={styles.monthTitle}>{selectedMonthText}</Text>
+          <TouchableOpacity style={styles.monthArrow} onPress={handleNextMonth} activeOpacity={0.7}>
             <Text style={styles.arrowText}>▶</Text>
           </TouchableOpacity>
         </View>
@@ -41,9 +82,17 @@ export default function CalendarScreen() {
 
           {/* Days Grid */}
           <View style={styles.daysGrid}>
+            {/* Blank leading cells for weekday offset */}
+            {leadingPaddingCells.map((padIndex) => (
+              <View key={`pad-${padIndex}`} style={styles.dayCell} />
+            ))}
+
             {daysInMonth.map((dayNum) => {
-              const isSpecial = dayNum === 17 || dayNum === 8 || dayNum === 25;
-              const isMonday = dayNum % 7 === 2;
+              const cellIndex = firstDayOfWeek + dayNum - 1;
+              const isMonday = cellIndex % 7 === 1;
+              const isSpecial =
+                (currentMonthIndex === 8 && (dayNum === 17 || dayNum === 25)) ||
+                (currentMonthIndex === 2 && dayNum === 8);
 
               return (
                 <TouchableOpacity
