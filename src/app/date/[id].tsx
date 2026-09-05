@@ -62,7 +62,7 @@ export default function SacredDateDetailScreen() {
           <View style={styles.actionsGrid}>
             <TouchableOpacity
               style={styles.actionCardBtn}
-              onPress={() => router.push('/jap')}
+              onPress={() => router.push('/jap' as any)}
               activeOpacity={0.8}
             >
               <Text style={styles.actionIcon}>📿</Text>
@@ -71,7 +71,7 @@ export default function SacredDateDetailScreen() {
 
             <TouchableOpacity
               style={styles.actionCardBtn}
-              onPress={() => router.push('/share')}
+              onPress={() => router.push('/share' as any)}
               activeOpacity={0.8}
             >
               <Text style={styles.actionIcon}>🖼️</Text>

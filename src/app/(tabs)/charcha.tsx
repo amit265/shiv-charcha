@@ -109,7 +109,7 @@ export default function ShivCharchaScreen() {
 
                   <TouchableOpacity
                     style={styles.readBtn}
-                    onPress={() => router.push(`/teaching/${topic.id}`)}
+                    onPress={() => router.push(`/teaching/${topic.id}` as any)}
                     activeOpacity={0.7}
                   >
                     <Text style={styles.readBtnText}>📖 विस्तृत पढ़ें</Text>
@@ -138,7 +138,7 @@ export default function ShivCharchaScreen() {
               <TouchableOpacity
                 key={book.id}
                 style={styles.bookCard}
-                onPress={() => router.push(`/book/${book.id}`)}
+                onPress={() => router.push(`/book/${book.id}` as any)}
                 activeOpacity={0.9}
               >
                 <Image source={{ uri: book.coverImage }} style={styles.bookCover} />
@@ -191,7 +191,7 @@ export default function ShivCharchaScreen() {
 
             <TouchableOpacity
               style={styles.sadhnaCard}
-              onPress={() => router.push('/jap')}
+              onPress={() => router.push('/jap' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>📿</Text>
@@ -203,7 +203,7 @@ export default function ShivCharchaScreen() {
 
             <TouchableOpacity
               style={styles.sadhnaCard}
-              onPress={() => router.push('/puja')}
+              onPress={() => router.push('/puja' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>🌸</Text>
@@ -215,7 +215,7 @@ export default function ShivCharchaScreen() {
 
             <TouchableOpacity
               style={styles.sadhnaCard}
-              onPress={() => router.push('/teaching/t-three-sutras')}
+              onPress={() => router.push('/teaching/t-three-sutras' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>🙏</Text>

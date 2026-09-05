@@ -69,7 +69,7 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={styles.actionBtnOutline}
-              onPress={() => router.push(`/teaching/t-three-sutras`)}
+              onPress={() => router.push('/teaching/t-three-sutras' as any)}
               activeOpacity={0.7}
             >
               <Text style={styles.actionBtnOutlineText}>📖 पढ़ें</Text>
@@ -93,7 +93,7 @@ export default function HomeScreen() {
           <View style={styles.experienceGrid}>
             <TouchableOpacity
               style={styles.experienceCard}
-              onPress={() => router.push('/puja')}
+              onPress={() => router.push('/puja' as any)}
               activeOpacity={0.85}
             >
               <Text style={styles.expIcon}>🌸</Text>
@@ -103,7 +103,7 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={[styles.experienceCard, styles.expCardAlt]}
-              onPress={() => router.push('/jap')}
+              onPress={() => router.push('/jap' as any)}
               activeOpacity={0.85}
             >
               <Text style={styles.expIcon}>📿</Text>
@@ -136,7 +136,7 @@ export default function HomeScreen() {
         {/* SECTION: आज का महत्वपूर्ण दिन & आगामी विशेष दिवस */}
         <TouchableOpacity
           style={styles.dateReminderCard}
-          onPress={() => router.push(`/date/${specialDate.id}`)}
+          onPress={() => router.push(`/date/${specialDate.id}` as any)}
           activeOpacity={0.9}
         >
           <View style={styles.dateLeftColumn}>
@@ -157,7 +157,7 @@ export default function HomeScreen() {
           </Text>
           <TouchableOpacity
             style={styles.shareTeaserBtn}
-            onPress={() => router.push('/share')}
+            onPress={() => router.push('/share' as any)}
             activeOpacity={0.8}
           >
             <Text style={styles.shareTeaserBtnText}>✨ शेयर कार्ड बनाएं</Text>

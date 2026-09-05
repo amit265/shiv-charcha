@@ -1,12 +1,22 @@
-import React from 'react';
+import 'react-native-gesture-handler';
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AudioProvider } from '../context/AudioContext';
 import { MiniPlayer } from '../components/player/MiniPlayer';
 import { colors } from '../theme/colors';
 
+// Prevent splash screen from auto-hiding before ready
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
 export default function RootLayout() {
+  useEffect(() => {
+    // Hide splash screen smoothly once root layout mounts
+    SplashScreen.hideAsync().catch(() => {});
+  }, []);
+
   return (
     <SafeAreaProvider>
       <AudioProvider>
@@ -41,3 +51,4 @@ export default function RootLayout() {
     </SafeAreaProvider>
   );
 }
+

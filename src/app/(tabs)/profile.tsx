@@ -101,7 +101,7 @@ export default function ProfileScreen() {
         <View style={styles.shortcutRow}>
           <TouchableOpacity
             style={styles.shortcutBtn}
-            onPress={() => router.push('/gallery')}
+            onPress={() => router.push('/gallery' as any)}
             activeOpacity={0.8}
           >
             <Text style={styles.shortcutIcon}>🖼️</Text>
@@ -110,7 +110,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             style={styles.shortcutBtn}
-            onPress={() => router.push('/ringtones')}
+            onPress={() => router.push('/ringtones' as any)}
             activeOpacity={0.8}
           >
             <Text style={styles.shortcutIcon}>🔔</Text>

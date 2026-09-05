@@ -54,9 +54,9 @@ export default function CalendarScreen() {
                     isSpecial && styles.specialDayBg,
                   ]}
                   onPress={() => {
-                    if (dayNum === 17) router.push('/date/date-harindranand-ji');
-                    else if (dayNum === 25) router.push('/date/date-neelam-anand-ji');
-                    else if (dayNum === 8) router.push('/date/date-mahashivratri');
+                    if (dayNum === 17) router.push('/date/date-harindranand-ji' as any);
+                    else if (dayNum === 25) router.push('/date/date-neelam-anand-ji' as any);
+                    else if (dayNum === 8) router.push('/date/date-mahashivratri' as any);
                   }}
                   activeOpacity={0.8}
                 >
@@ -83,7 +83,7 @@ export default function CalendarScreen() {
           <TouchableOpacity
             key={item.id}
             style={styles.dateCard}
-            onPress={() => router.push(`/date/${item.id}`)}
+            onPress={() => router.push(`/date/${item.id}` as any)}
             activeOpacity={0.9}
           >
             <Image source={{ uri: item.imageUrl }} style={styles.dateThumb} />
