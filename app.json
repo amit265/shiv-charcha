@@ -24,16 +24,14 @@
     },
     "web": {
       "output": "single",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.ico"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#4A0E17",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 120
+          "backgroundColor": "#4A0E17"
         }
       ],
       "expo-sharing"
