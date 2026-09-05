@@ -48,7 +48,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="मेरी शिव शिष्यता प्रोफाइल" subtitle="व्यक्तिगत यात्रा • सेटिंग्स • महाव्योम स्टूडियो" />
+      <Header title="मेरी शिव शिष्यता प्रोफाइल" subtitle="व्यक्तिगत यात्रा • ऐप सेटिंग्स" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* User Card */}
@@ -75,7 +75,7 @@ export default function ProfileScreen() {
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           )}
-          <Text style={styles.userSubText}>शिव शिष्य • महाव्योम आध्यात्मिक परिवार</Text>
+          <Text style={styles.userSubText}>शिव शिष्य • नमः शिवाय साधना</Text>
         </View>
 
         {/* SECTION: MY SHIV GURU JOURNEY */}

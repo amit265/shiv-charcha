@@ -37,7 +37,7 @@ export const WebDeviceFrame: React.FC<WebDeviceFrameProps> = ({ children }) => {
       <View style={styles.switcherBar}>
         <View style={styles.brandTag}>
           <Text style={styles.brandOm}>ॐ</Text>
-          <Text style={styles.brandTitle}>शिव चर्चा • महाव्योम वेब व्यू</Text>
+          <Text style={styles.brandTitle}>शिव चर्चा • हर हर महादेव</Text>
         </View>
 
         <View style={styles.modeButtonsRow}>

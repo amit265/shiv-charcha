@@ -10,7 +10,7 @@ export const booksLibrary: Book[] = [
     easySummary: 'यह पुस्तक हमें सिखाती है कि बिना किसी कठिन कर्मकांड के केवल सच्चे दिल से शिव को गुरु मानकर हम अपने जीवन में शांति और आनंद कैसे पा सकते हैं।',
     totalChapters: 4,
     metadata: {
-      publisher: 'महाव्योम आध्यात्मिक न्यास',
+      publisher: 'शिव चर्चा संस्थान',
       edition: 'प्रथम संस्करण',
     },
     chapters: [
@@ -56,7 +56,7 @@ export const booksLibrary: Book[] = [
     easySummary: 'मातृवत स्नेहमयी दीदी माँ ने अपनी सरल वाणी में शिव गुरु के प्रेम और करुणा के अनगिनत प्रसंग समझाए हैं।',
     totalChapters: 2,
     metadata: {
-      publisher: 'महाव्योम आध्यात्मिक न्यास',
+      publisher: 'शिव चर्चा संस्थान',
     },
     chapters: [
       {

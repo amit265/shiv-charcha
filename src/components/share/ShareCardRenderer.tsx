@@ -24,7 +24,7 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
   );
 
   const handleShare = async () => {
-    const message = `"${customMessage}"\n— ${userName || 'शिव शिष्य'}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो 🙏`;
+    const message = `"${customMessage}"\n— ${userName || 'शिव शिष्य'}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`;
 
     try {
       if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
@@ -102,7 +102,7 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
             — {userName || 'शिव शिष्य'}
           </Text>
           <Text style={[styles.brandingText, { color: template.textColor }]}>
-            महाव्योम स्टूडियो • शिव चर्चा 🙏
+            शिव चर्चा • हर हर महादेव 🙏
           </Text>
         </View>
       </ViewShot>

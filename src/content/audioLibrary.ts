@@ -65,6 +65,6 @@ export const audioLibrary: AudioItem[] = [
     duration: 480,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
     coverImage: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=600&q=80',
-    artist: 'महाव्योम आध्यात्मिक ध्वनि',
+    artist: 'शिव चर्चा भक्ति ध्वनि',
   },
 ];

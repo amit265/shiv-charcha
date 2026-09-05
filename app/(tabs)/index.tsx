@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const handleShareMessage = async () => {
     await safeShare({
       title: todayMsg.title,
-      message: `🌸 *आज का शिव गुरु संदेश* 🌸\n\n"${todayMsg.title}"\n${todayMsg.shortMessage}\n\n${todayMsg.shareCardPrompt}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+      message: `🌸 *आज का शिव गुरु संदेश* 🌸\n\n"${todayMsg.title}"\n${todayMsg.shortMessage}\n\n${todayMsg.shareCardPrompt}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
     });
   };
 
@@ -32,7 +32,7 @@ export default function HomeScreen() {
         {/* Banner Greeting */}
         <View style={styles.greetingBanner}>
           <Text style={styles.greetingTitle}>आज शिव गुरु से मेरा जुड़ाव 🙏</Text>
-          <Text style={styles.greetingSub}>देखें • सुनें • छुएँ • करें • सीखें • साझा करें</Text>
+          <Text style={styles.greetingSub}>हर हर महादेव • नमः शिवाय साधना</Text>
         </View>
 
         {/* SECTION: आज का शिव गुरु संदेश */}

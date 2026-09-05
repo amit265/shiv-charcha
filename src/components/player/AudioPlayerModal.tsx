@@ -30,7 +30,7 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
   const handleShare = async () => {
     await safeShare({
       title: currentTrack.title,
-      message: `🎧 शिव चर्चा ऑडियो सुनें: "${currentTrack.title}" — ${currentTrack.artist || 'शिव गुरु संदेश'}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+      message: `🎧 शिव चर्चा ऑडियो सुनें: "${currentTrack.title}" — ${currentTrack.artist || 'शिव गुरु संदेश'}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
     });
   };
 

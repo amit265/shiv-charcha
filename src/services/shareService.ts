@@ -15,7 +15,7 @@ export const safeShare = async (options: ShareOptions): Promise<boolean> => {
     if (typeof navigator !== 'undefined' && (navigator as any).share) {
       try {
         await (navigator as any).share({
-          title: options.title || 'शिव चर्चा — महाव्योम स्टूडियो',
+          title: options.title || 'शिव चर्चा — हर हर महादेव',
           text: options.message,
           url: options.url,
         });

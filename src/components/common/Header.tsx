@@ -13,7 +13,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   title = 'शिव चर्चा',
-  subtitle = 'महाव्योम स्टूडियो • देखें • सुनें • छुएँ • करें • सीखें',
+  subtitle = 'हर हर महादेव',
   showSearch = false,
   onSearchPress,
   rightAction,

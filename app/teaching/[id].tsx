@@ -14,7 +14,7 @@ export default function TeachingDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: topic.title,
-      message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+      message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
     });
   };
 

@@ -15,7 +15,7 @@ export default function SacredDateDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: dateItem.title,
-      message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+      message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
     });
   };
 

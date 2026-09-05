@@ -18,8 +18,8 @@ export default function ShivCharchaScreen() {
 
   const handleShareTopic = async (title: string, summary: string) => {
     await safeShare({
-      title: title,
-      message: `📖 *शिव चर्चा सीखें*: "${title}"\n\n${summary}\n\nशिव चर्चा ऐप — महाव्योम स्टूडियो`,
+      title,
+      message: `📖 *शिव चर्चा सीखें*: "${title}"\n\n${summary}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
     });
   };
 
