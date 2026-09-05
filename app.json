@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
+      "newArchEnabled": false,
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

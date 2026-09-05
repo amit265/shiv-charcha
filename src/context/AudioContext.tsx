@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Audio } from 'expo-av';
 import { Platform } from 'react-native';
 import { AudioItem } from '../types';
 import { StorageService } from '../services/storage';
@@ -22,7 +21,7 @@ interface AudioContextType {
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [htmlAudio, setHtmlAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTrack, setCurrentTrack] = useState<AudioItem | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
@@ -30,61 +29,46 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isMiniPlayerVisible, setIsMiniPlayerVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    // Configure audio session for background/devotional play
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: false,
-      shouldDuckAndroid: true,
-    }).catch(err => console.warn('Audio mode setup error:', err));
-
     return () => {
-      if (sound) {
-        sound.unloadAsync();
+      if (htmlAudio) {
+        htmlAudio.pause();
       }
     };
-  }, []);
-
-  const onPlaybackStatusUpdate = (status: any) => {
-    if (status.isLoaded) {
-      setPosition(Math.floor(status.positionMillis / 1000));
-      setDuration(Math.floor((status.durationMillis || 0) / 1000));
-      setIsPlaying(status.isPlaying);
-
-      if (status.didJustFinish) {
-        setIsPlaying(false);
-        setPosition(0);
-      }
-    }
-  };
+  }, [htmlAudio]);
 
   const playTrack = async (track: AudioItem) => {
     try {
-      if (sound) {
-        await sound.unloadAsync();
-        setSound(null);
+      if (htmlAudio) {
+        htmlAudio.pause();
+        setHtmlAudio(null);
       }
 
       setCurrentTrack(track);
       setIsMiniPlayerVisible(true);
       StorageService.recordAudioPlayed();
 
-      // If online URL or local asset
-      if (track.audioUrl.startsWith('http') || track.audioUrl.startsWith('file')) {
-        const { sound: newSound } = await Audio.Sound.createAsync(
-          { uri: track.audioUrl },
-          { shouldPlay: true },
-          onPlaybackStatusUpdate
-        );
-        setSound(newSound);
+      if (typeof window !== 'undefined' && 'Audio' in window && track.audioUrl.startsWith('http')) {
+        const audio = new window.Audio(track.audioUrl);
+        audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(true));
+
+        audio.ontimeupdate = () => {
+          setPosition(Math.floor(audio.currentTime));
+          setDuration(Math.floor(audio.duration || track.duration || 180));
+        };
+
+        audio.onended = () => {
+          setIsPlaying(false);
+          setPosition(0);
+        };
+
+        setHtmlAudio(audio);
       } else {
-        // Fallback demo simulation for local synthesized devotional sound if URL not yet loaded
         setIsPlaying(true);
         setDuration(track.duration || 180);
         setPosition(0);
       }
     } catch (e) {
       console.warn('Error loading audio track:', e);
-      // Fallback state so user UI remains interactive
       setIsPlaying(true);
       setDuration(track.duration || 180);
       setPosition(0);
@@ -92,15 +76,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const pauseTrack = async () => {
-    if (sound) {
-      await sound.pauseAsync();
+    if (htmlAudio) {
+      htmlAudio.pause();
     }
     setIsPlaying(false);
   };
 
   const resumeTrack = async () => {
-    if (sound) {
-      await sound.playAsync();
+    if (htmlAudio) {
+      htmlAudio.play().catch(() => {});
     }
     setIsPlaying(true);
   };
@@ -114,15 +98,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const seekTo = async (seconds: number) => {
-    if (sound) {
-      await sound.setPositionAsync(seconds * 1000);
+    if (htmlAudio) {
+      htmlAudio.currentTime = seconds;
     }
     setPosition(seconds);
   };
 
   const dismissMiniPlayer = () => {
-    if (sound) {
-      sound.pauseAsync();
+    if (htmlAudio) {
+      htmlAudio.pause();
     }
     setIsPlaying(false);
     setIsMiniPlayerVisible(false);
@@ -130,8 +114,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const playSoundEffect = async (soundType: string) => {
     try {
-      // Gentle web / native web-audio chime synthesis for devotional puja bell & shankh
-      if (Platform.OS === 'web' && typeof window !== 'undefined' && 'AudioContext' in window) {
+      if (typeof window !== 'undefined' && ('AudioContext' in window || 'webkitAudioContext' in window)) {
         const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
         const ctx = new AudioCtx();
         const osc = ctx.createOscillator();
