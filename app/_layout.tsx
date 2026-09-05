@@ -133,8 +133,7 @@ export default function RootLayout() {
                   {/* Fading & Sliding Brand Text */}
                   <Animated.View style={[styles.splashTextContainer, animatedTextStyle]}>
                     <Text style={styles.splashTitle}>शिव चर्चा</Text>
-                    <Text style={styles.splashSubtitle}>महाव्योम स्टूडियो</Text>
-                    <Text style={styles.splashTagline}>देखें • सुनें • छुएँ • करें • सीखें • साझा करें</Text>
+                    <Text style={styles.splashSubtitle}>हर हर महादेव</Text>
                   </Animated.View>
                 </View>
 
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   splashTitle: {
-    fontSize: 34,
+    fontSize: 36,
     fontWeight: 'bold',
     color: colors.goldLight,
     letterSpacing: 2,
@@ -187,18 +186,11 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
   splashSubtitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
     color: colors.goldPrimary,
-    marginTop: 6,
-    letterSpacing: 1.5,
-  },
-  splashTagline: {
-    fontSize: 13,
-    color: colors.bgIvory,
-    opacity: 0.9,
-    marginTop: 16,
-    letterSpacing: 1,
+    marginTop: 8,
+    letterSpacing: 2,
   },
   splashDeveloperText: {
     position: 'absolute',
