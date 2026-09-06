@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Platform } from 'react-native';
+import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { wallpapersData } from '@/content/wallpapers';
-import { colors, shadows } from '@/theme/colors';
+import { shadows } from '@/theme/colors';
 import { WallpaperItem } from '@/types';
 
 export default function GalleryScreen() {
+  const { theme } = useTheme();
   const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);
 
   const handleSetWallpaper = (item: WallpaperItem) => {
@@ -24,10 +27,12 @@ export default function GalleryScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title="🖼️ पावन गैलरी व वॉलपेपर" subtitle="शिव वॉलपेपर देखें व डाउनलोड करें" showBack />
+
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={styles.sectionTitle}>पावन शिव वॉलपेपर संग्रह 🖼️</Text>
-        <Text style={styles.sectionSub}>
+        <Text style={[styles.sectionTitle, { color: theme.primary }]}>पावन शिव वॉलपेपर संग्रह 🖼️</Text>
+        <Text style={[styles.sectionSub, { color: theme.textSecondary }]}>
           उच्च गुणवत्ता वाले भक्तिमय वॉलपेपर देखें और अपने फोन पर सजाएँ।
         </Text>
 
@@ -35,18 +40,18 @@ export default function GalleryScreen() {
           {wallpapersData.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={styles.card}
+              style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
               onPress={() => setSelectedWallpaper(item)}
               activeOpacity={0.9}
             >
               <Image source={{ uri: item.imageUrl }} style={styles.image} />
-              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
               <TouchableOpacity
-                style={styles.setBtn}
+                style={[styles.setBtn, { backgroundColor: theme.primary }]}
                 onPress={() => handleSetWallpaper(item)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.setBtnText}>📱 वॉलपेपर लगाएँ</Text>
+                <Text style={[styles.setBtnText, { color: theme.textWhite }]}>📱 वॉलपेपर लगाएँ</Text>
               </TouchableOpacity>
             </TouchableOpacity>
           ))}
@@ -59,7 +64,6 @@ export default function GalleryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgIvory,
   },
   scrollContent: {
     padding: 16,
@@ -68,11 +72,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.maroonDark,
   },
   sectionSub: {
     fontSize: 12,
-    color: colors.textMedium,
     marginTop: 2,
     marginBottom: 16,
   },
@@ -83,12 +85,10 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '48%',
-    backgroundColor: colors.cardBg,
     borderRadius: 16,
     padding: 10,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: colors.borderLight,
     ...shadows.soft,
   },
   image: {
@@ -100,12 +100,10 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: colors.textDark,
     textAlign: 'center',
     marginBottom: 8,
   },
   setBtn: {
-    backgroundColor: colors.saffronPrimary,
     borderRadius: 10,
     paddingVertical: 8,
     alignItems: 'center',
@@ -113,6 +111,5 @@ const styles = StyleSheet.create({
   setBtnText: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: colors.textWhite,
   },
 });

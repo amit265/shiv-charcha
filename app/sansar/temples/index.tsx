@@ -22,7 +22,7 @@ export default function FamousTemplesScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🛕 प्रसिद्ध शिव मंदिर" subtitle="पशुपतिनाथ, तुंगनाथ, अमरनाथ व देश-विदेश के शिवालय" />
+      <Header title="🛕 प्रसिद्ध शिव मंदिर" subtitle="पशुपतिनाथ, तुंगनाथ, अमरनाथ व देश-विदेश के शिवालय" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

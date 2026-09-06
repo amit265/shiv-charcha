@@ -14,7 +14,7 @@ export default function ShivaSymbolsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🕉️ शिव के प्रतीक" subtitle="त्रिशूल, डमरू, रुद्राक्ष, भस्म व त्रिनेत्र का अर्थ" />
+      <Header title="🕉️ शिव के प्रतीक" subtitle="त्रिशूल, डमरू, रुद्राक्ष, भस्म व त्रिनेत्र का अर्थ" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

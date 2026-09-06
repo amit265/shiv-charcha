@@ -104,7 +104,7 @@ export default function ShivYatraMapScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="📍 शिव यात्रा" subtitle="डिजिटल भारत तीर्थ मानचित्र (Interactive Map)" />
+      <Header title="📍 शिव यात्रा" subtitle="डिजिटल भारत तीर्थ मानचित्र (Interactive Map)" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Intro */}

@@ -14,7 +14,7 @@ export default function ShivaFestivalsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="📅 शिव पर्व एवं उत्सव" subtitle="महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत विधि" />
+      <Header title="📅 शिव पर्व एवं उत्सव" subtitle="महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत विधि" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

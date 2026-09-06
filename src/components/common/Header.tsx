@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 
 interface HeaderProps {
   title?: string;
   subtitle?: string;
+  showBack?: boolean;
+  onBackPress?: () => void;
   showSearch?: boolean;
   onSearchPress?: () => void;
   rightAction?: React.ReactNode;
@@ -14,16 +17,27 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   title = 'शिव चर्चा',
   subtitle = 'हर हर महादेव',
+  showBack = false,
+  onBackPress,
   showSearch = false,
   onSearchPress,
   rightAction,
 }) => {
+  const router = useRouter();
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const topPadding = Math.max(
     insets.top,
     Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44
   ) + 8;
+
+  const handleBack = () => {
+    if (onBackPress) {
+      onBackPress();
+    } else if (router.canGoBack()) {
+      router.back();
+    }
+  };
 
   return (
     <View style={[
@@ -36,12 +50,22 @@ export const Header: React.FC<HeaderProps> = ({
     ]}>
       <View style={styles.topRow}>
         <View style={styles.logoRow}>
+          {showBack && (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={handleBack}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.backIcon, { color: theme.textGold }]}>◀</Text>
+            </TouchableOpacity>
+          )}
+
           <View style={[styles.omBadge, { backgroundColor: theme.accent, borderColor: theme.accentGlow }]}>
             <Text style={[styles.omText, { color: theme.primaryDark }]}>ॐ</Text>
           </View>
           <View style={styles.textColumn}>
-            <Text style={[styles.titleText, { color: theme.textGold }]}>{title}</Text>
-            {subtitle ? <Text style={[styles.subtitleText, { color: theme.textWhite }]}>{subtitle}</Text> : null}
+            <Text style={[styles.titleText, { color: theme.textGold }]} numberOfLines={1}>{title}</Text>
+            {subtitle ? <Text style={[styles.subtitleText, { color: theme.textWhite }]} numberOfLines={1}>{subtitle}</Text> : null}
           </View>
         </View>
 
@@ -61,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     borderBottomWidth: 2,
   },
   topRow: {
@@ -74,24 +98,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  omBadge: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 8,
+  },
+  backIcon: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  omBadge: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
     borderWidth: 2,
   },
   omText: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   textColumn: {
     flex: 1,
+    paddingRight: 6,
   },
   titleText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     letterSpacing: 0.5,
   },

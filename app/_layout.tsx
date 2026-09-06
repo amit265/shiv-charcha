@@ -32,13 +32,7 @@ function RootNavigator() {
       <StatusBar style={theme.statusBar} />
       <Stack
         screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.navigationBackground,
-          },
-          headerTintColor: theme.textGold,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown: false,
           contentStyle: {
             backgroundColor: theme.background,
           },

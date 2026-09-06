@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { sacredDates } from '@/content/dates';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
@@ -9,6 +11,7 @@ import { safeShare } from '@/services/shareService';
 export default function SacredDateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { theme } = useTheme();
   const { playTrack } = useAudio();
   const dateItem = sacredDates.find(d => d.id === id) || sacredDates[0];
 
@@ -20,7 +23,8 @@ export default function SacredDateDetailScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title="📅 पावन दिवस स्मरण" subtitle={dateItem.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Large Devotional Artwork */}
         <Image source={{ uri: dateItem.imageUrl }} style={styles.heroImage} />

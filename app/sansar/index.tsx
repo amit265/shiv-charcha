@@ -95,7 +95,7 @@ export default function ShivSansarHomeScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🔱 शिव संसार" subtitle="महादेव से जुड़ी कथाएँ, तीर्थ, मंदिर, स्वरूप और ज्ञान" />
+      <Header title="🔱 शिव संसार" subtitle="महादेव से जुड़ी कथाएँ, तीर्थ, मंदिर, स्वरूप और ज्ञान" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Banner Hero Card */}

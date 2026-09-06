@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { booksLibrary } from '@/content/books';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { theme } = useTheme();
   const { playTrack } = useAudio();
   const book = booksLibrary.find(b => b.id === id) || booksLibrary[0];
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
@@ -14,7 +17,8 @@ export default function BookDetailScreen() {
   const chapter = book.chapters[activeChapterIndex] || book.chapters[0];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title="📖 पुस्तक अध्ययन" subtitle={book.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Book Header Card */}
         <View style={styles.bookHeaderCard}>

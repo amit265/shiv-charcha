@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { teachingTopics } from '@/content/teachings';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
@@ -8,6 +10,7 @@ import { safeShare } from '@/services/shareService';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { theme } = useTheme();
   const { playTrack } = useAudio();
   const topic = teachingTopics.find(t => t.id === id) || teachingTopics[0];
 
@@ -19,7 +22,8 @@ export default function TeachingDetailScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title="💡 शिव गुरु ज्ञान" subtitle={topic.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Topic Header Image */}
         {topic.imageUrl && (

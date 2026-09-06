@@ -1,19 +1,17 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { ShivlingPujaCanvas } from '@/components/puja/ShivlingPujaCanvas';
-import { colors } from '@/theme/colors';
 
 export default function PujaScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.headerBox}>
-          <Text style={styles.headerTitle}>शिव लिंग पूजा एवं अभिषेक सेवा</Text>
-          <Text style={styles.headerSub}>
-            भक्ति भाव से पुष्प, बेलपत्र, जलधारा, दुग्धधारा अर्पित करें व शंखनाद करें
-          </Text>
-        </View>
+  const { theme } = useTheme();
 
+  return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title="🌸 शिव लिंग पूजा सेवा" subtitle="पुष्प, जल, बेलपत्र व आरती सेवा" showBack />
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ShivlingPujaCanvas />
       </ScrollView>
     </View>
@@ -23,25 +21,9 @@ export default function PujaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgIvory,
   },
   scrollContent: {
     padding: 16,
     paddingBottom: 110,
-  },
-  headerBox: {
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.maroonDark,
-  },
-  headerSub: {
-    fontSize: 12,
-    color: colors.textMedium,
-    textAlign: 'center',
-    marginTop: 4,
   },
 });

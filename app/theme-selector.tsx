@@ -57,7 +57,7 @@ export default function ThemeSelectorScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🎨 अपना रंग चुनें" subtitle="व्यक्तिगत ऐप रूप-सज्जा (App Themes)" />
+      <Header title="🎨 अपना रंग चुनें" subtitle="व्यक्तिगत ऐप रूप-सज्जा (App Themes)" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introCard}>

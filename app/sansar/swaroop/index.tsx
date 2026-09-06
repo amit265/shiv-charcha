@@ -14,7 +14,7 @@ export default function ShivSwaroopScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🔱 शिव के स्वरूप" subtitle="महादेव, नीलकंठ, नटराज, अर्धनारीश्वर व महाकाल" />
+      <Header title="🔱 शिव के स्वरूप" subtitle="महादेव, नीलकंठ, नटराज, अर्धनारीश्वर व महाकाल" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

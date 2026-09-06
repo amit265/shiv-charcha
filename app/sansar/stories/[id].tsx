@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
+import { Header } from '@/components/common/Header';
 import { shivaStories } from '@/content/sansar/stories';
 import { useAudio } from '@/context/AudioContext';
 import { RelatedContentSection } from '@/components/sansar/RelatedContentSection';
@@ -26,6 +27,7 @@ export default function ShivaStoryDetailScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header title={story.title} subtitle={story.subtitle} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>

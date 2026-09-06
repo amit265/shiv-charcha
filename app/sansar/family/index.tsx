@@ -14,7 +14,7 @@ export default function ShivFamilyScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="👨‍👩‍👧 शिव परिवार" subtitle="कैलाशपति शिव, पार्वती, गणेश, कार्तिकेय व नंदी" />
+      <Header title="👨‍👩‍👧 शिव परिवार" subtitle="कैलाशपति शिव, पार्वती, गणेश, कार्तिकेय व नंदी" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

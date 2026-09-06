@@ -14,7 +14,7 @@ export default function ShivaStoriesListScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="📖 शिव कथाएँ" subtitle="पौराणिक गाथाएँ • ऑडियो • दृश्य कथा" />
+      <Header title="📖 शिव कथाएँ" subtitle="पौराणिक गाथाएँ • ऑडियो • दृश्य कथा" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.headerInfo}>

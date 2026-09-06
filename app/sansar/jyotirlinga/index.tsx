@@ -14,7 +14,7 @@ export default function JyotirlingaListScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🛕 12 ज्योतिर्लिंग" subtitle="द्वादश पावन धाम दर्शन व महिमा" />
+      <Header title="🛕 12 ज्योतिर्लिंग" subtitle="द्वादश पावन धाम दर्शन व महिमा" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>

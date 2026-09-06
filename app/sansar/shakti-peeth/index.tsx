@@ -14,7 +14,7 @@ export default function ShaktiPeethListScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🌺 शक्ति पीठ" subtitle="सती के पावन अंगों से बने 51 सिद्ध पीठ" />
+      <Header title="🌺 शक्ति पीठ" subtitle="सती के पावन अंगों से बने 51 सिद्ध पीठ" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.introBox}>
