@@ -53,18 +53,16 @@ export const Header: React.FC<HeaderProps> = ({
           {showBack && (
             <TouchableOpacity
               style={[
-                styles.circularBackBtn,
+                styles.backBtn,
                 {
-                  backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
                   borderColor: theme.borderGold,
                 },
               ]}
               onPress={handleBack}
-              activeOpacity={0.75}
+              activeOpacity={0.7}
             >
-              <View style={styles.iconCenterWrapper}>
-                <Text style={[styles.backArrowSymbol, { color: theme.textGold }]}>←</Text>
-              </View>
+              <Text style={[styles.backIcon, { color: theme.textGold }]}>◀</Text>
             </TouchableOpacity>
           )}
 
@@ -106,35 +104,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  circularBackBtn: {
+  backBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    borderWidth: 1.2,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
   },
-  iconCenterWrapper: {
-    width: 38,
-    height: 38,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backArrowSymbol: {
-    fontSize: 18,
+  backIcon: {
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
     textAlignVertical: 'center',
     ...Platform.select({
       android: {
         includeFontPadding: false,
+        transform: [{ translateX: -1 }],
       },
       ios: {
-        lineHeight: 20,
+        lineHeight: 18,
+        transform: [{ translateX: -1 }],
       },
       web: {
-        lineHeight: 20,
+        lineHeight: 18,
+        transform: [{ translateX: -1 }],
       },
     }),
   },
