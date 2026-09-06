@@ -1,5 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+  Image,
+  ScrollView,
+} from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import { ShareTemplate } from '../../types';
@@ -12,6 +21,16 @@ interface ShareCardRendererProps {
   customText?: string;
 }
 
+const PRESET_QUOTES = [
+  'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए। 🙏',
+  'शिव ही गुरु हैं, गुरु ही शिव हैं। आओ चलें शिव की ओर! 🌺',
+  'ॐ नमः शिवाय! शिव गुरु की अहैतुकी दया हम सब पर बनी रहे। 📿',
+  'सत्य ही शिव है, शिव ही सुंदर है। हर हर महादेव 🔱',
+  'नागेन्द्रहाराय त्रिलोचनाय भस्माङ्गरागाय महेश्वराय... नमः शिवाय 🕉️',
+  'ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्... महामृत्युंजय मंत्र 🌺',
+  'मन शांत, मन में शिव... शिव शरणं गच्छामि 🙏',
+];
+
 export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
   template,
   userName: initialUserName = 'शिव शिष्य',
@@ -23,8 +42,14 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
     initialCustomText || template.defaultText
   );
 
+  // Customization Options
+  const [aspectRatio, setAspectRatio] = useState<'1:1' | '9:16'>('1:1');
+  const [usePhotoBg, setUsePhotoBg] = useState<boolean>(true);
+  const [fontSize, setFontSize] = useState<number>(20);
+  const [headerTitle, setHeaderTitle] = useState<string>('शिव चर्चा • पावन संदेश');
+
   const handleShare = async () => {
-    const message = `"${customMessage}"\n— ${userName || 'शिव शिष्य'}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`;
+    const formattedMessage = `"${customMessage}"\n— ${userName || 'शिव शिष्य'}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`;
 
     try {
       if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
@@ -43,7 +68,7 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
 
           await safeShare({
             title: 'शिव चर्चा शेयर कार्ड',
-            message: message,
+            message: formattedMessage,
           });
           return;
         }
@@ -54,62 +79,154 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
         } else {
           await safeShare({
             title: 'शिव चर्चा शेयर कार्ड',
-            message: message,
+            message: formattedMessage,
             url: uri,
           });
         }
       } else {
         await safeShare({
           title: 'शिव चर्चा शेयर कार्ड',
-          message: message,
+          message: formattedMessage,
         });
       }
     } catch (e) {
       await safeShare({
         title: 'शिव चर्चा शेयर कार्ड',
-        message: message,
+        message: formattedMessage,
       });
     }
   };
 
+  const isVertical = aspectRatio === '9:16';
+
   return (
     <View style={styles.outerContainer}>
-      {/* Captured Card Component */}
+      {/* Aspect Ratio & Photo BG Quick Controls */}
+      <View style={styles.topControlRow}>
+        <View style={styles.pillGroup}>
+          <TouchableOpacity
+            style={[styles.aspectPill, aspectRatio === '1:1' && styles.aspectPillActive]}
+            onPress={() => setAspectRatio('1:1')}
+          >
+            <Text style={[styles.aspectPillText, aspectRatio === '1:1' && styles.aspectPillTextActive]}>
+              ⬛ 1:1 Square (Status)
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.aspectPill, aspectRatio === '9:16' && styles.aspectPillActive]}
+            onPress={() => setAspectRatio('9:16')}
+          >
+            <Text style={[styles.aspectPillText, aspectRatio === '9:16' && styles.aspectPillTextActive]}>
+              📱 9:16 Story / Reel
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {template.artworkUrl && (
+          <TouchableOpacity
+            style={[styles.photoBgToggle, usePhotoBg && styles.photoBgToggleActive]}
+            onPress={() => setUsePhotoBg(!usePhotoBg)}
+          >
+            <Text style={styles.photoBgToggleText}>
+              {usePhotoBg ? '🖼️ फोटो बैकग्राउंड (ON)' : '🎨 केवल रंग (OFF)'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* Captured Card Component (Exact image output) */}
       <ViewShot
         ref={viewShotRef}
-        options={{ format: 'png', quality: 0.95 }}
+        options={{ format: 'png', quality: 0.98 }}
         style={[
           styles.cardContainer,
+          isVertical ? styles.cardVertical : styles.cardSquare,
           {
             backgroundColor: template.bgGradient[0],
             borderColor: template.accentColor,
           },
         ]}
       >
-        <View style={styles.cardHeader}>
-          <Text style={styles.cardOm}>ॐ</Text>
-          <Text style={[styles.cardTitle, { color: template.accentColor }]}>{template.title}</Text>
-        </View>
+        {/* Optional Artwork Overlay */}
+        {usePhotoBg && template.artworkUrl && (
+          <Image source={{ uri: template.artworkUrl }} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        )}
 
-        <View style={styles.quoteBox}>
-          <Text style={[styles.quoteText, { color: template.textColor }]}>
-            "{customMessage}"
-          </Text>
-        </View>
+        {/* Dark Scrim / Overlay for Text Readability */}
+        <View
+          style={[
+            styles.cardOverlay,
+            { backgroundColor: usePhotoBg ? 'rgba(15, 23, 42, 0.72)' : 'rgba(0, 0, 0, 0.15)' },
+          ]}
+        >
+          {/* Card Header (NO template title leak!) */}
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardOm}>ॐ</Text>
+            <View>
+              <Text style={[styles.headerTag, { color: template.accentColor }]}>
+                {headerTitle}
+              </Text>
+              <Text style={styles.headerSub}>हर हर महादेव 🔱</Text>
+            </View>
+          </View>
 
-        <View style={styles.cardFooter}>
-          <Text style={[styles.authorText, { color: template.accentColor }]}>
-            — {userName || 'शिव शिष्य'}
-          </Text>
-          <Text style={[styles.brandingText, { color: template.textColor }]}>
-            शिव चर्चा • हर हर महादेव 🙏
-          </Text>
+          {/* Quote Body */}
+          <View style={styles.quoteBox}>
+            <Text style={styles.quoteMark}>“</Text>
+            <Text style={[styles.quoteText, { color: '#FFFFFF', fontSize }]}>
+              {customMessage}
+            </Text>
+            <Text style={styles.quoteMarkRight}>”</Text>
+          </View>
+
+          {/* Card Footer */}
+          <View style={styles.cardFooter}>
+            <Text style={[styles.authorText, { color: template.accentColor }]}>
+              — {userName || 'शिव शिष्य'}
+            </Text>
+            <View style={styles.brandRow}>
+              <Text style={styles.brandBadge}>शिव चर्चा ऐप</Text>
+              <Text style={styles.brandText}>| गुरुभक्ति संदेश</Text>
+            </View>
+          </View>
         </View>
       </ViewShot>
 
-      {/* Input controls to customize */}
+      {/* Control Box: Edit Text, Name, Font Size, Presets */}
       <View style={styles.controlsBox}>
-        <Text style={styles.inputLabel}>अपना नाम दर्ज करें (Optional):</Text>
+        <Text style={styles.sectionTitle}>✍️ कार्ड कस्टमाइज़ करें</Text>
+
+        {/* Preset Quotes Chooser */}
+        <Text style={styles.inputLabel}>💡 लोकप्रिय शिव विचार चुनें:</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.presetsRow}>
+          {PRESET_QUOTES.map((quote, idx) => (
+            <TouchableOpacity
+              key={idx}
+              style={styles.presetChip}
+              onPress={() => setCustomMessage(quote)}
+            >
+              <Text style={styles.presetChipText} numberOfLines={1}>
+                {quote}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Custom Message Input */}
+        <Text style={styles.inputLabel}>अपना विचार / संदेश बदलें:</Text>
+        <TextInput
+          style={[styles.textInput, styles.multilineInput]}
+          value={customMessage}
+          onChangeText={setCustomMessage}
+          multiline
+          numberOfLines={3}
+          placeholder="अपना पावन संदेश लिखें..."
+          placeholderTextColor="#8D6E63"
+        />
+
+        {/* User Name Input */}
+        <Text style={styles.inputLabel}>आपका नाम (Author Name):</Text>
         <TextInput
           style={styles.textInput}
           value={userName}
@@ -118,20 +235,30 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
           placeholderTextColor="#8D6E63"
         />
 
-        <Text style={styles.inputLabel}>संदेश बदलें:</Text>
-        <TextInput
-          style={[styles.textInput, styles.multilineInput]}
-          value={customMessage}
-          onChangeText={setCustomMessage}
-          multiline
-          numberOfLines={3}
-          placeholder="संदेश लिखें..."
-          placeholderTextColor="#8D6E63"
-        />
+        {/* Font Size Adjuster */}
+        <View style={styles.fontSizeRow}>
+          <Text style={styles.inputLabel}>अक्षर आकार (Font Size):</Text>
+          <View style={styles.fontSizeBtns}>
+            <TouchableOpacity
+              style={styles.sizeBtn}
+              onPress={() => setFontSize((prev) => Math.max(15, prev - 2))}
+            >
+              <Text style={styles.sizeBtnText}>A-</Text>
+            </TouchableOpacity>
+            <Text style={styles.sizeValText}>{fontSize}px</Text>
+            <TouchableOpacity
+              style={styles.sizeBtn}
+              onPress={() => setFontSize((prev) => Math.min(32, prev + 2))}
+            >
+              <Text style={styles.sizeBtnText}>A+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
-        <TouchableOpacity style={styles.shareButton} onPress={handleShare} activeOpacity={0.8}>
+        {/* Share / Download Action Button */}
+        <TouchableOpacity style={styles.shareButton} onPress={handleShare} activeOpacity={0.85}>
           <Text style={styles.shareButtonText}>
-            {Platform.OS === 'web' ? '📥 कार्ड डाउनलोड व शेयर करें' : '🖼️ शेयर कार्ड साझा करें'}
+            {Platform.OS === 'web' ? '📥 कार्ड डाउनलोड व शेयर करें' : '🖼️ कार्ड इमेज शेयर करें'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -144,70 +271,190 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  topControlRow: {
+    width: '100%',
+    marginBottom: 14,
+    alignItems: 'center',
+    gap: 8,
+  },
+  pillGroup: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  aspectPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 10,
+    backgroundColor: 'rgba(74, 14, 23, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(74, 14, 23, 0.2)',
+  },
+  aspectPillActive: {
+    backgroundColor: colors.maroonPrimary,
+    borderColor: colors.goldPrimary,
+  },
+  aspectPillText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.textDark,
+  },
+  aspectPillTextActive: {
+    color: colors.goldLight,
+  },
+  photoBgToggle: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: '#FFF8E7',
+    borderWidth: 1,
+    borderColor: colors.borderGold,
+  },
+  photoBgToggleActive: {
+    backgroundColor: '#FFF3E0',
+  },
+  photoBgToggleText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.saffronDark,
+  },
   cardContainer: {
     width: '100%',
     maxWidth: 380,
-    aspectRatio: 1.0,
     borderRadius: 24,
-    padding: 24,
-    justifyContent: 'space-between',
+    overflow: 'hidden',
     borderWidth: 2,
     ...shadows.medium,
+  },
+  cardSquare: {
+    aspectRatio: 1.0,
+  },
+  cardVertical: {
+    aspectRatio: 0.62, // 9:16 approximation
+  },
+  cardOverlay: {
+    flex: 1,
+    padding: 22,
+    justifyContent: 'space-between',
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   cardOm: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: 'bold',
     color: colors.goldPrimary,
     marginRight: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowRadius: 4,
   },
-  cardTitle: {
-    fontSize: 16,
+  headerTag: {
+    fontSize: 15,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  headerSub: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginTop: 1,
   },
   quoteBox: {
-    paddingHorizontal: 12,
-    marginVertical: 16,
+    paddingHorizontal: 8,
+    marginVertical: 12,
+    alignItems: 'center',
+  },
+  quoteMark: {
+    fontSize: 36,
+    color: colors.goldPrimary,
+    lineHeight: 30,
+    alignSelf: 'flex-start',
+  },
+  quoteMarkRight: {
+    fontSize: 36,
+    color: colors.goldPrimary,
+    lineHeight: 30,
+    alignSelf: 'flex-end',
   },
   quoteText: {
-    fontSize: 20,
     fontWeight: 'bold',
-    lineHeight: 30,
+    lineHeight: 28,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+    marginVertical: 4,
   },
   cardFooter: {
     alignItems: 'flex-end',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.2)',
-    paddingTop: 12,
+    borderTopColor: 'rgba(255, 255, 255, 0.25)',
+    paddingTop: 10,
   },
   authorText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
-  brandingText: {
-    fontSize: 10,
-    opacity: 0.7,
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 4,
+    gap: 4,
+  },
+  brandBadge: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: colors.goldLight,
+    backgroundColor: 'rgba(212, 175, 55, 0.25)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  brandText: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.75)',
   },
   controlsBox: {
     width: '100%',
     backgroundColor: colors.cardBgAmber,
     borderRadius: 20,
     padding: 18,
-    marginTop: 20,
+    marginTop: 18,
     borderWidth: 1,
     borderColor: colors.borderGold,
+    ...shadows.soft,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.maroonDark,
+    marginBottom: 10,
   },
   inputLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: colors.textDark,
     marginBottom: 6,
-    marginTop: 8,
+    marginTop: 10,
+  },
+  presetsRow: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  presetChip: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.borderGold,
+    marginRight: 8,
+    maxWidth: 220,
+  },
+  presetChipText: {
+    fontSize: 11,
+    color: colors.maroonDark,
+    fontWeight: '600',
   },
   textInput: {
     backgroundColor: '#FFFFFF',
@@ -223,6 +470,33 @@ const styles = StyleSheet.create({
     height: 70,
     textAlignVertical: 'top',
   },
+  fontSizeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  fontSizeBtns: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  sizeBtn: {
+    backgroundColor: colors.maroonPrimary,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  sizeBtnText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  sizeValText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: colors.textDark,
+  },
   shareButton: {
     backgroundColor: colors.saffronPrimary,
     borderRadius: 16,
@@ -232,7 +506,7 @@ const styles = StyleSheet.create({
     ...shadows.soft,
   },
   shareButtonText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: colors.textWhite,
   },

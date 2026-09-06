@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -38,9 +38,9 @@ export default function ShareStudioScreen() {
           </View>
         </TouchableOpacity>
 
-        <Text style={styles.sectionHeaderTitle}>टैम्पलेट डिजाइन चुनें 🎨</Text>
-        <Text style={styles.sectionHeaderSub}>
-          अपनी पसंद का भक्ति कार्ड स्टाइल चुनें और अपना नाम लिखकर शेयर करें:
+        <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>टैम्पलेट स्टाइल चुनें 🎨</Text>
+        <Text style={[styles.sectionHeaderSub, { color: theme.textSecondary }]}>
+          अपनी पसंद की रंग शैली चुनें और अपना नाम लिखकर शेयर कार्ड बनाएँ:
         </Text>
 
         {/* Template Selector Horizontal List */}
@@ -65,7 +65,7 @@ export default function ShareStudioScreen() {
               >
                 <Text style={styles.templatePillTitle}>{template.title}</Text>
                 <Text style={styles.templatePillStyle}>
-                  {isSelected ? '✓ चयनित' : template.style}
+                  {isSelected ? '✓ चयनित' : 'रंग शैली'}
                 </Text>
               </TouchableOpacity>
             );
@@ -82,7 +82,6 @@ export default function ShareStudioScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgIvory,
   },
   scrollContent: {
     padding: 16,
@@ -147,12 +146,10 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.maroonDark,
     marginBottom: 4,
   },
   sectionHeaderSub: {
     fontSize: 12,
-    color: colors.textMedium,
     marginBottom: 12,
   },
   templateScroll: {
