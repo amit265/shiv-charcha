@@ -32,7 +32,10 @@
               "pathPrefix": "/apps/shiv-charcha"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -54,13 +57,20 @@
     ],
     "owner": "mindcraftlearning",
     "updates": {
-      "enabled": true
+      "enabled": true,
+      "url": "https://u.expo.dev/b0e82df7-7948-47e2-90fd-5c428c8de72e"
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "experiments": {
       "typedRoutes": false
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b0e82df7-7948-47e2-90fd-5c428c8de72e"
+      }
     }
   }
 }
