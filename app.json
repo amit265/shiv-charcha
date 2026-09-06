@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "शिव चर्चा",
+    "name": "शिव चर्चा - Shiv charcha",
     "slug": "shiv-charcha",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -31,7 +31,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#4A0E17"
+          "backgroundColor": "#4A0E17",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 120
         }
       ],
       "expo-sharing"
