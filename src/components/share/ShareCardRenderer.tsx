@@ -135,7 +135,7 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
         )}
       </View>
 
-      {/* Captured Card Component (Exact image output) */}
+      {/* Captured Card Component (With Outer Inset Padding & Inner Ornamental Frame) */}
       <ViewShot
         ref={viewShotRef}
         options={{ format: 'png', quality: 0.98 }}
@@ -153,41 +153,46 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
           <Image source={{ uri: template.artworkUrl }} style={StyleSheet.absoluteFill} resizeMode="cover" />
         )}
 
-        {/* Dark Scrim / Overlay for Text Readability */}
-        <View
-          style={[
-            styles.cardOverlay,
-            { backgroundColor: usePhotoBg ? 'rgba(15, 23, 42, 0.72)' : 'rgba(0, 0, 0, 0.15)' },
-          ]}
-        >
-          {/* Card Header (NO template title leak!) */}
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardOm}>ॐ</Text>
-            <View>
-              <Text style={[styles.headerTag, { color: template.accentColor }]}>
-                {headerTitle}
-              </Text>
-              <Text style={styles.headerSub}>हर हर महादेव 🔱</Text>
+        {/* Inner Framed Container with Horizontal & Vertical Padding */}
+        <View style={styles.cardPaddingWrapper}>
+          <View
+            style={[
+              styles.innerBorderFrame,
+              {
+                borderColor: template.accentColor || 'rgba(255, 215, 0, 0.5)',
+                backgroundColor: usePhotoBg ? 'rgba(15, 23, 42, 0.76)' : 'rgba(0, 0, 0, 0.18)',
+              },
+            ]}
+          >
+            {/* Card Header */}
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardOm}>ॐ</Text>
+              <View>
+                <Text style={[styles.headerTag, { color: template.accentColor }]}>
+                  {headerTitle}
+                </Text>
+                <Text style={styles.headerSub}>हर हर महादेव 🔱</Text>
+              </View>
             </View>
-          </View>
 
-          {/* Quote Body */}
-          <View style={styles.quoteBox}>
-            <Text style={styles.quoteMark}>“</Text>
-            <Text style={[styles.quoteText, { color: '#FFFFFF', fontSize }]}>
-              {customMessage}
-            </Text>
-            <Text style={styles.quoteMarkRight}>”</Text>
-          </View>
+            {/* Quote Body with Horizontal Padding */}
+            <View style={styles.quoteBox}>
+              <Text style={styles.quoteMark}>“</Text>
+              <Text style={[styles.quoteText, { color: '#FFFFFF', fontSize }]}>
+                {customMessage}
+              </Text>
+              <Text style={styles.quoteMarkRight}>”</Text>
+            </View>
 
-          {/* Card Footer */}
-          <View style={styles.cardFooter}>
-            <Text style={[styles.authorText, { color: template.accentColor }]}>
-              — {userName || 'शिव शिष्य'}
-            </Text>
-            <View style={styles.brandRow}>
-              <Text style={styles.brandBadge}>शिव चर्चा ऐप</Text>
-              <Text style={styles.brandText}>| गुरुभक्ति संदेश</Text>
+            {/* Card Footer */}
+            <View style={styles.cardFooter}>
+              <Text style={[styles.authorText, { color: template.accentColor }]}>
+                — {userName || 'शिव शिष्य'}
+              </Text>
+              <View style={styles.brandRow}>
+                <Text style={styles.brandBadge}>शिव चर्चा ऐप</Text>
+                <Text style={styles.brandText}>| गुरुभक्ति संदेश</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -331,9 +336,16 @@ const styles = StyleSheet.create({
   cardVertical: {
     aspectRatio: 0.62, // 9:16 approximation
   },
-  cardOverlay: {
+  cardPaddingWrapper: {
     flex: 1,
-    padding: 22,
+    padding: 12, // Outer horizontal & vertical breathing padding
+  },
+  innerBorderFrame: {
+    flex: 1,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    paddingHorizontal: 18, // Generous horizontal side padding
+    paddingVertical: 16, // Generous vertical padding
     justifyContent: 'space-between',
   },
   cardHeader: {
@@ -341,7 +353,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardOm: {
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.goldPrimary,
     marginRight: 10,
@@ -359,20 +371,20 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   quoteBox: {
-    paddingHorizontal: 8,
-    marginVertical: 12,
+    paddingHorizontal: 12, // Additional horizontal padding so quote text doesn't touch frame borders
+    marginVertical: 10,
     alignItems: 'center',
   },
   quoteMark: {
-    fontSize: 36,
+    fontSize: 32,
     color: colors.goldPrimary,
-    lineHeight: 30,
+    lineHeight: 26,
     alignSelf: 'flex-start',
   },
   quoteMarkRight: {
-    fontSize: 36,
+    fontSize: 32,
     color: colors.goldPrimary,
-    lineHeight: 30,
+    lineHeight: 26,
     alignSelf: 'flex-end',
   },
   quoteText: {
@@ -382,7 +394,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
-    marginVertical: 4,
+    marginVertical: 2,
   },
   cardFooter: {
     alignItems: 'flex-end',
