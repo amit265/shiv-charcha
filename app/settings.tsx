@@ -344,7 +344,7 @@ export default function SettingsScreen() {
           </Text>
 
           <Text style={[styles.infoDetail, { color: theme.textSecondary, marginTop: 2 }]}>
-            विकासक (Developer): <Text style={{ fontWeight: 'bold', color: theme.primary }}>Mahavyoma Studio & Destya Studio</Text>
+            विकासक (Developer): <Text style={{ fontWeight: 'bold', color: theme.primary }}>Mahavyoma Studio</Text>
           </Text>
 
           <Text style={[styles.infoFooterText, { color: theme.textMuted }]}>
@@ -393,6 +393,21 @@ export default function SettingsScreen() {
                   <Text style={[styles.modalBody, { color: theme.textSecondary }]}>
                     ऐप के सुचारू संचालन एवं रखरखाव हेतु गूगल एडमॉब (AdMob) एवं फायरबेस एनालिटिक्स की मानक सेवाओं का उपयोग किया जा सकता है जो गूगल की गोपनीयता नीतियों के अधीन हैं।
                   </Text>
+
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 16,
+                      padding: 12,
+                      backgroundColor: theme.primary,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                    }}
+                    onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/privacy')}
+                  >
+                    <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>
+                      🌐 अधिकारी वेबसाइट पर गोपनीयता नीति खोलें
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
 
@@ -407,6 +422,21 @@ export default function SettingsScreen() {
                   <Text style={[styles.modalBody, { color: theme.textSecondary }]}>
                     ऐप में प्रस्तुत विचार, स्तोत्र पाठ, चित्र एवं ऑडियो भक्तिमयी परंपरा से संबंधित हैं। किसी भी व्यावसायिक पुनःप्रकाशन से पूर्व उचित अनुमति आवश्यक है।
                   </Text>
+
+                  <TouchableOpacity
+                    style={{
+                      marginTop: 16,
+                      padding: 12,
+                      backgroundColor: theme.primary,
+                      borderRadius: 10,
+                      alignItems: 'center',
+                    }}
+                    onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/terms')}
+                  >
+                    <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>
+                      🌐 आधिकारिक वेबसाइट पर सेवा शर्तें खोलें
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
 

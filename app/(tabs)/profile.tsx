@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Alert, Platform, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -216,8 +216,18 @@ export default function ProfileScreen() {
             <Text style={styles.legalItem}>
               • सामग्री आभार: साहब श्री हरिंद्रानंद जी एवं दीदी माँ नीलम आनंद जी के पावन विचार
             </Text>
-            <Text style={styles.legalItem}>• गोपनीयता नीति (Privacy Policy) & सेवा शर्तें</Text>
-            <Text style={styles.legalItem}>• ओपन सोर्स लाइसेंस व श्रेय</Text>
+
+            <TouchableOpacity onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/privacy')} activeOpacity={0.7} style={{ marginVertical: 4 }}>
+              <Text style={[styles.legalItem, { color: theme.primary, fontWeight: 'bold' }]}>
+                🔒 गोपनीयता नीति (Privacy Policy) ➔
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/terms')} activeOpacity={0.7} style={{ marginVertical: 4 }}>
+              <Text style={[styles.legalItem, { color: theme.primary, fontWeight: 'bold' }]}>
+                📜 सेवा की शर्तें (Terms of Service) ➔
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
