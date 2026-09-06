@@ -50,7 +50,28 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="मेरी शिव शिष्यता प्रोफाइल" subtitle="व्यक्तिगत यात्रा • ऐप सेटिंग्स" />
+      <Header
+        title="मेरी शिव शिष्यता प्रोफाइल"
+        subtitle="व्यक्तिगत यात्रा • ऐप सेटिंग्स"
+        rightAction={
+          <TouchableOpacity
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 19,
+              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              borderWidth: 1,
+              borderColor: theme.borderGold,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => router.push('/settings' as any)}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: 18 }}>⚙️</Text>
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* User Card */}
@@ -166,6 +187,20 @@ export default function ProfileScreen() {
               thumbColor={prefs.notificationsEnabled ? theme.primary : '#F5F5F5'}
             />
           </View>
+
+          <TouchableOpacity
+            style={[styles.settingRow, { borderBottomWidth: 0, paddingTop: 14 }]}
+            onPress={() => router.push('/settings' as any)}
+            activeOpacity={0.7}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.settingLabel, { color: theme.primary, fontWeight: 'bold' }]}>⚙️ सभी सेटिंग्स, शेयर एवं कानूनी नीतियाँ</Text>
+              <Text style={{ fontSize: 12, color: theme.textSecondary, marginTop: 2 }}>
+                ऐप शेयर, रेटिंग, हमारे अन्य ऐप एवं नीतियाँ
+              </Text>
+            </View>
+            <Text style={{ fontSize: 16, color: theme.primary, fontWeight: 'bold' }}>खोलें ➔</Text>
+          </TouchableOpacity>
         </View>
 
         {/* SECTION: ABOUT & LEGAL */}

@@ -47,10 +47,10 @@ export default function HomeScreen() {
                 styles.headerActionBtn,
                 { backgroundColor: 'rgba(255, 255, 255, 0.15)', borderColor: theme.borderGold },
               ]}
-              onPress={() => router.push('/theme-selector' as any)}
+              onPress={() => router.push('/settings' as any)}
               activeOpacity={0.8}
             >
-              <Text style={styles.headerActionIcon}>🎨</Text>
+              <Text style={styles.headerActionIcon}>⚙️</Text>
             </TouchableOpacity>
           </View>
         }

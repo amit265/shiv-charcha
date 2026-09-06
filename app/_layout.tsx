@@ -39,7 +39,8 @@ function RootNavigator() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="theme-selector" options={{ title: '🎨 अपना रंग चुनें' }} />
+        <Stack.Screen name="settings" options={{ title: '⚙️ सेटिंग्स' }} />
+        <Stack.Screen name="theme-selector" options={{ title: '🎨 अपना रंग चुनें', presentation: 'modal' }} />
         <Stack.Screen name="puja" options={{ title: '🌸 शिव लिंग पूजा सेवा', presentation: 'modal' }} />
         <Stack.Screen name="jap" options={{ title: '📿 108 जाप साधना', presentation: 'card' }} />
         <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
