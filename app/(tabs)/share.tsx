@@ -20,20 +20,20 @@ export default function ShareStudioScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Full-Screen Reels Mode Feature Banner */}
         <TouchableOpacity
-          style={styles.reelsBanner}
+          style={[styles.reelsBanner, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
           onPress={() => router.push('/reels' as any)}
           activeOpacity={0.9}
         >
           <View style={styles.reelsBannerLeft}>
-            <View style={styles.reelsBadge}>
-              <Text style={styles.reelsBadgeText}>✨ 100+ पावन विचार रील्स</Text>
+            <View style={[styles.reelsBadge, { backgroundColor: theme.accent, borderColor: theme.accent }]}>
+              <Text style={[styles.reelsBadgeText, { color: theme.primaryDark }]}>✨ 100+ पावन विचार रील्स</Text>
             </View>
-            <Text style={styles.reelsBannerTitle}>🎬 विचार रील स्क्रॉल (Reels Mode)</Text>
-            <Text style={styles.reelsBannerSub}>
+            <Text style={[styles.reelsBannerTitle, { color: theme.textGold }]}>🎬 विचार रिल्स स्क्रॉल (Reels Mode)</Text>
+            <Text style={[styles.reelsBannerSub, { color: theme.textWhite }]}>
               फुल-स्क्रीन शिव वॉलपेपर पर 100 विचार स्क्रॉल करें, सहेजें और शेयर करें ➔
             </Text>
           </View>
-          <View style={styles.reelsPlayCircle}>
+          <View style={[styles.reelsPlayCircle, { backgroundColor: theme.accent }]}>
             <Text style={styles.reelsPlayIcon}>▶️</Text>
           </View>
         </TouchableOpacity>

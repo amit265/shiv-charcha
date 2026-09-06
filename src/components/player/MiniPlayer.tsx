@@ -17,8 +17,8 @@ export const MiniPlayer: React.FC = () => {
   }
 
   const progressPercent = duration > 0 ? (position / duration) * 100 : 0;
-  const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 14 : 0);
-  const miniPlayerBottom = 58 + bottomInset + 8;
+  const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 12 : 6);
+  const miniPlayerBottom = 64 + bottomInset + 18;
 
   return (
     <>
