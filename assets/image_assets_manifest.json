@@ -1,0 +1,815 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "appName": "शिव चर्चा (Shiv Charcha)",
+  "version": "1.0.0",
+  "generatedAt": "2026-09-06",
+  "instructions": {
+    "targetDirectory": "assets/images/",
+    "recommendedFormats": [
+      "PNG for App Icons and transparent artwork",
+      "JPG / WEBP (80-90% quality) for wallpapers, banners, and photo content"
+    ],
+    "namingConvention": "Use lowercase with underscores (snake_case), matching the filename property exactly.",
+    "fallbackRule": "If a specific asset is missing, use the corresponding asset in the 'fallbacks' object."
+  },
+  "summary": {
+    "totalRequiredImages": 75,
+    "categoriesCount": 11
+  },
+  "app_core": [
+    {
+      "filename": "icon.png",
+      "path": "assets/images/icon.png",
+      "dimensions": "1024x1024",
+      "format": "PNG",
+      "description": "App Launcher Icon (High Resolution, Mahadev Trishul/Damru with Gold Accent)"
+    },
+    {
+      "filename": "splash-icon.png",
+      "path": "assets/images/splash-icon.png",
+      "dimensions": "512x512",
+      "format": "PNG",
+      "description": "Centered Splash Screen Icon used during animated intro"
+    },
+    {
+      "filename": "favicon.png",
+      "path": "assets/images/favicon.png",
+      "dimensions": "48x48",
+      "format": "PNG",
+      "description": "Web Browser Favicon"
+    },
+    {
+      "filename": "android-icon-foreground.png",
+      "path": "assets/images/android-icon-foreground.png",
+      "dimensions": "432x432",
+      "format": "PNG",
+      "description": "Adaptive Icon Foreground for Android"
+    },
+    {
+      "filename": "android-icon-background.png",
+      "path": "assets/images/android-icon-background.png",
+      "dimensions": "432x432",
+      "format": "PNG",
+      "description": "Adaptive Icon Background for Android (Maroon #4A0E17)"
+    },
+    {
+      "filename": "shiva_logo_transparent.png",
+      "path": "assets/images/shiva_logo_transparent.png",
+      "dimensions": "800x800",
+      "format": "PNG",
+      "description": "Transparent Shiva Silhouette / Symbol for Headers and Cards"
+    }
+  ],
+  "fallbacks": [
+    {
+      "id": "fallback-hero",
+      "filename": "fallback_hero_banner.jpg",
+      "path": "assets/images/fallbacks/fallback_hero_banner.jpg",
+      "dimensions": "1200x600",
+      "description": "Generic Mahadev Kailash Hero Banner fallback"
+    },
+    {
+      "id": "fallback-jyotirlinga",
+      "filename": "fallback_jyotirlinga.jpg",
+      "path": "assets/images/fallbacks/fallback_jyotirlinga.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Jyotirlinga Abhishek fallback image"
+    },
+    {
+      "id": "fallback-shakti-peeth",
+      "filename": "fallback_shakti_peeth.jpg",
+      "path": "assets/images/fallbacks/fallback_shakti_peeth.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Shakti Peeth Mata Temple fallback image"
+    },
+    {
+      "id": "fallback-story",
+      "filename": "fallback_story.jpg",
+      "path": "assets/images/fallbacks/fallback_story.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Shiva Puranic Story illustration fallback image"
+    },
+    {
+      "id": "fallback-stotra",
+      "filename": "fallback_stotra.jpg",
+      "path": "assets/images/fallbacks/fallback_stotra.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Stotra Rudraksha / Damru fallback image"
+    },
+    {
+      "id": "fallback-temple",
+      "filename": "fallback_temple.jpg",
+      "path": "assets/images/fallbacks/fallback_temple.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Ancient Indian Shiva Temple architecture fallback"
+    },
+    {
+      "id": "fallback-family",
+      "filename": "fallback_family.jpg",
+      "path": "assets/images/fallbacks/fallback_family.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Shiv Parivar divine illustration fallback"
+    },
+    {
+      "id": "fallback-swaroop",
+      "filename": "fallback_swaroop.jpg",
+      "path": "assets/images/fallbacks/fallback_swaroop.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Shiva Form / Dhyan Mudra fallback image"
+    },
+    {
+      "id": "fallback-symbol",
+      "filename": "fallback_symbol.jpg",
+      "path": "assets/images/fallbacks/fallback_symbol.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Trishul / Rudraksha / Crescent Moon fallback image"
+    },
+    {
+      "id": "fallback-book",
+      "filename": "fallback_book.jpg",
+      "path": "assets/images/fallbacks/fallback_book.jpg",
+      "dimensions": "600x900",
+      "description": "Generic Sacred Scripture Book Cover fallback image"
+    },
+    {
+      "id": "fallback-teaching",
+      "filename": "fallback_teaching.jpg",
+      "path": "assets/images/fallbacks/fallback_teaching.jpg",
+      "dimensions": "800x600",
+      "description": "Generic Shiv Guru Guidance teaching cover fallback"
+    },
+    {
+      "id": "fallback-reel",
+      "filename": "fallback_reel_bg.jpg",
+      "path": "assets/images/fallbacks/fallback_reel_bg.jpg",
+      "dimensions": "1080x1920",
+      "description": "Generic Vertical Reel Quote Dark Background fallback"
+    }
+  ],
+  "jyotirlingas": [
+    {
+      "id": "somnath",
+      "nameHindi": "सोमनाथ ज्योतिर्लिंग",
+      "location": "प्रभास पाटन, गुजरात",
+      "filename": "jyotirlinga_somnath.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_somnath.jpg",
+      "dimensions": "800x600",
+      "description": "प्रथम ज्योतिर्लिंग, समुद्र तट स्थित दिव्य सोमनाथ मंदिर"
+    },
+    {
+      "id": "mallikarjuna",
+      "nameHindi": "मल्लिकार्जुन ज्योतिर्लिंग",
+      "location": "श्रीशैलम, आंध्र प्रदेश",
+      "filename": "jyotirlinga_mallikarjuna.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_mallikarjuna.jpg",
+      "dimensions": "800x600",
+      "description": "श्रीशैल पर्वत स्थित शिव-पार्वती का दक्षिण भारत पावन धाम"
+    },
+    {
+      "id": "mahakaleshwar",
+      "nameHindi": "महाकालेश्वर ज्योतिर्लिंग",
+      "location": "उज्जैन, मध्य प्रदेश",
+      "filename": "jyotirlinga_mahakaleshwar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_mahakaleshwar.jpg",
+      "dimensions": "800x600",
+      "description": "दक्षिणमुखी महाकाल, उज्जैन भस्म आरती व शिप्रा तट"
+    },
+    {
+      "id": "omkareshwar",
+      "nameHindi": "ओंकारेश्वर ज्योतिर्लिंग",
+      "location": "खंडवा, मध्य प्रदेश",
+      "filename": "jyotirlinga_omkareshwar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_omkareshwar.jpg",
+      "dimensions": "800x600",
+      "description": "नर्मदा नदी के बीच ओंकार आकार द्वीप पर स्थित मंदिर"
+    },
+    {
+      "id": "kedarnath",
+      "nameHindi": "केदारनाथ ज्योतिर्लिंग",
+      "location": "रुद्रप्रयाग, उत्तराखंड",
+      "filename": "jyotirlinga_kedarnath.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_kedarnath.jpg",
+      "dimensions": "800x600",
+      "description": "हिमालय की बर्फीली वादियों में मंदाकिनी तट पर केदारनाथ धाम"
+    },
+    {
+      "id": "bhimashankar",
+      "nameHindi": "भीमाशंकर ज्योतिर्लिंग",
+      "location": "पुणे, महाराष्ट्र",
+      "filename": "jyotirlinga_bhimashankar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_bhimashankar.jpg",
+      "dimensions": "800x600",
+      "description": "सह्याद्रि पर्वत शृंखला व भीमा नदी के उद्गम स्थल पर मंदिर"
+    },
+    {
+      "id": "kashi-vishwanath",
+      "nameHindi": "काशी विश्वनाथ ज्योतिर्लिंग",
+      "location": "वाराणसी, उत्तर प्रदेश",
+      "filename": "jyotirlinga_kashi_vishwanath.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_kashi_vishwanath.jpg",
+      "dimensions": "800x600",
+      "description": "पावन मोक्ष नगरी काशी में गंगा तट स्थित स्वर्ण मंदिर"
+    },
+    {
+      "id": "trimbakeshwar",
+      "nameHindi": "त्र्यंबकेश्वर ज्योतिर्लिंग",
+      "location": "नासिक, महाराष्ट्र",
+      "filename": "jyotirlinga_trimbakeshwar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_trimbakeshwar.jpg",
+      "dimensions": "800x600",
+      "description": "ब्रह्मगिरि पर्वत के निकट त्रिदेव (शिव-विष्णु-ब्रह्मा) स्वरूप ज्योतिर्लिंग"
+    },
+    {
+      "id": "vaidyanath",
+      "nameHindi": "बैद्यनाथ (बाबा धाम)",
+      "location": "देवघर, झारखंड",
+      "filename": "jyotirlinga_vaidyanath.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_vaidyanath.jpg",
+      "dimensions": "800x600",
+      "description": "रावण द्वारा स्थापित कामना लिंग व सावन काँवर मेला धाम"
+    },
+    {
+      "id": "nageshwar",
+      "nameHindi": "नागेश्वर ज्योतिर्लिंग",
+      "location": "द्वारका, गुजरात",
+      "filename": "jyotirlinga_nageshwar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_nageshwar.jpg",
+      "dimensions": "800x600",
+      "description": "विशाल ध्यानस्थ शिव मूर्ति व विषमुक्ति दायक धाम"
+    },
+    {
+      "id": "rameshwaram",
+      "nameHindi": "रामेश्वरम (रामानाथस्वामी)",
+      "location": "रामनाथपुरम, तमिलनाडु",
+      "filename": "jyotirlinga_rameshwaram.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_rameshwaram.jpg",
+      "dimensions": "800x600",
+      "description": "भगवान श्री राम द्वारा स्थापित बालूका लिंग व भव्य गलियारा"
+    },
+    {
+      "id": "ghushneshwar",
+      "nameHindi": "घृष्णेश्वर ज्योतिर्लिंग",
+      "location": "संभाजीनगर (औरंगाबाद), महाराष्ट्र",
+      "filename": "jyotirlinga_ghushneshwar.jpg",
+      "path": "assets/images/jyotirlinga/jyotirlinga_ghushneshwar.jpg",
+      "dimensions": "800x600",
+      "description": "एलोरा गुफाओं के समीप स्थित 12वां अंतिम पावन ज्योतिर्लिंग"
+    }
+  ],
+  "shakti_peethas": [
+    {
+      "id": "kamakhya",
+      "nameHindi": "कामाख्या शक्तिपीठ",
+      "location": "गुवाहाटी, असम",
+      "filename": "shakti_peeth_kamakhya.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_kamakhya.jpg",
+      "dimensions": "800x600",
+      "description": "सती का योनि भाग गिर गिरा था, अंबूवाची योग सिद्ध पीठ"
+    },
+    {
+      "id": "kalighat",
+      "nameHindi": "कालीघाट शक्तिपीठ",
+      "location": "कोलकाता, पश्चिम बंगाल",
+      "filename": "shakti_peeth_kalighat.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_kalighat.jpg",
+      "dimensions": "800x600",
+      "description": "सती के दाएँ पैर की उँगलियाँ गिरी थीं, माँ कालिका धाम"
+    },
+    {
+      "id": "hinglaj",
+      "nameHindi": "हिंगलाज माता शक्तिपीठ",
+      "location": "बलूचिस्तान",
+      "filename": "shakti_peeth_hinglaj.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_hinglaj.jpg",
+      "dimensions": "800x600",
+      "description": "सती का ब्रह्मरंध्र (सिर) गिरा था, गुफा सिद्ध पीठ"
+    },
+    {
+      "id": "tarapith",
+      "nameHindi": "तारापीठ शक्तिपीठ",
+      "location": "वीरभूम, पश्चिम बंगाल",
+      "filename": "shakti_peeth_tarapith.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_tarapith.jpg",
+      "dimensions": "800x600",
+      "description": "सती का नयन (नेत्र) गिरा था, तंत्र सिद्ध तारा माँ पीठ"
+    },
+    {
+      "id": "ambaji",
+      "nameHindi": "अंबाजी शक्तिपीठ",
+      "location": "बनासकांठा, गुजरात",
+      "filename": "shakti_peeth_ambaji.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_ambaji.jpg",
+      "dimensions": "800x600",
+      "description": "सती का हृदय भाग गिरा था, गब्बर पर्वत पावन पीठ"
+    },
+    {
+      "id": "jwalaji",
+      "nameHindi": "ज्वालाजी शक्तिपीठ",
+      "location": "काँगड़ा, हिमाचल प्रदेश",
+      "filename": "shakti_peeth_jwalaji.jpg",
+      "path": "assets/images/shakti_peeth/shakti_peeth_jwalaji.jpg",
+      "dimensions": "800x600",
+      "description": "सती की जिह्वा (जीभ) गिरी थी, बिना ईंधन जलती नौ ज्वालाएँ"
+    }
+  ],
+  "stories": [
+    {
+      "storyId": "sati-dahan",
+      "titleHindi": "सती दाहन व वीरभद्र उत्पत्ति",
+      "coverFilename": "story_sati_dahan_cover.jpg",
+      "scenes": [
+        {
+          "sceneNumber": 1,
+          "filename": "story_sati_dahan_scene1.jpg",
+          "description": "दक्ष प्रजापति का महायज्ञ और शिवजी का अनादर"
+        },
+        {
+          "sceneNumber": 2,
+          "filename": "story_sati_dahan_scene2.jpg",
+          "description": "माता सती का योगाग्नि में आत्मदाह"
+        },
+        {
+          "sceneNumber": 3,
+          "filename": "story_sati_dahan_scene3.jpg",
+          "description": "क्रुद्ध शिव की जटा से वीरभद्र व भद्रकाली का प्राकट्य"
+        }
+      ]
+    },
+    {
+      "storyId": "shiv-parvati-vivah",
+      "titleHindi": "शिव-पार्वती विवाह",
+      "coverFilename": "story_shiv_parvati_vivah_cover.jpg",
+      "scenes": [
+        {
+          "sceneNumber": 1,
+          "filename": "story_shiv_parvati_scene1.jpg",
+          "description": "राजकुमारी पार्वती की घोर तपस्या"
+        },
+        {
+          "sceneNumber": 2,
+          "filename": "story_shiv_parvati_scene2.jpg",
+          "description": "अद्भूत वरयात्रा व शिव का अघोर रूप"
+        },
+        {
+          "sceneNumber": 3,
+          "filename": "story_shiv_parvati_scene3.jpg",
+          "description": "हिमाचल नगरी में भव्य पाणिग्रहण संस्कार"
+        }
+      ]
+    },
+    {
+      "storyId": "neelkanth-samudra-manthan",
+      "titleHindi": "समुद्र मंथन व नीलकंठ",
+      "coverFilename": "story_neelkanth_cover.jpg",
+      "scenes": [
+        {
+          "sceneNumber": 1,
+          "filename": "story_neelkanth_scene1.jpg",
+          "description": "क्षीरसागर में देव-दानवों का मंदर पर्वत से मंथन"
+        },
+        {
+          "sceneNumber": 2,
+          "filename": "story_neelkanth_scene2.jpg",
+          "description": "हलाहल विष की ज्वाला से त्रिलोक की रक्षा हेतु महादेव का विषपान"
+        },
+        {
+          "sceneNumber": 3,
+          "filename": "story_neelkanth_scene3.jpg",
+          "description": "पार्वतीजी द्वारा कण्ठ रोकना एवं नीलकंठ रूप में स्तुति"
+        }
+      ]
+    },
+    {
+      "storyId": "ganga-avtaran",
+      "titleHindi": "गंगा अवतरण",
+      "coverFilename": "story_ganga_cover.jpg",
+      "scenes": [
+        {
+          "sceneNumber": 1,
+          "filename": "story_ganga_scene1.jpg",
+          "description": "राजा भगीरथ का गंगा को पृथ्वी पर लाने हेतु कठोर तप"
+        },
+        {
+          "sceneNumber": 2,
+          "filename": "story_ganga_scene2.jpg",
+          "description": "गंगा के वेग को शिवजी द्वारा अपनी जटाओं में धारण करना"
+        },
+        {
+          "sceneNumber": 3,
+          "filename": "story_ganga_scene3.jpg",
+          "description": "जटा से शांत बिंदुसार धारा का पृथ्वी पर प्रवाह"
+        }
+      ]
+    }
+  ],
+  "sansar_categories": [
+    {
+      "id": "stories",
+      "title": "शिव कथाएँ",
+      "filename": "sansar_cat_stories.jpg",
+      "path": "assets/images/sansar/sansar_cat_stories.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "jyotirlinga",
+      "title": "12 ज्योतिर्लिंग",
+      "filename": "sansar_cat_jyotirlinga.jpg",
+      "path": "assets/images/sansar/sansar_cat_jyotirlinga.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "shakti-peeth",
+      "title": "शक्ति पीठ",
+      "filename": "sansar_cat_shakti_peeth.jpg",
+      "path": "assets/images/sansar/sansar_cat_shakti_peeth.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "family",
+      "title": "शिव परिवार",
+      "filename": "sansar_cat_family.jpg",
+      "path": "assets/images/sansar/sansar_cat_family.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "swaroop",
+      "title": "शिव के स्वरूप",
+      "filename": "sansar_cat_swaroop.jpg",
+      "path": "assets/images/sansar/sansar_cat_swaroop.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "symbols",
+      "title": "शिव के प्रतीक",
+      "filename": "sansar_cat_symbols.jpg",
+      "path": "assets/images/sansar/sansar_cat_symbols.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "yatra",
+      "title": "शिव यात्रा Map",
+      "filename": "sansar_cat_yatra.jpg",
+      "path": "assets/images/sansar/sansar_cat_yatra.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "temples",
+      "title": "प्रसिद्ध शिव मंदिर",
+      "filename": "sansar_cat_temples.jpg",
+      "path": "assets/images/sansar/sansar_cat_temples.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "festivals",
+      "title": "शिव पर्व एवं उत्सव",
+      "filename": "sansar_cat_festivals.jpg",
+      "path": "assets/images/sansar/sansar_cat_festivals.jpg",
+      "dimensions": "600x400"
+    },
+    {
+      "id": "stotra",
+      "title": "शिव स्तोत्र व मंत्र",
+      "filename": "sansar_cat_stotra.jpg",
+      "path": "assets/images/sansar/sansar_cat_stotra.jpg",
+      "dimensions": "600x400"
+    }
+  ],
+  "family_and_forms": [
+    {
+      "id": "mata-parvati",
+      "name": "माता पार्वती",
+      "filename": "family_mata_parvati.jpg",
+      "path": "assets/images/family/family_mata_parvati.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "ganesha",
+      "name": "भगवान श्री गणेश",
+      "filename": "family_ganesha.jpg",
+      "path": "assets/images/family/family_ganesha.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "kartikeya",
+      "name": "स्वामी कार्तिकेय",
+      "filename": "family_kartikeya.jpg",
+      "path": "assets/images/family/family_kartikeya.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "nandi",
+      "name": "नंदी देव",
+      "filename": "family_nandi.jpg",
+      "path": "assets/images/family/family_nandi.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "swaroop-mahadev",
+      "name": "महादेव (सदाशिव रूप)",
+      "filename": "swaroop_mahadev.jpg",
+      "path": "assets/images/swaroop/swaroop_mahadev.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "swaroop-natraj",
+      "name": "नटराज (तांडव स्वरूप)",
+      "filename": "swaroop_natraj.jpg",
+      "path": "assets/images/swaroop/swaroop_natraj.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "swaroop-ardhanarishwar",
+      "name": "अर्धनारीश्वर स्वरूप",
+      "filename": "swaroop_ardhanarishwar.jpg",
+      "path": "assets/images/swaroop/swaroop_ardhanarishwar.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "swaroop-nilkanth",
+      "name": "नीलकंठ रूप",
+      "filename": "swaroop_nilkanth.jpg",
+      "path": "assets/images/swaroop/swaroop_nilkanth.jpg",
+      "dimensions": "800x600"
+    }
+  ],
+  "symbols_and_temples": [
+    {
+      "id": "trishul",
+      "name": "त्रिशूल",
+      "filename": "symbol_trishul.jpg",
+      "path": "assets/images/symbols/symbol_trishul.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "damru",
+      "name": "डमरू",
+      "filename": "symbol_damru.jpg",
+      "path": "assets/images/symbols/symbol_damru.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "rudraksha",
+      "name": "रुद्राक्ष माला",
+      "filename": "symbol_rudraksha.jpg",
+      "path": "assets/images/symbols/symbol_rudraksha.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "trinetra-bhasma",
+      "name": "त्रिनेत्र एवं भस्म",
+      "filename": "symbol_trinetra_bhasma.jpg",
+      "path": "assets/images/symbols/symbol_trinetra_bhasma.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "pashupatinath",
+      "name": "पशुपतिनाथ (नेपाल)",
+      "filename": "temple_pashupatinath.jpg",
+      "path": "assets/images/temples/temple_pashupatinath.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "tungnath",
+      "name": "तुंगनाथ (सर्वोच्च शिव मंदिर)",
+      "filename": "temple_tungnath.jpg",
+      "path": "assets/images/temples/temple_tungnath.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "amarnath",
+      "name": "बाबा अमरनाथ गुफा",
+      "filename": "temple_amarnath.jpg",
+      "path": "assets/images/temples/temple_amarnath.jpg",
+      "dimensions": "800x600"
+    }
+  ],
+  "stotras_and_mantras": [
+    {
+      "id": "shiva-tandava-stotram",
+      "title": "शिव तांडव स्तोत्रम्",
+      "filename": "stotra_shiva_tandav.jpg",
+      "path": "assets/images/stotras/stotra_shiva_tandav.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "rudrashtakam",
+      "title": "श्री रुद्राष्टकम्",
+      "filename": "stotra_rudrashtakam.jpg",
+      "path": "assets/images/stotras/stotra_rudrashtakam.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "mahamrityunjaya-mantra",
+      "title": "महामृत्युंजय मंत्र",
+      "filename": "stotra_mahamrityunjaya.jpg",
+      "path": "assets/images/stotras/stotra_mahamrityunjaya.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "lingashtakam",
+      "title": "श्री लिंगाष्टकम्",
+      "filename": "stotra_lingashtakam.jpg",
+      "path": "assets/images/stotras/stotra_lingashtakam.jpg",
+      "dimensions": "800x600"
+    }
+  ],
+  "reels_and_quotes_wallpapers": [
+    {
+      "id": "reel-01",
+      "filename": "reel_shiva_quote_01.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_01.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "अघोरी / ध्यान मग्न भगवान शिव - डार्क स्मोकी बैकग्राउंड (महाकाल विचार)"
+    },
+    {
+      "id": "reel-02",
+      "filename": "reel_shiva_quote_02.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_02.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "कैलाश पर्वत पर स्वर्णिम सूर्योदय व बर्फानी चोटियाँ"
+    },
+    {
+      "id": "reel-03",
+      "filename": "reel_shiva_quote_03.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_03.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "उज्जैन महाकाल भस्म आरती क्लोजअप व दीया ज्योति"
+    },
+    {
+      "id": "reel-04",
+      "filename": "reel_shiva_quote_04.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_04.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "गंगाजल व बेलपत्र से शिवलिंग जलाभिषेक दृश्य"
+    },
+    {
+      "id": "reel-05",
+      "filename": "reel_shiva_quote_05.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_05.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "नटराज तांडव मुद्रा स्वर्णिम अग्नि चक्र के साथ"
+    },
+    {
+      "id": "reel-06",
+      "filename": "reel_shiva_quote_06.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_06.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "दिव्य त्रिशूल, रुद्राक्ष माला व भस्म की सूक्ष्म कलाकृति"
+    },
+    {
+      "id": "reel-07",
+      "filename": "reel_shiva_quote_07.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_07.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "वाराणसी गंगा आरती संध्या दीप उत्सव"
+    },
+    {
+      "id": "reel-08",
+      "filename": "reel_shiva_quote_08.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_08.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "केदारनाथ मंदिर हिमपात व रात्रि की नीली छटा"
+    },
+    {
+      "id": "reel-09",
+      "filename": "reel_shiva_quote_09.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_09.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "डमरू नाद तरंग व अलौकिक नीली धुंध"
+    },
+    {
+      "id": "reel-10",
+      "filename": "reel_shiva_quote_10.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_10.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "शिव-पार्वती का पावन सौम्य रूप (प्रेम व शक्ति)"
+    },
+    {
+      "id": "reel-11",
+      "filename": "reel_shiva_quote_11.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_11.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "चंद्रशेखर शिव - जटा में चंद्रमा व गंगा की धारा"
+    },
+    {
+      "id": "reel-12",
+      "filename": "reel_shiva_quote_12.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_12.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "मानसरोवर झील का शांत निर्मल जल व कैलाश प्रतिबिंब"
+    },
+    {
+      "id": "reel-13",
+      "filename": "reel_shiva_quote_13.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_13.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "हाथों में 108 रुद्राक्ष मनके व ॐ नमः शिवाय जप"
+    },
+    {
+      "id": "reel-14",
+      "filename": "reel_shiva_quote_14.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_14.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "सोमनाथ मंदिर व हिंद महासागर की लहरें"
+    },
+    {
+      "id": "reel-15",
+      "filename": "reel_shiva_quote_15.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_15.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "अघोरी संन्यासी भस्म स्नान व महाकाल ध्यान"
+    },
+    {
+      "id": "reel-16",
+      "filename": "reel_shiva_quote_16.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_16.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "बाबा अमरनाथ बर्फानी शिवलिंग की अलौकिक कांति"
+    },
+    {
+      "id": "reel-17",
+      "filename": "reel_shiva_quote_17.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_17.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "तुंगनाथ मंदिर का प्राकृतिक हरित-पर्वतीय दृश्य"
+    },
+    {
+      "id": "reel-18",
+      "filename": "reel_shiva_quote_18.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_18.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "पशुपतिनाथ बागमती तट दीपदान"
+    },
+    {
+      "id": "reel-19",
+      "filename": "reel_shiva_quote_19.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_19.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "कमल पुष्प व धतूरा अर्पण शिवलिंग पर"
+    },
+    {
+      "id": "reel-20",
+      "filename": "reel_shiva_quote_20.jpg",
+      "path": "assets/images/reels/reel_shiva_quote_20.jpg",
+      "dimensions": "1080x1920",
+      "aspectRatio": "9:16",
+      "themeDescription": "महादेव का विशाल रौद्र-सौम्य त्रिनेत्र रूप"
+    }
+  ],
+  "books_and_teachings": [
+    {
+      "id": "shiva-purana",
+      "title": "शिव महापुराण",
+      "filename": "book_shiva_purana.jpg",
+      "path": "assets/images/books/book_shiva_purana.jpg",
+      "dimensions": "600x900"
+    },
+    {
+      "id": "shiv-charcha-guide",
+      "title": "शिव चर्चा मार्गदर्शिका",
+      "filename": "book_shiv_charcha_guide.jpg",
+      "path": "assets/images/books/book_shiv_charcha_guide.jpg",
+      "dimensions": "600x900"
+    },
+    {
+      "id": "shiva-sutra",
+      "title": "शिव सूत्र (कश्मीर शैवदर्शन)",
+      "filename": "book_shiva_sutra.jpg",
+      "path": "assets/images/books/book_shiva_sutra.jpg",
+      "dimensions": "600x900"
+    },
+    {
+      "id": "teaching-guru-shiva",
+      "title": "शिव ही गुरु हैं",
+      "filename": "teaching_guru_shiva.jpg",
+      "path": "assets/images/teachings/teaching_guru_shiva.jpg",
+      "dimensions": "800x600"
+    },
+    {
+      "id": "teaching-3-niyam",
+      "title": "शिव चर्चा के 3 नियम",
+      "filename": "teaching_3_niyam.jpg",
+      "path": "assets/images/teachings/teaching_3_niyam.jpg",
+      "dimensions": "800x600"
+    }
+  ]
+}
