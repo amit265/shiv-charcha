@@ -47,11 +47,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="calendar"
+        name="sansar"
         options={{
-          title: 'कैलेंडर',
+          title: 'शिव संसार',
           tabBarIcon: ({ focused }) => (
-            <Text style={[styles.tabIcon, focused && styles.tabIconActive]}>📅</Text>
+            <Text style={[styles.tabIcon, focused && styles.tabIconActive]}>🔱</Text>
           ),
         }}
       />

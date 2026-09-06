@@ -28,7 +28,33 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header />
+      <Header
+        rightAction={
+          <View style={styles.headerRightRow}>
+            <TouchableOpacity
+              style={[
+                styles.headerActionBtn,
+                { backgroundColor: 'rgba(255, 255, 255, 0.15)', borderColor: theme.borderGold },
+              ]}
+              onPress={() => router.push('/calendar' as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.headerActionIcon}>📅</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.headerActionBtn,
+                { backgroundColor: 'rgba(255, 255, 255, 0.15)', borderColor: theme.borderGold },
+              ]}
+              onPress={() => router.push('/theme-selector' as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.headerActionIcon}>🎨</Text>
+            </TouchableOpacity>
+          </View>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Banner Greeting */}
@@ -211,6 +237,22 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerRightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerActionBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  headerActionIcon: {
+    fontSize: 16,
   },
   scrollContent: {
     padding: 16,

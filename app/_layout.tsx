@@ -48,6 +48,7 @@ function RootNavigator() {
         <Stack.Screen name="reels" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
         <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
         <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
+        <Stack.Screen name="calendar" options={{ title: '📅 शिव चर्चा कैलेंडर' }} />
 
         {/* Shiv Sansar Routes */}
         <Stack.Screen name="sansar/index" options={{ title: '🔱 शिव संसार' }} />
