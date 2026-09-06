@@ -134,9 +134,12 @@ export interface UserStats {
 
 import { ThemeId } from '../theme/themes';
 
+export type UserGender = 'male' | 'female' | 'neutral';
+
 export interface UserPreferences {
   userName: string;
   avatarIcon?: string;
+  userGender?: UserGender; // 'male' (शिव शिष्य) | 'female' (शिव शिष्या) | 'neutral' (शिव भक्त)
   hasCompletedOnboarding?: boolean;
   favoriteColorTheme: ThemeId;
   fontSize: 'medium' | 'large' | 'extra_large';

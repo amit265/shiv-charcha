@@ -13,6 +13,7 @@ const STORAGE_KEYS = {
 export const defaultPreferences: UserPreferences = {
   userName: 'शिव शिष्य',
   avatarIcon: '🙏',
+  userGender: 'male',
   hasCompletedOnboarding: false,
   favoriteColorTheme: 'divya_sukoon',
   fontSize: 'medium',
@@ -21,6 +22,22 @@ export const defaultPreferences: UserPreferences = {
   soundEnabled: true,
   hapticsEnabled: true,
   shareCardDefaultName: 'शिव शिष्य',
+};
+
+export const getDiscipleTitle = (gender?: string): string => {
+  if (gender === 'female') return 'शिव शिष्या';
+  if (gender === 'neutral') return 'शिव भक्त';
+  return 'शिव शिष्य';
+};
+
+export const getFirstSutraText = (gender?: string): string => {
+  if (gender === 'female') {
+    return 'हे शिव! आप मेरे गुरु हैं, मैं आपकी शिष्या हूँ। मुझ पर दया कर दीजिए।';
+  }
+  if (gender === 'neutral') {
+    return 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य / शिष्या हूँ। मुझ पर दया कर दीजिए।';
+  }
+  return 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए।';
 };
 
 export const defaultStats: UserStats = {

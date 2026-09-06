@@ -42,10 +42,22 @@ export default function ProfileScreen() {
   };
 
   const handleSaveName = async () => {
-    const trimmed = nameInput.trim() || 'शिव शिष्य';
+    const trimmed = nameInput.trim() || (prefs.userGender === 'female' ? 'शिव शिष्या' : prefs.userGender === 'neutral' ? 'शिव भक्त' : 'शिव शिष्य');
     await StorageService.savePreferences({ userName: trimmed });
     setPrefs((prev) => ({ ...prev, userName: trimmed }));
     setIsEditingName(false);
+  };
+
+  const handleSelectGender = async (gender: 'male' | 'female' | 'neutral') => {
+    const defaultName = gender === 'female' ? 'शिव शिष्या' : gender === 'neutral' ? 'शिव भक्त' : 'शिव शिष्य';
+    const isGenericName = !prefs.userName || prefs.userName === 'शिव शिष्य' || prefs.userName === 'शिव शिष्या' || prefs.userName === 'शिव भक्त';
+    const newName = isGenericName ? defaultName : prefs.userName;
+    const defaultAvatar = gender === 'female' ? '👩' : gender === 'neutral' ? '🙏' : '👨';
+    const newAvatar = (!prefs.avatarIcon || prefs.avatarIcon === '🙏' || prefs.avatarIcon === '👨' || prefs.avatarIcon === '👩') ? defaultAvatar : prefs.avatarIcon;
+
+    await StorageService.savePreferences({ userGender: gender, userName: newName, avatarIcon: newAvatar, shareCardDefaultName: newName });
+    setPrefs((prev) => ({ ...prev, userGender: gender, userName: newName, avatarIcon: newAvatar, shareCardDefaultName: newName }));
+    setNameInput(newName);
   };
 
   const handleSelectAvatar = async (icon: string) => {
@@ -67,6 +79,12 @@ export default function ProfileScreen() {
       hasCompletedOnboarding: true,
     }));
     setShowOnboardingModal(false);
+  };
+
+  const getSubText = () => {
+    if (prefs.userGender === 'female') return 'शिव शिष्या • नमः शिवाय साधना';
+    if (prefs.userGender === 'neutral') return 'शिव भक्त • नमः शिवाय साधना';
+    return 'शिव शिष्य • नमः शिवाय साधना';
   };
 
   return (
@@ -124,15 +142,57 @@ export default function ProfileScreen() {
           ) : (
             <TouchableOpacity style={styles.nameRow} onPress={() => setIsEditingName(true)}>
               <Text style={[styles.userNameText, { color: theme.textGold }]}>
-                {prefs.userName || 'शिव शिष्य'} 🙏
+                {prefs.userName || (prefs.userGender === 'female' ? 'शिव शिष्या' : 'शिव शिष्य')} 🙏
               </Text>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           )}
 
           <Text style={[styles.userSubText, { color: theme.textWhite }]}>
-            शिव शिष्य • नमः शिवाय साधना
+            {getSubText()}
           </Text>
+
+          {/* Disciple Gender / Title Selector Pills */}
+          <View style={styles.genderRow}>
+            <TouchableOpacity
+              style={[
+                styles.genderPill,
+                { backgroundColor: (prefs.userGender || 'male') === 'male' ? theme.accent : 'rgba(255,255,255,0.15)' },
+              ]}
+              onPress={() => handleSelectGender('male')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.genderPillText, { color: (prefs.userGender || 'male') === 'male' ? theme.primaryDark : '#FFF' }]}>
+                👨 शिव शिष्य
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.genderPill,
+                { backgroundColor: prefs.userGender === 'female' ? theme.accent : 'rgba(255,255,255,0.15)' },
+              ]}
+              onPress={() => handleSelectGender('female')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.genderPillText, { color: prefs.userGender === 'female' ? theme.primaryDark : '#FFF' }]}>
+                👩 शिव शिष्या
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.genderPill,
+                { backgroundColor: prefs.userGender === 'neutral' ? theme.accent : 'rgba(255,255,255,0.15)' },
+              ]}
+              onPress={() => handleSelectGender('neutral')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.genderPillText, { color: prefs.userGender === 'neutral' ? theme.primaryDark : '#FFF' }]}>
+                🙏 शिव भक्त
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* SECTION: MY SHIV GURU DEVOTIONAL STATS */}
@@ -390,6 +450,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.9,
     marginTop: 4,
+  },
+  genderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    gap: 8,
+  },
+  genderPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+  },
+  genderPillText: {
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   sectionHeaderTitle: {
     fontSize: 16,

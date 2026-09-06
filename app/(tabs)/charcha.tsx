@@ -9,7 +9,7 @@ import { booksLibrary } from '@/content/books';
 import { audioLibrary } from '@/content/audioLibrary';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
-import { StorageService } from '@/services/storage';
+import { StorageService, getFirstSutraText, getDiscipleTitle } from '@/services/storage';
 
 type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -19,6 +19,7 @@ export default function ShivCharchaScreen() {
   const { playTrack } = useAudio();
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [userGender, setUserGender] = useState<'male' | 'female' | 'neutral'>('male');
 
   // Daily 3 Sutras State
   const [dailySutras, setDailySutras] = useState({
@@ -28,11 +29,13 @@ export default function ShivCharchaScreen() {
   });
 
   useEffect(() => {
-    loadDailySutras();
+    loadData();
   }, []);
 
-  const loadDailySutras = async () => {
+  const loadData = async () => {
     const data = await StorageService.getDaily3Sutras();
+    const prefs = await StorageService.getPreferences();
+    setUserGender(prefs.userGender || 'male');
     setDailySutras({
       sutra1: data.sutra1,
       sutra2: data.sutra2,
@@ -51,9 +54,11 @@ export default function ShivCharchaScreen() {
   const isAllCompleted = completedCount === 3;
 
   const handleShareCompletion = async () => {
+    const sutra1Text = getFirstSutraText(userGender);
+    const titleText = getDiscipleTitle(userGender);
     await safeShare({
       title: 'आज की शिव गुरु साधना पूर्ण हुई',
-      message: `🔱 *आज की शिव गुरु साधना पूर्ण हुई* 🙏\n\n"हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए।"\n\n✅ प्रथम सूत्र: दया माँगी\n✅ द्वितीय सूत्र: चर्चा की\n✅ तृतीय सूत्र: 108 नमः शिवाय जाप\n\nहर हर महादेव 🌸\nशिव चर्चा ऐप से साधना करें।`,
+      message: `🔱 *आज की शिव गुरु साधना पूर्ण हुई* 🙏\n\n"${sutra1Text}"\n\n✅ प्रथम सूत्र: दया माँगी\n✅ द्वितीय सूत्र: चर्चा की\n✅ तृतीय सूत्र: 108 नमः शिवाय जाप\n\nहर हर महादेव 🌸 — ${titleText}\nशिव चर्चा ऐप से साधना करें।`,
     });
   };
 
@@ -145,7 +150,7 @@ export default function ShivCharchaScreen() {
                   🌸 प्रथम सूत्र: दया माँगी
                 </Text>
                 <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                  "हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए।"
+                  "{getFirstSutraText(userGender)}"
                 </Text>
               </View>
             </TouchableOpacity>

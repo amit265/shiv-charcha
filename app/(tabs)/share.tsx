@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -8,9 +8,18 @@ import { shareTemplates } from '@/content/shareTemplates';
 import { ShareCardRenderer } from '@/components/share/ShareCardRenderer';
 import { ShareTemplate } from '@/types';
 
+import { StorageService, getFirstSutraText, getDiscipleTitle } from '@/services/storage';
+
 export default function ShareStudioScreen() {
   const router = useRouter();
   const { theme } = useTheme();
+  const [userGender, setUserGender] = useState<'male' | 'female' | 'neutral'>('male');
+
+  useEffect(() => {
+    StorageService.getPreferences().then((p) => {
+      setUserGender(p.userGender || 'male');
+    });
+  }, []);
 
   const activeThemeTemplate: ShareTemplate = {
     id: 'st-active-app-theme',
@@ -20,8 +29,8 @@ export default function ShareStudioScreen() {
     bgGradient: [theme.primaryDark, theme.primary],
     textColor: theme.textWhite,
     accentColor: theme.accent,
-    defaultText: 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए। 🙏',
-    defaultAuthor: '— शिव शिष्य',
+    defaultText: getFirstSutraText(userGender),
+    defaultAuthor: `— ${getDiscipleTitle(userGender)}`,
     artworkUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
   };
 
