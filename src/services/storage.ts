@@ -11,9 +11,10 @@ const STORAGE_KEYS = {
 };
 
 export const defaultPreferences: UserPreferences = {
-  userName: 'शिव शिष्य',
+  userName: '',
   avatarIcon: '🙏',
   userGender: 'male',
+  discipleTitle: 'शिव शिष्य',
   hasCompletedOnboarding: false,
   favoriteColorTheme: 'divya_sukoon',
   fontSize: 'medium',
@@ -24,17 +25,44 @@ export const defaultPreferences: UserPreferences = {
   shareCardDefaultName: 'शिव शिष्य',
 };
 
-export const getDiscipleTitle = (gender?: string): string => {
-  if (gender === 'female') return 'शिव शिष्या';
-  if (gender === 'neutral') return 'शिव भक्त';
+export const getDiscipleTitle = (prefsOrGender?: Partial<UserPreferences> | string): string => {
+  if (typeof prefsOrGender === 'object' && prefsOrGender) {
+    if (prefsOrGender.discipleTitle) return prefsOrGender.discipleTitle;
+    if (prefsOrGender.userGender === 'female') return 'शिव शिष्या';
+    if (prefsOrGender.userGender === 'neutral') return 'शिव भक्त';
+    return 'शिव शिष्य';
+  }
+  if (typeof prefsOrGender === 'string') {
+    if (prefsOrGender === 'female' || prefsOrGender === 'शिव शिष्या' || prefsOrGender === 'गुरु बहिन') return 'शिव शिष्या';
+    if (prefsOrGender === 'neutral' || prefsOrGender === 'शिव भक्त') return 'शिव भक्त';
+  }
   return 'शिव शिष्य';
 };
 
-export const getFirstSutraText = (gender?: string): string => {
-  if (gender === 'female') {
+export const getFormattedUserName = (prefs?: Partial<UserPreferences>): string => {
+  const title = getDiscipleTitle(prefs);
+  const rawName = prefs?.userName?.trim();
+  
+  if (!rawName) return title;
+
+  // If rawName is purely one of the titles, return the new title
+  if (['शिव शिष्य', 'शिव शिष्या', 'गुरु भाई', 'गुरु बहिन', 'शिव भक्त'].includes(rawName)) {
+    return title;
+  }
+
+  // Remove any old title prefix if user typed custom name
+  const cleanName = rawName.replace(/^(शिव शिष्य|शिव शिष्या|गुरु भाई|गुरु बहिन|शिव भक्त)\s*/, '');
+  return `${title} ${cleanName}`;
+};
+
+export const getFirstSutraText = (genderOrPrefs?: string | Partial<UserPreferences>): string => {
+  const gender = typeof genderOrPrefs === 'object' ? genderOrPrefs.userGender : genderOrPrefs;
+  const title = typeof genderOrPrefs === 'object' ? genderOrPrefs.discipleTitle : undefined;
+
+  if (gender === 'female' || title === 'शिव शिष्या' || title === 'गुरु बहिन') {
     return 'हे शिव! आप मेरे गुरु हैं, मैं आपकी शिष्या हूँ। मुझ पर दया कर दीजिए।';
   }
-  if (gender === 'neutral') {
+  if (gender === 'neutral' || title === 'शिव भक्त') {
     return 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य / शिष्या हूँ। मुझ पर दया कर दीजिए।';
   }
   return 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए।';

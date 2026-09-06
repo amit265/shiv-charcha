@@ -135,11 +135,13 @@ export interface UserStats {
 import { ThemeId } from '../theme/themes';
 
 export type UserGender = 'male' | 'female' | 'neutral';
+export type DiscipleTitle = 'शिव शिष्य' | 'शिव शिष्या' | 'गुरु भाई' | 'गुरु बहिन' | 'शिव भक्त';
 
 export interface UserPreferences {
   userName: string;
   avatarIcon?: string;
-  userGender?: UserGender; // 'male' (शिव शिष्य) | 'female' (शिव शिष्या) | 'neutral' (शिव भक्त)
+  userGender?: UserGender; // 'male' | 'female' | 'neutral'
+  discipleTitle?: DiscipleTitle; // 'शिव शिष्य' | 'शिव शिष्या' | 'गुरु भाई' | 'गुरु बहिन' | 'शिव भक्त'
   hasCompletedOnboarding?: boolean;
   favoriteColorTheme: ThemeId;
   fontSize: 'medium' | 'large' | 'extra_large';

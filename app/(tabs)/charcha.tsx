@@ -19,7 +19,7 @@ export default function ShivCharchaScreen() {
   const { playTrack } = useAudio();
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [userGender, setUserGender] = useState<'male' | 'female' | 'neutral'>('male');
+  const [userPrefs, setUserPrefs] = useState<any>(null);
 
   // Daily 3 Sutras State
   const [dailySutras, setDailySutras] = useState({
@@ -35,7 +35,7 @@ export default function ShivCharchaScreen() {
   const loadData = async () => {
     const data = await StorageService.getDaily3Sutras();
     const prefs = await StorageService.getPreferences();
-    setUserGender(prefs.userGender || 'male');
+    setUserPrefs(prefs);
     setDailySutras({
       sutra1: data.sutra1,
       sutra2: data.sutra2,
@@ -54,8 +54,8 @@ export default function ShivCharchaScreen() {
   const isAllCompleted = completedCount === 3;
 
   const handleShareCompletion = async () => {
-    const sutra1Text = getFirstSutraText(userGender);
-    const titleText = getDiscipleTitle(userGender);
+    const sutra1Text = getFirstSutraText(userPrefs);
+    const titleText = getDiscipleTitle(userPrefs);
     await safeShare({
       title: 'आज की शिव गुरु साधना पूर्ण हुई',
       message: `🔱 *आज की शिव गुरु साधना पूर्ण हुई* 🙏\n\n"${sutra1Text}"\n\n✅ प्रथम सूत्र: दया माँगी\n✅ द्वितीय सूत्र: चर्चा की\n✅ तृतीय सूत्र: 108 नमः शिवाय जाप\n\nहर हर महादेव 🌸 — ${titleText}\nशिव चर्चा ऐप से साधना करें।`,
@@ -150,7 +150,7 @@ export default function ShivCharchaScreen() {
                   🌸 प्रथम सूत्र: दया माँगी
                 </Text>
                 <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                  "{getFirstSutraText(userGender)}"
+                  "{getFirstSutraText(userPrefs)}"
                 </Text>
               </View>
             </TouchableOpacity>
