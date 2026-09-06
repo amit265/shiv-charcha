@@ -148,4 +148,30 @@ export const StorageService = {
       return [];
     }
   },
+
+  // Daily 3 Sutras Tracking
+  async getDaily3Sutras(): Promise<{ day: string; sutra1: boolean; sutra2: boolean; sutra3: boolean }> {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const data = await AsyncStorage.getItem('shiv_charcha_daily_sutras_v1');
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (parsed.day === today) return parsed;
+      }
+      return { day: today, sutra1: false, sutra2: false, sutra3: false };
+    } catch (e) {
+      return { day: new Date().toISOString().split('T')[0], sutra1: false, sutra2: false, sutra3: false };
+    }
+  },
+
+  async saveDaily3Sutras(sutras: { sutra1?: boolean; sutra2?: boolean; sutra3?: boolean }): Promise<{ day: string; sutra1: boolean; sutra2: boolean; sutra3: boolean }> {
+    try {
+      const current = await this.getDaily3Sutras();
+      const updated = { ...current, ...sutras };
+      await AsyncStorage.setItem('shiv_charcha_daily_sutras_v1', JSON.stringify(updated));
+      return updated;
+    } catch (e) {
+      return await this.getDaily3Sutras();
+    }
+  },
 };
