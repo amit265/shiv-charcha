@@ -132,9 +132,11 @@ export interface UserStats {
   lastActiveDate: string;
 }
 
+import { ThemeId } from '../theme/themes';
+
 export interface UserPreferences {
   userName: string;
-  favoriteColorTheme: 'saffron' | 'deep_maroon' | 'gold' | 'soft_ivory';
+  favoriteColorTheme: ThemeId;
   fontSize: 'medium' | 'large' | 'extra_large';
   notificationsEnabled: boolean;
   dailyReminderTime: string; // HH:mm

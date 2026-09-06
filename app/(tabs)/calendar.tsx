@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { sacredDates } from '@/content/dates';
 
@@ -22,6 +23,7 @@ const HINDI_MONTHS = [
 
 export default function CalendarScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const [currentYear, setCurrentYear] = useState<number>(2026);
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(8); // Default: September (8)
 
@@ -54,7 +56,7 @@ export default function CalendarScreen() {
   const leadingPaddingCells = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="शिव चर्चा कैलेंडर" subtitle="पावन स्मरण दिवस • विशेष तिथि" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>

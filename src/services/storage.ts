@@ -12,7 +12,7 @@ const STORAGE_KEYS = {
 
 export const defaultPreferences: UserPreferences = {
   userName: 'शिव शिष्य',
-  favoriteColorTheme: 'saffron',
+  favoriteColorTheme: 'divya_sukoon',
   fontSize: 'medium',
   notificationsEnabled: true,
   dailyReminderTime: '07:00',

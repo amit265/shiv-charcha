@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
-import { colors, shadows } from '../../theme/colors';
+import { useTheme } from '../../context/ThemeContext';
+import { shadows } from '../../theme/colors';
 import { AudioPlayerModal } from './AudioPlayerModal';
 
 export const MiniPlayer: React.FC = () => {
   const { currentTrack, isPlaying, position, duration, isMiniPlayerVisible, togglePlayPause, dismissMiniPlayer } = useAudio();
+  const { theme } = useTheme();
   const [isFullModalVisible, setIsFullModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
 
@@ -21,34 +23,52 @@ export const MiniPlayer: React.FC = () => {
   return (
     <>
       <TouchableOpacity
-        style={[styles.container, { bottom: miniPlayerBottom }]}
+        style={[
+          styles.container,
+          {
+            bottom: miniPlayerBottom,
+            backgroundColor: theme.primary,
+            borderColor: theme.accent,
+          },
+        ]}
         activeOpacity={0.9}
         onPress={() => setIsFullModalVisible(true)}
       >
         {/* Top Progress Line */}
         <View style={styles.progressBarBg}>
-          <View style={[styles.progressBarFill, { width: `${Math.min(100, Math.max(0, progressPercent))}%` }]} />
+          <View
+            style={[
+              styles.progressBarFill,
+              { width: `${Math.min(100, Math.max(0, progressPercent))}%`, backgroundColor: theme.accent },
+            ]}
+          />
         </View>
 
         <View style={styles.contentRow}>
           <Image source={{ uri: currentTrack.coverImage }} style={styles.coverImage} />
 
           <View style={styles.textContainer}>
-            <Text style={styles.trackTitle} numberOfLines={1}>
+            <Text style={[styles.trackTitle, { color: theme.textGold }]} numberOfLines={1}>
               {currentTrack.title}
             </Text>
-            <Text style={styles.trackSubtitle} numberOfLines={1}>
+            <Text style={[styles.trackSubtitle, { color: theme.textWhite }]} numberOfLines={1}>
               🎧 {currentTrack.artist || currentTrack.subtitle || 'शिव चर्चा ऑडियो'}
             </Text>
           </View>
 
           <View style={styles.controlsRow}>
-            <TouchableOpacity style={styles.playBtn} onPress={togglePlayPause} activeOpacity={0.7}>
-              <Text style={styles.playIcon}>{isPlaying ? '⏸️' : '▶️'}</Text>
+            <TouchableOpacity
+              style={[styles.playBtn, { backgroundColor: theme.accent }]}
+              onPress={togglePlayPause}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.playIcon, { color: theme.primaryDark }]}>
+                {isPlaying ? '⏸️' : '▶️'}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.closeBtn} onPress={dismissMiniPlayer} activeOpacity={0.7}>
-              <Text style={styles.closeIcon}>✕</Text>
+              <Text style={[styles.closeIcon, { color: theme.textWhite }]}>✕</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -68,11 +88,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 12,
     right: 12,
-    backgroundColor: colors.maroonPrimary,
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1.5,
-    borderColor: colors.goldPrimary,
     ...shadows.medium,
     zIndex: 9999,
   },
@@ -83,7 +101,6 @@ const styles = StyleSheet.create({
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: colors.goldPrimary,
   },
   contentRow: {
     flexDirection: 'row',
@@ -95,7 +112,6 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 8,
-    backgroundColor: colors.maroonDark,
   },
   textContainer: {
     flex: 1,
@@ -105,11 +121,9 @@ const styles = StyleSheet.create({
   trackTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: colors.goldLight,
   },
   trackSubtitle: {
     fontSize: 11,
-    color: colors.bgIvory,
     opacity: 0.85,
     marginTop: 2,
   },
@@ -121,14 +135,12 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: colors.goldPrimary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 6,
   },
   playIcon: {
     fontSize: 16,
-    color: colors.maroonDark,
   },
   closeBtn: {
     width: 28,
@@ -140,7 +152,6 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     fontSize: 12,
-    color: colors.bgIvory,
     fontWeight: 'bold',
   },
 });

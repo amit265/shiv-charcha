@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Share } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
-import { colors, shadows } from '@/theme/colors';
+import { useTheme } from '@/context/ThemeContext';
+import { shadows } from '@/theme/colors';
 import { teachingTopics } from '@/content/teachings';
 import { booksLibrary } from '@/content/books';
 import { audioLibrary } from '@/content/audioLibrary';
@@ -13,6 +14,7 @@ type SubSection = 'understand' | 'books' | 'audio' | 'sadhna';
 
 export default function ShivCharchaScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { playTrack } = useAudio();
   const [activeTab, setActiveTab] = useState<SubSection>('understand');
 
@@ -24,72 +26,89 @@ export default function ShivCharchaScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="शिव चर्चा पुस्तकालय" subtitle="ज्ञान • पुस्तकें • ऑडियो • साधना" />
 
-      {/* 4 Section Navigation Tabs */}
-      <View style={styles.navSubTabs}>
-        <TouchableOpacity
-          style={[styles.subTabBtn, activeTab === 'understand' && styles.subTabBtnActive]}
-          onPress={() => setActiveTab('understand')}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.subTabText, activeTab === 'understand' && styles.subTabTextActive]}>
-            💡 समझें
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.subTabBtn, activeTab === 'books' && styles.subTabBtnActive]}
-          onPress={() => setActiveTab('books')}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.subTabText, activeTab === 'books' && styles.subTabTextActive]}>
-            📖 पुस्तकें
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.subTabBtn, activeTab === 'audio' && styles.subTabBtnActive]}
-          onPress={() => setActiveTab('audio')}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.subTabText, activeTab === 'audio' && styles.subTabTextActive]}>
-            🎧 सुनें
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.subTabBtn, activeTab === 'sadhna' && styles.subTabBtnActive]}
-          onPress={() => setActiveTab('sadhna')}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.subTabText, activeTab === 'sadhna' && styles.subTabTextActive]}>
-            📿 साधना
-          </Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* PROMINENT SHIV SANSAR ENTRY WORLD BANNER */}
+        <TouchableOpacity
+          style={[styles.sansarBanner, { backgroundColor: theme.primary, borderColor: theme.accent }]}
+          onPress={() => router.push('/sansar' as any)}
+          activeOpacity={0.88}
+        >
+          <View style={styles.sansarBannerContent}>
+            <Text style={[styles.sansarBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>
+              नया प्रमुख भक्ति संसार
+            </Text>
+            <Text style={[styles.sansarTitle, { color: theme.textGold }]}>🔱 शिव संसार में प्रवेश करें ➔</Text>
+            <Text style={[styles.sansarSub, { color: theme.textWhite }]}>
+              महादेव से जुड़ी कथाएँ, 12 ज्योतिर्लिंग, शक्ति पीठ, शिव परिवार, प्रतीक व तीर्थ यात्रा
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* 4 Section Navigation Tabs */}
+        <View style={[styles.navSubTabs, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <TouchableOpacity
+            style={[styles.subTabBtn, activeTab === 'understand' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('understand')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.subTabText, { color: activeTab === 'understand' ? theme.textWhite : theme.textPrimary }]}>
+              💡 समझें
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.subTabBtn, activeTab === 'books' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('books')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.subTabText, { color: activeTab === 'books' ? theme.textWhite : theme.textPrimary }]}>
+              📖 पुस्तकें
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.subTabBtn, activeTab === 'audio' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('audio')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.subTabText, { color: activeTab === 'audio' ? theme.textWhite : theme.textPrimary }]}>
+              🎧 सुनें
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.subTabBtn, activeTab === 'sadhna' && { backgroundColor: theme.primary }]}
+            onPress={() => setActiveTab('sadhna')}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.subTabText, { color: activeTab === 'sadhna' ? theme.textWhite : theme.textPrimary }]}>
+              📿 साधना
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {/* SECTION A — समझें */}
         {activeTab === 'understand' && (
           <View>
-            <Text style={styles.sectionHeaderTitle}>शिव शिष्यता के मूल विषय</Text>
-            <Text style={styles.sectionHeaderSub}>
+            <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>शिव शिष्यता के मूल विषय</Text>
+            <Text style={[styles.sectionHeaderSub, { color: theme.textSecondary }]}>
               सरल भाषा में समझें और सुनें कि शिव को अपना गुरु कैसे बनाएँ।
             </Text>
 
             {teachingTopics.map((topic) => (
-              <View key={topic.id} style={styles.topicCard}>
+              <View key={topic.id} style={[styles.topicCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
                 <Image source={{ uri: topic.imageUrl }} style={styles.topicImage} />
-                <Text style={styles.topicTitle}>{topic.title}</Text>
-                <Text style={styles.topicSubtitle}>{topic.subTitle}</Text>
-                <Text style={styles.topicSummary}>{topic.summary}</Text>
+                <Text style={[styles.topicTitle, { color: theme.textPrimary }]}>{topic.title}</Text>
+                <Text style={[styles.topicSubtitle, { color: theme.secondary }]}>{topic.subTitle}</Text>
+                <Text style={[styles.topicSummary, { color: theme.textSecondary }]}>{topic.summary}</Text>
 
                 <View style={styles.cardActionsRow}>
                   {topic.audioUrl && (
                     <TouchableOpacity
-                      style={styles.listenBtn}
+                      style={[styles.listenBtn, { backgroundColor: theme.primary }]}
                       onPress={() =>
                         playTrack({
                           id: topic.id,
@@ -103,20 +122,20 @@ export default function ShivCharchaScreen() {
                       }
                       activeOpacity={0.8}
                     >
-                      <Text style={styles.listenBtnText}>🎧 सुनें</Text>
+                      <Text style={[styles.listenBtnText, { color: theme.textWhite }]}>🎧 सुनें</Text>
                     </TouchableOpacity>
                   )}
 
                   <TouchableOpacity
-                    style={styles.readBtn}
+                    style={[styles.readBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
                     onPress={() => router.push(`/teaching/${topic.id}` as any)}
                     activeOpacity={0.7}
                   >
-                    <Text style={styles.readBtnText}>📖 विस्तृत पढ़ें</Text>
+                    <Text style={[styles.readBtnText, { color: theme.primary }]}>📖 विस्तृत पढ़ें</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={styles.shareIconBtn}
+                    style={[styles.shareIconBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
                     onPress={() => handleShareTopic(topic.title, topic.summary)}
                     activeOpacity={0.7}
                   >
@@ -131,25 +150,25 @@ export default function ShivCharchaScreen() {
         {/* SECTION B — पुस्तकें */}
         {activeTab === 'books' && (
           <View>
-            <Text style={styles.sectionHeaderTitle}>शिव चर्चा ग्रंथ व पुस्तकें</Text>
-            <Text style={styles.sectionHeaderSub}>"आसान भाषा में समझें" व्याख्या एवं अध्याय</Text>
+            <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>शिव चर्चा ग्रंथ व पुस्तकें</Text>
+            <Text style={[styles.sectionHeaderSub, { color: theme.textSecondary }]}>"आसान भाषा में समझें" व्याख्या एवं अध्याय</Text>
 
             {booksLibrary.map((book) => (
               <TouchableOpacity
                 key={book.id}
-                style={styles.bookCard}
+                style={[styles.bookCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
                 onPress={() => router.push(`/book/${book.id}` as any)}
                 activeOpacity={0.9}
               >
                 <Image source={{ uri: book.coverImage }} style={styles.bookCover} />
                 <View style={styles.bookDetails}>
-                  <Text style={styles.bookTitle}>{book.title}</Text>
-                  <Text style={styles.bookAuthor}>लेखक: {book.author}</Text>
-                  <Text style={styles.easyTag}>✨ आसान भाषा में सार</Text>
-                  <Text style={styles.bookSummary} numberOfLines={2}>
+                  <Text style={[styles.bookTitle, { color: theme.primary }]}>{book.title}</Text>
+                  <Text style={[styles.bookAuthor, { color: theme.textMuted }]}>लेखक: {book.author}</Text>
+                  <Text style={[styles.easyTag, { color: theme.secondary }]}>✨ आसान भाषा में सार</Text>
+                  <Text style={[styles.bookSummary, { color: theme.textSecondary }]} numberOfLines={2}>
                     {book.easySummary}
                   </Text>
-                  <Text style={styles.chapterBadge}>
+                  <Text style={[styles.chapterBadge, { color: theme.primary }]}>
                     📚 {book.totalChapters} अध्याय सम्मलित
                   </Text>
                 </View>
@@ -161,23 +180,23 @@ export default function ShivCharchaScreen() {
         {/* SECTION C — सुनें (Audio Library) */}
         {activeTab === 'audio' && (
           <View>
-            <Text style={styles.sectionHeaderTitle}>भजन व शिव चर्चा ऑडियो पुस्तकालय</Text>
+            <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>भजन व शिव चर्चा ऑडियो पुस्तकालय</Text>
 
             {audioLibrary.map((audio) => (
-              <View key={audio.id} style={styles.audioRowCard}>
+              <View key={audio.id} style={[styles.audioRowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
                 <Image source={{ uri: audio.coverImage }} style={styles.audioCover} />
                 <View style={styles.audioMeta}>
-                  <Text style={styles.audioRowTitle}>{audio.title}</Text>
-                  <Text style={styles.audioRowSubtitle}>
+                  <Text style={[styles.audioRowTitle, { color: theme.textPrimary }]}>{audio.title}</Text>
+                  <Text style={[styles.audioRowSubtitle, { color: theme.textMuted }]}>
                     {audio.artist || audio.subtitle} • {Math.floor(audio.duration / 60)} मि
                   </Text>
                 </View>
                 <TouchableOpacity
-                  style={styles.audioPlayBtn}
+                  style={[styles.audioPlayBtn, { backgroundColor: theme.primary }]}
                   onPress={() => playTrack(audio)}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.audioPlayIcon}>▶️</Text>
+                  <Text style={[styles.audioPlayIcon, { color: theme.textWhite }]}>▶️</Text>
                 </TouchableOpacity>
               </View>
             ))}
@@ -187,41 +206,41 @@ export default function ShivCharchaScreen() {
         {/* SECTION D — साधना (Devotional Practice) */}
         {activeTab === 'sadhna' && (
           <View>
-            <Text style={styles.sectionHeaderTitle}>मार्गदर्शित साधना अनुभव</Text>
+            <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>मार्गदर्शित साधना अनुभव</Text>
 
             <TouchableOpacity
-              style={styles.sadhnaCard}
+              style={[styles.sadhnaCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}
               onPress={() => router.push('/jap' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>📿</Text>
               <View style={styles.sadhnaTextCol}>
-                <Text style={styles.sadhnaTitle}>108 नमः शिवाय जाप</Text>
-                <Text style={styles.sadhnaSub}>तृतीय सूत्र — मंत्र माला साधना व रिकॉर्ड</Text>
+                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>108 नमः शिवाय जाप</Text>
+                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>तृतीय सूत्र — मंत्र माला साधना व रिकॉर्ड</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.sadhnaCard}
+              style={[styles.sadhnaCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}
               onPress={() => router.push('/puja' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>🌸</Text>
               <View style={styles.sadhnaTextCol}>
-                <Text style={styles.sadhnaTitle}>शिव लिंग पूजा सेवा</Text>
-                <Text style={styles.sadhnaSub}>पुष्प, जल, बेलपत्र व आरती सेवा</Text>
+                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>शिव लिंग पूजा सेवा</Text>
+                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>पुष्प, जल, बेलपत्र व आरती सेवा</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.sadhnaCard}
+              style={[styles.sadhnaCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}
               onPress={() => router.push('/teaching/t-three-sutras' as any)}
               activeOpacity={0.9}
             >
               <Text style={styles.sadhnaIcon}>🙏</Text>
               <View style={styles.sadhnaTextCol}>
-                <Text style={styles.sadhnaTitle}>दया माँगना व चर्चा करना</Text>
-                <Text style={styles.sadhnaSub}>प्रथम व द्वितीय सूत्र का अभ्यास</Text>
+                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>दया माँगना व चर्चा करना</Text>
+                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>प्रथम व द्वितीय सूत्र का अभ्यास</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -234,55 +253,70 @@ export default function ShivCharchaScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgIvory,
-  },
-  navSubTabs: {
-    flexDirection: 'row',
-    backgroundColor: colors.maroonPrimary,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.goldPrimary,
-  },
-  subTabBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  subTabBtnActive: {
-    backgroundColor: colors.goldPrimary,
-  },
-  subTabText: {
-    fontSize: 13,
-    color: colors.bgIvory,
-    fontWeight: 'bold',
-  },
-  subTabTextActive: {
-    color: colors.maroonDark,
   },
   scrollContent: {
     padding: 16,
     paddingBottom: 110,
   },
+  sansarBanner: {
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    ...shadows.medium,
+  },
+  sansarBannerContent: {},
+  sansarBadge: {
+    alignSelf: 'flex-start',
+    fontSize: 11,
+    fontWeight: 'bold',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 6,
+  },
+  sansarTitle: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  sansarSub: {
+    fontSize: 12,
+    lineHeight: 17,
+    opacity: 0.9,
+  },
+  navSubTabs: {
+    flexDirection: 'row',
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  subTabBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  subTabText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
   sectionHeaderTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.maroonDark,
     marginBottom: 4,
   },
   sectionHeaderSub: {
     fontSize: 13,
-    color: colors.textMedium,
     marginBottom: 16,
   },
   topicCard: {
-    backgroundColor: colors.cardBg,
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: colors.borderLight,
     ...shadows.soft,
   },
   topicImage: {
@@ -294,18 +328,15 @@ const styles = StyleSheet.create({
   topicTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.textDark,
   },
   topicSubtitle: {
     fontSize: 12,
-    color: colors.saffronDark,
     fontWeight: 'bold',
     marginTop: 2,
     marginBottom: 6,
   },
   topicSummary: {
     fontSize: 13,
-    color: colors.textMedium,
     lineHeight: 20,
     marginBottom: 14,
   },
@@ -314,7 +345,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listenBtn: {
-    backgroundColor: colors.saffronPrimary,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
@@ -323,15 +353,12 @@ const styles = StyleSheet.create({
   listenBtnText: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: colors.textWhite,
   },
   readBtn: {
-    backgroundColor: colors.bgSoftAmber,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: colors.borderGold,
     marginRight: 8,
     flex: 1,
     alignItems: 'center',
@@ -339,29 +366,24 @@ const styles = StyleSheet.create({
   readBtnText: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: colors.maroonDark,
   },
   shareIconBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.bgIvory,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.borderLight,
   },
   shareIconText: {
     fontSize: 14,
   },
   bookCard: {
-    backgroundColor: colors.cardBgAmber,
     borderRadius: 18,
     padding: 16,
     flexDirection: 'row',
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: colors.borderGold,
     ...shadows.soft,
   },
   bookCover: {
@@ -376,40 +398,33 @@ const styles = StyleSheet.create({
   bookTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.maroonDark,
   },
   bookAuthor: {
     fontSize: 12,
-    color: colors.textLight,
     marginTop: 2,
   },
   easyTag: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: colors.saffronDark,
     marginTop: 4,
   },
   bookSummary: {
     fontSize: 12,
-    color: colors.textMedium,
     marginTop: 4,
     lineHeight: 16,
   },
   chapterBadge: {
     fontSize: 11,
-    color: colors.maroonPrimary,
     fontWeight: 'bold',
     marginTop: 6,
   },
   audioRowCard: {
-    backgroundColor: colors.cardBg,
     borderRadius: 16,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: colors.borderLight,
   },
   audioCover: {
     width: 50,
@@ -423,18 +438,15 @@ const styles = StyleSheet.create({
   audioRowTitle: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: colors.textDark,
   },
   audioRowSubtitle: {
     fontSize: 12,
-    color: colors.textLight,
     marginTop: 2,
   },
   audioPlayBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.goldPrimary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -442,14 +454,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sadhnaCard: {
-    backgroundColor: colors.maroonPrimary,
     borderRadius: 18,
     padding: 18,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 14,
     borderWidth: 1.5,
-    borderColor: colors.goldPrimary,
     ...shadows.gold,
   },
   sadhnaIcon: {
@@ -462,11 +472,9 @@ const styles = StyleSheet.create({
   sadhnaTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: colors.goldLight,
   },
   sadhnaSub: {
     fontSize: 12,
-    color: colors.bgIvory,
     opacity: 0.85,
     marginTop: 2,
   },

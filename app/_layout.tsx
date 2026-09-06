@@ -16,12 +16,66 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { AudioProvider } from '@/context/AudioContext';
+import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import { MiniPlayer } from '@/components/player/MiniPlayer';
 import { WebDeviceFrame } from '@/components/common/WebDeviceFrame';
 import { colors } from '@/theme/colors';
 
 // Prevent native splash screen from auto-hiding until initial mount is done
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+function RootNavigator() {
+  const { theme } = useTheme();
+
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: theme.navigationBackground,
+          },
+          headerTintColor: theme.textGold,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          contentStyle: {
+            backgroundColor: theme.background,
+          },
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="theme-selector" options={{ title: '🎨 अपना रंग चुनें' }} />
+        <Stack.Screen name="puja" options={{ title: '🌸 शिव लिंग पूजा सेवा', presentation: 'modal' }} />
+        <Stack.Screen name="jap" options={{ title: '📿 108 जाप साधना', presentation: 'card' }} />
+        <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
+        <Stack.Screen name="teaching/[id]" options={{ title: '💡 शिव गुरु ज्ञान' }} />
+        <Stack.Screen name="date/[id]" options={{ title: '📅 पावन दिवस स्मरण' }} />
+        <Stack.Screen name="reels" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
+        <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
+
+        {/* Shiv Sansar Routes */}
+        <Stack.Screen name="sansar/index" options={{ title: '🔱 शिव संसार' }} />
+        <Stack.Screen name="sansar/stories/index" options={{ title: '📖 शिव कथाएँ' }} />
+        <Stack.Screen name="sansar/stories/[id]" options={{ title: '📖 शिव कथा' }} />
+        <Stack.Screen name="sansar/jyotirlinga/index" options={{ title: '🛕 12 ज्योतिर्लिंग' }} />
+        <Stack.Screen name="sansar/jyotirlinga/[id]" options={{ title: '🛕 ज्योतिर्लिंग दर्शन' }} />
+        <Stack.Screen name="sansar/shakti-peeth/index" options={{ title: '🌺 शक्ति पीठ' }} />
+        <Stack.Screen name="sansar/shakti-peeth/[id]" options={{ title: '🌺 शक्ति पीठ दर्शन' }} />
+        <Stack.Screen name="sansar/family/index" options={{ title: '👨‍👩‍👧 शिव परिवार' }} />
+        <Stack.Screen name="sansar/swaroop/index" options={{ title: '🔱 शिव के स्वरूप' }} />
+        <Stack.Screen name="sansar/symbols/index" options={{ title: '🕉️ शिव के प्रतीक' }} />
+        <Stack.Screen name="sansar/temples/index" options={{ title: '🛕 प्रसिद्ध शिव मंदिर' }} />
+        <Stack.Screen name="sansar/yatra" options={{ title: '📍 शिव यात्रा' }} />
+        <Stack.Screen name="sansar/festivals/index" options={{ title: '📅 शिव पर्व एवं उत्सव' }} />
+      </Stack>
+
+      {/* Global Persistent Mini-Player */}
+      <MiniPlayer />
+    </>
+  );
+}
 
 export default function RootLayout() {
   const [isAppReady, setIsAppReady] = useState(false);
@@ -44,7 +98,7 @@ export default function RootLayout() {
       // Hide native plain splash screen immediately
       SplashScreen.hideAsync().catch(() => {});
 
-      // Custom animated intro transitions (matching thakur-prasad style)
+      // Custom animated intro transitions
       logoScale.value = withTiming(1, { duration: 900, easing: Easing.out(Easing.back(1.5)) });
       logoOpacity.value = withTiming(1, { duration: 600 });
       logoRotation.value = withTiming(720, { duration: 1200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
@@ -87,65 +141,40 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <AudioProvider>
-          <WebDeviceFrame>
-            <StatusBar style="light" />
-            <Stack
-              screenOptions={{
-                headerStyle: {
-                  backgroundColor: colors.maroonPrimary,
-                },
-                headerTintColor: colors.goldLight,
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-                contentStyle: {
-                  backgroundColor: colors.bgIvory,
-                },
-              }}
-            >
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="puja" options={{ title: '🌸 शिव लिंग पूजा सेवा', presentation: 'modal' }} />
-              <Stack.Screen name="jap" options={{ title: '📿 108 जाप साधना', presentation: 'card' }} />
-              <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
-              <Stack.Screen name="teaching/[id]" options={{ title: '💡 शिव गुरु ज्ञान' }} />
-              <Stack.Screen name="date/[id]" options={{ title: '📅 पावन दिवस स्मरण' }} />
-              <Stack.Screen name="reels" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
-              <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
-              <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
-            </Stack>
+        <ThemeProvider>
+          <AudioProvider>
+            <WebDeviceFrame>
+              <RootNavigator />
 
-            {/* Global Persistent Mini-Player */}
-            <MiniPlayer />
+              {/* Custom Animated Splash Screen Overlay */}
+              {isSplashVisible && (
+                <Animated.View style={[StyleSheet.absoluteFill, styles.splashContainer, animatedSplashStyle]}>
+                  <View style={styles.splashContent}>
+                    {/* Rotating & Scaling App Icon */}
+                    <Animated.View style={[styles.splashIconWrapper, animatedLogoStyle]}>
+                      <Image
+                        source={require('../assets/images/splash-icon.png')}
+                        style={styles.splashIconImage}
+                        resizeMode="contain"
+                      />
+                    </Animated.View>
 
-            {/* Custom Animated Splash Screen Overlay */}
-            {isSplashVisible && (
-              <Animated.View style={[StyleSheet.absoluteFill, styles.splashContainer, animatedSplashStyle]}>
-                <View style={styles.splashContent}>
-                  {/* Rotating & Scaling App Icon */}
-                  <Animated.View style={[styles.splashIconWrapper, animatedLogoStyle]}>
-                    <Image
-                      source={require('../assets/images/splash-icon.png')}
-                      style={styles.splashIconImage}
-                      resizeMode="contain"
-                    />
-                  </Animated.View>
+                    {/* Fading & Sliding Brand Text */}
+                    <Animated.View style={[styles.splashTextContainer, animatedTextStyle]}>
+                      <Text style={styles.splashTitle}>शिव चर्चा</Text>
+                      <Text style={styles.splashSubtitle}>हर हर महादेव</Text>
+                    </Animated.View>
+                  </View>
 
-                  {/* Fading & Sliding Brand Text */}
-                  <Animated.View style={[styles.splashTextContainer, animatedTextStyle]}>
-                    <Text style={styles.splashTitle}>शिव चर्चा</Text>
-                    <Text style={styles.splashSubtitle}>हर हर महादेव</Text>
-                  </Animated.View>
-                </View>
-
-                {/* Developer Branding */}
-                <Text style={styles.splashDeveloperText}>
-                  MAHAVYOMA STUDIO
-                </Text>
-              </Animated.View>
-            )}
-          </WebDeviceFrame>
-        </AudioProvider>
+                  {/* Developer Branding */}
+                  <Text style={styles.splashDeveloperText}>
+                    MAHAVYOMA STUDIO
+                  </Text>
+                </Animated.View>
+              )}
+            </WebDeviceFrame>
+          </AudioProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

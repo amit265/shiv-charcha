@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { shareTemplates } from '@/content/shareTemplates';
 import { ShareCardRenderer } from '@/components/share/ShareCardRenderer';
@@ -9,10 +10,11 @@ import { ShareTemplate } from '@/types';
 
 export default function ShareStudioScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const [selectedTemplate, setSelectedTemplate] = useState<ShareTemplate>(shareTemplates[0]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="शेयर स्टूडियो" subtitle="डिजाइन चुनें • नाम दर्ज करें • साझा करें" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>

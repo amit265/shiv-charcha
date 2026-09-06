@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
+import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { StorageService, defaultPreferences, defaultStats } from '@/services/storage';
 import { UserPreferences, UserStats } from '@/types';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [stats, setStats] = useState<UserStats>(defaultStats);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -119,35 +121,49 @@ export default function ProfileScreen() {
         </View>
 
         {/* SECTION: SETTINGS */}
-        <Text style={styles.sectionHeaderTitle}>ऐप सेटिंग्स ⚙️</Text>
-        <View style={styles.settingsCard}>
+        <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>ऐप सेटिंग्स ⚙️</Text>
+        <View style={[styles.settingsCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <TouchableOpacity
+            style={styles.settingRow}
+            onPress={() => router.push('/theme-selector' as any)}
+            activeOpacity={0.7}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🎨 ऐप रंग-सज्जा (Theme)</Text>
+              <Text style={{ fontSize: 12, color: theme.textSecondary, marginTop: 2 }}>
+                {theme.nameHindi}
+              </Text>
+            </View>
+            <Text style={{ fontSize: 16, color: theme.accent, fontWeight: 'bold' }}>बदलें ➔</Text>
+          </TouchableOpacity>
+
           <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>🔊 ध्वनि प्रभाव (Sound)</Text>
+            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🔊 ध्वनि प्रभाव (Sound)</Text>
             <Switch
               value={prefs.soundEnabled}
               onValueChange={toggleSound}
-              trackColor={{ false: '#D7CCC8', true: colors.goldPrimary }}
-              thumbColor={prefs.soundEnabled ? colors.maroonPrimary : '#F5F5F5'}
+              trackColor={{ false: '#D7CCC8', true: theme.accent }}
+              thumbColor={prefs.soundEnabled ? theme.primary : '#F5F5F5'}
             />
           </View>
 
           <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>📳 कंपन प्रतिक्रिया (Vibration)</Text>
+            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>📳 कंपन प्रतिक्रिया (Vibration)</Text>
             <Switch
               value={prefs.hapticsEnabled}
               onValueChange={toggleHaptics}
-              trackColor={{ false: '#D7CCC8', true: colors.goldPrimary }}
-              thumbColor={prefs.hapticsEnabled ? colors.maroonPrimary : '#F5F5F5'}
+              trackColor={{ false: '#D7CCC8', true: theme.accent }}
+              thumbColor={prefs.hapticsEnabled ? theme.primary : '#F5F5F5'}
             />
           </View>
 
           <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>🔔 दैनिक स्मरण सूचनाएं (Notifications)</Text>
+            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🔔 दैनिक स्मरण सूचनाएं (Notifications)</Text>
             <Switch
               value={prefs.notificationsEnabled}
               onValueChange={toggleNotifications}
-              trackColor={{ false: '#D7CCC8', true: colors.goldPrimary }}
-              thumbColor={prefs.notificationsEnabled ? colors.maroonPrimary : '#F5F5F5'}
+              trackColor={{ false: '#D7CCC8', true: theme.accent }}
+              thumbColor={prefs.notificationsEnabled ? theme.primary : '#F5F5F5'}
             />
           </View>
         </View>

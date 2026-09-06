@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../../theme/colors';
+import { useTheme } from '@/context/ThemeContext';
 
 interface HeaderProps {
   title?: string;
@@ -18,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSearchPress,
   rightAction,
 }) => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   const topPadding = Math.max(
     insets.top,
@@ -25,15 +26,22 @@ export const Header: React.FC<HeaderProps> = ({
   ) + 8;
 
   return (
-    <View style={[styles.container, { paddingTop: topPadding }]}>
+    <View style={[
+      styles.container,
+      {
+        backgroundColor: theme.navigationBackground,
+        borderBottomColor: theme.accent,
+        paddingTop: topPadding,
+      }
+    ]}>
       <View style={styles.topRow}>
         <View style={styles.logoRow}>
-          <View style={styles.omBadge}>
-            <Text style={styles.omText}>ॐ</Text>
+          <View style={[styles.omBadge, { backgroundColor: theme.accent, borderColor: theme.accentGlow }]}>
+            <Text style={[styles.omText, { color: theme.primaryDark }]}>ॐ</Text>
           </View>
           <View style={styles.textColumn}>
-            <Text style={styles.titleText}>{title}</Text>
-            {subtitle ? <Text style={styles.subtitleText}>{subtitle}</Text> : null}
+            <Text style={[styles.titleText, { color: theme.textGold }]}>{title}</Text>
+            {subtitle ? <Text style={[styles.subtitleText, { color: theme.textWhite }]}>{subtitle}</Text> : null}
           </View>
         </View>
 
@@ -52,11 +60,9 @@ export const Header: React.FC<HeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.maroonPrimary,
     paddingBottom: 14,
     paddingHorizontal: 18,
     borderBottomWidth: 2,
-    borderBottomColor: colors.goldPrimary,
   },
   topRow: {
     flexDirection: 'row',
@@ -72,17 +78,14 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.goldPrimary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
     borderWidth: 2,
-    borderColor: colors.goldLight,
   },
   omText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.maroonDark,
   },
   textColumn: {
     flex: 1,
@@ -90,12 +93,10 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: colors.goldLight,
     letterSpacing: 0.5,
   },
   subtitleText: {
     fontSize: 11,
-    color: colors.bgIvory,
     opacity: 0.9,
     marginTop: 2,
   },
