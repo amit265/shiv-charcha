@@ -136,6 +136,8 @@ import { ThemeId } from '../theme/themes';
 
 export interface UserPreferences {
   userName: string;
+  avatarIcon?: string;
+  hasCompletedOnboarding?: boolean;
   favoriteColorTheme: ThemeId;
   fontSize: 'medium' | 'large' | 'extra_large';
   notificationsEnabled: boolean;

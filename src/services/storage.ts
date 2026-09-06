@@ -12,6 +12,8 @@ const STORAGE_KEYS = {
 
 export const defaultPreferences: UserPreferences = {
   userName: 'शिव शिष्य',
+  avatarIcon: '🙏',
+  hasCompletedOnboarding: false,
   favoriteColorTheme: 'divya_sukoon',
   fontSize: 'medium',
   notificationsEnabled: true,

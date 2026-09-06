@@ -10,10 +10,34 @@ import { sacredDates } from '@/content/dates';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 
+import { StorageService } from '@/services/storage';
+import { OnboardingModal } from '@/components/common/OnboardingModal';
+
 export default function HomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
+  const [showOnboarding, setShowOnboarding] = React.useState(false);
+
+  React.useEffect(() => {
+    checkOnboarding();
+  }, []);
+
+  const checkOnboarding = async () => {
+    const prefs = await StorageService.getPreferences();
+    if (!prefs.hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  };
+
+  const handleOnboardingComplete = async (userName: string, avatarIcon: string) => {
+    await StorageService.savePreferences({
+      userName,
+      avatarIcon,
+      hasCompletedOnboarding: true,
+    });
+    setShowOnboarding(false);
+  };
 
   const todayMsg = dailyMessages[0];
   const todayBhajan = audioLibrary[0];
@@ -230,6 +254,13 @@ export default function HomeScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* GENTLE ONBOARDING MODAL ON COLD START */}
+      <OnboardingModal
+        visible={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onComplete={handleOnboardingComplete}
+      />
     </View>
   );
 }

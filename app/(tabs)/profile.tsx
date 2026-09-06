@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Alert, Platform, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+  Modal,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { StorageService, defaultPreferences, defaultStats } from '@/services/storage';
 import { UserPreferences, UserStats } from '@/types';
+import { OnboardingModal } from '@/components/common/OnboardingModal';
+
+const AVATAR_OPTIONS = ['🙏', '🔱', '🕉️', '📿', '🌺', '🌸', '🛕'];
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -14,6 +26,8 @@ export default function ProfileScreen() {
   const [stats, setStats] = useState<UserStats>(defaultStats);
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -24,47 +38,48 @@ export default function ProfileScreen() {
     const s = await StorageService.getStats();
     setPrefs(p);
     setStats(s);
-    setNameInput(p.userName);
+    setNameInput(p.userName || 'शिव शिष्य');
   };
 
   const handleSaveName = async () => {
-    await StorageService.savePreferences({ userName: nameInput });
-    setPrefs(prev => ({ ...prev, userName: nameInput }));
+    const trimmed = nameInput.trim() || 'शिव शिष्य';
+    await StorageService.savePreferences({ userName: trimmed });
+    setPrefs((prev) => ({ ...prev, userName: trimmed }));
     setIsEditingName(false);
   };
 
-  const toggleSound = async (val: boolean) => {
-    await StorageService.savePreferences({ soundEnabled: val });
-    setPrefs(prev => ({ ...prev, soundEnabled: val }));
+  const handleSelectAvatar = async (icon: string) => {
+    await StorageService.savePreferences({ avatarIcon: icon });
+    setPrefs((prev) => ({ ...prev, avatarIcon: icon }));
+    setShowAvatarPicker(false);
   };
 
-  const toggleHaptics = async (val: boolean) => {
-    await StorageService.savePreferences({ hapticsEnabled: val });
-    setPrefs(prev => ({ ...prev, hapticsEnabled: val }));
-  };
-
-  const toggleNotifications = async (val: boolean) => {
-    await StorageService.savePreferences({ notificationsEnabled: val });
-    setPrefs(prev => ({ ...prev, notificationsEnabled: val }));
+  const handleOnboardingComplete = async (userName: string, avatarIcon: string) => {
+    await StorageService.savePreferences({
+      userName,
+      avatarIcon,
+      hasCompletedOnboarding: true,
+    });
+    setPrefs((prev) => ({
+      ...prev,
+      userName,
+      avatarIcon,
+      hasCompletedOnboarding: true,
+    }));
+    setShowOnboardingModal(false);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header
         title="मेरी शिव शिष्यता प्रोफाइल"
-        subtitle="व्यक्तिगत यात्रा • ऐप सेटिंग्स"
+        subtitle="व्यक्तिगत यात्रा • साधना आँकड़े"
         rightAction={
           <TouchableOpacity
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 19,
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              borderWidth: 1,
-              borderColor: theme.borderGold,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={[
+              styles.headerRightBtn,
+              { backgroundColor: 'rgba(255, 255, 255, 0.15)', borderColor: theme.borderGold },
+            ]}
             onPress={() => router.push('/settings' as any)}
             activeOpacity={0.8}
           >
@@ -74,11 +89,18 @@ export default function ProfileScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* User Card */}
-        <View style={styles.userCard}>
-          <View style={styles.avatarCircle}>
-            <Text style={styles.avatarText}>🙏</Text>
-          </View>
+        {/* USER PROFILE IDENTITY CARD */}
+        <View style={[styles.userCard, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
+          <TouchableOpacity
+            style={[styles.avatarCircle, { backgroundColor: theme.accent, borderColor: theme.borderGold }]}
+            onPress={() => setShowAvatarPicker(true)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.avatarText}>{prefs.avatarIcon || '🙏'}</Text>
+            <View style={styles.avatarEditBadge}>
+              <Text style={{ fontSize: 10 }}>✏️</Text>
+            </View>
+          </TouchableOpacity>
 
           {isEditingName ? (
             <View style={styles.editNameRow}>
@@ -88,149 +110,186 @@ export default function ProfileScreen() {
                 onChangeText={setNameInput}
                 autoFocus
               />
-              <TouchableOpacity style={styles.saveNameBtn} onPress={handleSaveName}>
-                <Text style={styles.saveNameText}>सहेजें</Text>
+              <TouchableOpacity style={[styles.saveNameBtn, { backgroundColor: theme.accent }]} onPress={handleSaveName}>
+                <Text style={[styles.saveNameText, { color: theme.primaryDark }]}>सहेजें</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <TouchableOpacity style={styles.nameRow} onPress={() => setIsEditingName(true)}>
-              <Text style={styles.userNameText}>{prefs.userName} 🙏</Text>
+              <Text style={[styles.userNameText, { color: theme.textGold }]}>
+                {prefs.userName || 'शिव शिष्य'} 🙏
+              </Text>
               <Text style={styles.editIcon}>✏️</Text>
             </TouchableOpacity>
           )}
-          <Text style={styles.userSubText}>शिव शिष्य • नमः शिवाय साधना</Text>
+
+          <Text style={[styles.userSubText, { color: theme.textWhite }]}>
+            शिव शिष्य • नमः शिवाय साधना
+          </Text>
         </View>
 
-        {/* SECTION: MY SHIV GURU JOURNEY */}
-        <Text style={styles.sectionHeaderTitle}>मेरी शिव गुरु यात्रा 📊</Text>
+        {/* SECTION: MY SHIV GURU DEVOTIONAL STATS */}
+        <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>मेरी शिव गुरु यात्रा 📊</Text>
         <View style={styles.statsGrid}>
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{stats.activeDays}</Text>
-            <Text style={styles.statLabel}>सक्रिय दिन</Text>
+          <View style={[styles.statBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+            <Text style={[styles.statNumber, { color: theme.primary }]}>{stats.activeDays}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>सक्रिय दिन</Text>
           </View>
 
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{stats.japCompletions}</Text>
-            <Text style={styles.statLabel}>108 जाप पूर्ण</Text>
+          <View style={[styles.statBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+            <Text style={[styles.statNumber, { color: theme.primary }]}>{stats.japCompletions}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>108 जाप पूर्ण</Text>
           </View>
 
-          <View style={styles.statBox}>
-            <Text style={styles.statNumber}>{stats.audioListenedCount}</Text>
-            <Text style={styles.statLabel}>ऑडियो सुने</Text>
+          <View style={[styles.statBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+            <Text style={[styles.statNumber, { color: theme.primary }]}>{stats.totalJapCount || stats.japCompletions * 108}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>कुल मणके</Text>
+          </View>
+
+          <View style={[styles.statBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+            <Text style={[styles.statNumber, { color: theme.primary }]}>{stats.audioListenedCount}</Text>
+            <Text style={[styles.statLabel, { color: theme.textSecondary }]}>ऑडियो सुने</Text>
           </View>
         </View>
 
-        {/* Quick Utilities Shortcuts */}
-        <View style={styles.shortcutRow}>
+        {/* SECTION: DEVOTIONAL TOOLS SHORTCUTS */}
+        <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>साधना केंद्र एवं सुविधाएं 🌸</Text>
+        <View style={styles.toolsGrid}>
           <TouchableOpacity
-            style={styles.shortcutBtn}
+            style={[styles.toolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+            onPress={() => router.push('/puja' as any)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.toolIcon}>🌸</Text>
+            <View style={styles.toolTextCol}>
+              <Text style={[styles.toolTitle, { color: theme.textPrimary }]}>शिव लिंग पूजा सेवा</Text>
+              <Text style={[styles.toolSub, { color: theme.textSecondary }]}>जल, बेलपत्र व आरती चढ़ाएं</Text>
+            </View>
+            <Text style={{ color: theme.accent, fontWeight: 'bold' }}>➔</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.toolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+            onPress={() => router.push('/jap' as any)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.toolIcon}>📿</Text>
+            <View style={styles.toolTextCol}>
+              <Text style={[styles.toolTitle, { color: theme.textPrimary }]}>108 जाप साधना</Text>
+              <Text style={[styles.toolSub, { color: theme.textSecondary }]}>मंत्र जाप काउंटर व रुद्राक्ष</Text>
+            </View>
+            <Text style={{ color: theme.accent, fontWeight: 'bold' }}>➔</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.toolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             onPress={() => router.push('/gallery' as any)}
             activeOpacity={0.8}
           >
-            <Text style={styles.shortcutIcon}>🖼️</Text>
-            <Text style={styles.shortcutText}>वॉलपेपर</Text>
+            <Text style={styles.toolIcon}>🖼️</Text>
+            <View style={styles.toolTextCol}>
+              <Text style={[styles.toolTitle, { color: theme.textPrimary }]}>पावन गैलरी व वॉलपेपर</Text>
+              <Text style={[styles.toolSub, { color: theme.textSecondary }]}>एचडी शिव वॉलपेपर संग्रह</Text>
+            </View>
+            <Text style={{ color: theme.accent, fontWeight: 'bold' }}>➔</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.shortcutBtn}
+            style={[styles.toolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             onPress={() => router.push('/ringtones' as any)}
             activeOpacity={0.8}
           >
-            <Text style={styles.shortcutIcon}>🔔</Text>
-            <Text style={styles.shortcutText}>रिंगटोन</Text>
+            <Text style={styles.toolIcon}>🔔</Text>
+            <View style={styles.toolTextCol}>
+              <Text style={[styles.toolTitle, { color: theme.textPrimary }]}>भक्तिमय ध्वनियाँ व रिंगटोन</Text>
+              <Text style={[styles.toolSub, { color: theme.textSecondary }]}>शंख, डमरू व मंत्र ध्वनियाँ</Text>
+            </View>
+            <Text style={{ color: theme.accent, fontWeight: 'bold' }}>➔</Text>
           </TouchableOpacity>
         </View>
 
-        {/* SECTION: SETTINGS */}
-        <Text style={[styles.sectionHeaderTitle, { color: theme.primary }]}>ऐप सेटिंग्स ⚙️</Text>
-        <View style={[styles.settingsCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-          <TouchableOpacity
-            style={styles.settingRow}
-            onPress={() => router.push('/theme-selector' as any)}
-            activeOpacity={0.7}
-          >
+        {/* SECTION: ONBOARDING TOUR REPLAY */}
+        <TouchableOpacity
+          style={[styles.tourBanner, { backgroundColor: theme.surfaceElevated, borderColor: theme.accent }]}
+          onPress={() => setShowOnboardingModal(true)}
+          activeOpacity={0.85}
+        >
+          <View style={styles.tourLeft}>
+            <Text style={{ fontSize: 26, marginRight: 12 }}>🌸</Text>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🎨 ऐप रंग-सज्जा (Theme)</Text>
-              <Text style={{ fontSize: 12, color: theme.textSecondary, marginTop: 2 }}>
-                {theme.nameHindi}
+              <Text style={[styles.tourTitle, { color: theme.primary }]}>शिव चर्चा 3 सूत्र एवं परिचय</Text>
+              <Text style={[styles.tourSub, { color: theme.textSecondary }]}>
+                साहब श्री हरिंद्रानंद जी के 3 सूत्र व ऐप परिचय पुनः देखें
               </Text>
             </View>
-            <Text style={{ fontSize: 16, color: theme.accent, fontWeight: 'bold' }}>बदलें ➔</Text>
-          </TouchableOpacity>
-
-          <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🔊 ध्वनि प्रभाव (Sound)</Text>
-            <Switch
-              value={prefs.soundEnabled}
-              onValueChange={toggleSound}
-              trackColor={{ false: '#D7CCC8', true: theme.accent }}
-              thumbColor={prefs.soundEnabled ? theme.primary : '#F5F5F5'}
-            />
           </View>
+          <Text style={[styles.tourBtnText, { color: theme.primary }]}>देखें ➔</Text>
+        </TouchableOpacity>
 
-          <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>📳 कंपन प्रतिक्रिया (Vibration)</Text>
-            <Switch
-              value={prefs.hapticsEnabled}
-              onValueChange={toggleHaptics}
-              trackColor={{ false: '#D7CCC8', true: theme.accent }}
-              thumbColor={prefs.hapticsEnabled ? theme.primary : '#F5F5F5'}
-            />
-          </View>
-
-          <View style={styles.settingRow}>
-            <Text style={[styles.settingLabel, { color: theme.textPrimary }]}>🔔 दैनिक स्मरण सूचनाएं (Notifications)</Text>
-            <Switch
-              value={prefs.notificationsEnabled}
-              onValueChange={toggleNotifications}
-              trackColor={{ false: '#D7CCC8', true: theme.accent }}
-              thumbColor={prefs.notificationsEnabled ? theme.primary : '#F5F5F5'}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={[styles.settingRow, { borderBottomWidth: 0, paddingTop: 14 }]}
-            onPress={() => router.push('/settings' as any)}
-            activeOpacity={0.7}
-          >
+        {/* SECTION: FULL SETTINGS ENTRY BANNER */}
+        <TouchableOpacity
+          style={[styles.settingsEntryCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+          onPress={() => router.push('/settings' as any)}
+          activeOpacity={0.85}
+        >
+          <View style={styles.settingsEntryLeft}>
+            <Text style={{ fontSize: 28, marginRight: 12 }}>⚙️</Text>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.settingLabel, { color: theme.primary, fontWeight: 'bold' }]}>⚙️ सभी सेटिंग्स, शेयर एवं कानूनी नीतियाँ</Text>
-              <Text style={{ fontSize: 12, color: theme.textSecondary, marginTop: 2 }}>
-                ऐप शेयर, रेटिंग, हमारे अन्य ऐप एवं नीतियाँ
+              <Text style={[styles.settingsEntryTitle, { color: theme.textPrimary }]}>ऐप सेटिंग्स एवं कानूनी नीतियाँ</Text>
+              <Text style={[styles.settingsEntrySub, { color: theme.textSecondary }]}>
+                थीम बदलें, ध्वनि/कंपन, ऐप शेयर, रेटिंग एवं नीतियाँ
               </Text>
             </View>
-            <Text style={{ fontSize: 16, color: theme.primary, fontWeight: 'bold' }}>खोलें ➔</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* SECTION: ABOUT & LEGAL */}
-        <Text style={styles.sectionHeaderTitle}>ऐप परिचय व कानूनी जानकारी ℹ️</Text>
-        <View style={styles.aboutCard}>
-          <Text style={styles.aboutTitle}>महाव्योम स्टूडियो (Mahavyoma Studio)</Text>
-          <Text style={styles.aboutDesc}>
-            शिव चर्चा V1 — एक सुंदर, सहज, भक्तिमय और सर्वसुलभ डिजिटल साथी।
-          </Text>
-
-          <View style={styles.legalList}>
-            <Text style={styles.legalItem}>• सर्वाधिकार सुरक्षित © महाव्योम स्टूडियो</Text>
-            <Text style={styles.legalItem}>
-              • सामग्री आभार: साहब श्री हरिंद्रानंद जी एवं दीदी माँ नीलम आनंद जी के पावन विचार
-            </Text>
-
-            <TouchableOpacity onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/privacy')} activeOpacity={0.7} style={{ marginVertical: 4 }}>
-              <Text style={[styles.legalItem, { color: theme.primary, fontWeight: 'bold' }]}>
-                🔒 गोपनीयता नीति (Privacy Policy) ➔
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/terms')} activeOpacity={0.7} style={{ marginVertical: 4 }}>
-              <Text style={[styles.legalItem, { color: theme.primary, fontWeight: 'bold' }]}>
-                📜 सेवा की शर्तें (Terms of Service) ➔
-              </Text>
-            </TouchableOpacity>
           </View>
-        </View>
+          <View style={[styles.settingsEntryBadge, { backgroundColor: theme.primary }]}>
+            <Text style={[styles.settingsEntryBadgeText, { color: theme.textWhite }]}>खोलें ➔</Text>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
+
+      {/* AVATAR PICKER MODAL */}
+      <Modal
+        visible={showAvatarPicker}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowAvatarPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.avatarModalContainer, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}>
+            <Text style={[styles.avatarModalTitle, { color: theme.primary }]}>अपना पावन प्रतीक चुनें 🙏</Text>
+
+            <View style={styles.avatarPickerGrid}>
+              {AVATAR_OPTIONS.map((icon) => (
+                <TouchableOpacity
+                  key={icon}
+                  style={[
+                    styles.avatarSelectBtn,
+                    {
+                      backgroundColor: prefs.avatarIcon === icon ? theme.primary : theme.surfaceElevated,
+                      borderColor: prefs.avatarIcon === icon ? theme.accent : theme.border,
+                    },
+                  ]}
+                  onPress={() => handleSelectAvatar(icon)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={{ fontSize: 28 }}>{icon}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity style={styles.avatarModalCloseBtn} onPress={() => setShowAvatarPicker(false)}>
+              <Text style={[styles.avatarModalCloseText, { color: theme.textSecondary }]}>बंद करें</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ONBOARDING MODAL REPLAY */}
+      <OnboardingModal
+        visible={showOnboardingModal}
+        onClose={() => setShowOnboardingModal(false)}
+        onComplete={handleOnboardingComplete}
+      />
     </View>
   );
 }
@@ -238,33 +297,52 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bgIvory,
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 110,
+    paddingBottom: 50,
+  },
+  headerRightBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   userCard: {
-    backgroundColor: colors.maroonPrimary,
     borderRadius: 20,
     padding: 20,
     alignItems: 'center',
     marginBottom: 20,
     borderWidth: 1.5,
-    borderColor: colors.goldPrimary,
     ...shadows.medium,
   },
   avatarCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: colors.goldPrimary,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
+    borderWidth: 2,
+    position: 'relative',
   },
   avatarText: {
-    fontSize: 32,
+    fontSize: 34,
+  },
+  avatarEditBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CCC',
   },
   nameRow: {
     flexDirection: 'row',
@@ -273,7 +351,6 @@ const styles = StyleSheet.create({
   userNameText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.goldLight,
   },
   editIcon: {
     fontSize: 14,
@@ -289,11 +366,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     fontSize: 16,
-    color: colors.textDark,
+    color: '#000000',
     width: 160,
   },
   saveNameBtn: {
-    backgroundColor: colors.goldPrimary,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
@@ -302,122 +378,172 @@ const styles = StyleSheet.create({
   saveNameText: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: colors.maroonDark,
   },
   userSubText: {
     fontSize: 12,
-    color: colors.bgIvory,
-    opacity: 0.85,
+    opacity: 0.9,
     marginTop: 4,
   },
   sectionHeaderTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: colors.maroonDark,
     marginBottom: 10,
     marginTop: 6,
   },
   statsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 18,
+    gap: 10,
+    marginBottom: 20,
   },
   statBox: {
-    backgroundColor: colors.cardBgAmber,
+    width: '48%',
     borderRadius: 16,
     padding: 14,
-    flex: 0.31,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.borderGold,
     ...shadows.soft,
   },
   statNumber: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: colors.saffronDark,
   },
   statLabel: {
     fontSize: 11,
-    color: colors.textMedium,
     marginTop: 4,
     textAlign: 'center',
   },
-  shortcutRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  toolsGrid: {
     marginBottom: 20,
+    gap: 10,
   },
-  shortcutBtn: {
-    backgroundColor: colors.cardBg,
+  toolCard: {
     borderRadius: 16,
     padding: 14,
-    flex: 0.48,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 1,
-    borderColor: colors.borderLight,
     ...shadows.soft,
   },
-  shortcutIcon: {
-    fontSize: 20,
-    marginRight: 8,
+  toolIcon: {
+    fontSize: 24,
+    marginRight: 12,
   },
-  shortcutText: {
+  toolTextCol: {
+    flex: 1,
+  },
+  toolTitle: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: colors.textDark,
   },
-  settingsCard: {
-    backgroundColor: colors.cardBg,
+  toolSub: {
+    fontSize: 11,
+    marginTop: 2,
+  },
+  tourBanner: {
+    borderRadius: 18,
+    padding: 14,
+    marginBottom: 14,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    ...shadows.soft,
+  },
+  tourLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    paddingRight: 8,
+  },
+  tourTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  tourSub: {
+    fontSize: 11,
+    marginTop: 2,
+  },
+  tourBtnText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  settingsEntryCard: {
     borderRadius: 18,
     padding: 16,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: colors.borderLight,
-  },
-  settingRow: {
+    borderWidth: 1.5,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.borderLight,
+    justifyContent: 'space-between',
+    ...shadows.soft,
   },
-  settingLabel: {
+  settingsEntryLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    paddingRight: 10,
+  },
+  settingsEntryTitle: {
     fontSize: 14,
-    color: colors.textDark,
-    fontWeight: '500',
+    fontWeight: 'bold',
   },
-  aboutCard: {
-    backgroundColor: colors.bgSoftAmber,
-    borderRadius: 18,
-    padding: 18,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: colors.borderGold,
+  settingsEntrySub: {
+    fontSize: 11,
+    marginTop: 2,
+    lineHeight: 15,
   },
-  aboutTitle: {
+  settingsEntryBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  settingsEntryBadgeText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  avatarModalContainer: {
+    width: '100%',
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 2,
+    alignItems: 'center',
+    ...shadows.medium,
+  },
+  avatarModalTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: colors.maroonDark,
+    marginBottom: 16,
   },
-  aboutDesc: {
-    fontSize: 13,
-    color: colors.textMedium,
-    marginTop: 4,
-    lineHeight: 18,
+  avatarPickerGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+    marginBottom: 16,
   },
-  legalList: {
-    marginTop: 12,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.borderGold,
+  avatarSelectBtn: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
   },
-  legalItem: {
-    fontSize: 11,
-    color: colors.textLight,
-    lineHeight: 18,
+  avatarModalCloseBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  avatarModalCloseText: {
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
