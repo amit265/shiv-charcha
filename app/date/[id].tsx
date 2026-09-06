@@ -29,15 +29,15 @@ export default function SacredDateDetailScreen() {
         {/* Large Devotional Artwork */}
         <Image source={{ uri: dateItem.imageUrl }} style={styles.heroImage} />
 
-        <View style={styles.contentCard}>
-          <Text style={styles.dateTag}>📅 {dateItem.date} पावन तिथि</Text>
-          <Text style={styles.title}>{dateItem.title}</Text>
-          <Text style={styles.subtitle}>{dateItem.subtitle}</Text>
+        <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <Text style={[styles.dateTag, { color: theme.primary }]}>📅 {dateItem.date} पावन तिथि</Text>
+          <Text style={[styles.title, { color: theme.primary }]}>{dateItem.title}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{dateItem.subtitle}</Text>
 
           {/* Audio Button */}
           {dateItem.audioUrl && (
             <TouchableOpacity
-              style={styles.audioBtn}
+              style={[styles.audioBtn, { backgroundColor: theme.primary }]}
               onPress={() =>
                 playTrack({
                   id: dateItem.id,
@@ -51,41 +51,41 @@ export default function SacredDateDetailScreen() {
               }
               activeOpacity={0.8}
             >
-              <Text style={styles.audioBtnText}>🎧 ऑडियो स्मरण व्याख्यान सुनें</Text>
+              <Text style={[styles.audioBtnText, { color: theme.textWhite }]}>🎧 ऑडियो स्मरण व्याख्यान सुनें</Text>
             </TouchableOpacity>
           )}
 
           {/* Description */}
-          <Text style={styles.descText}>{dateItem.description}</Text>
+          <Text style={[styles.descText, { color: theme.textPrimary }]}>{dateItem.description}</Text>
 
           {/* Detailed Text */}
-          <Text style={styles.sectionHeading}>📖 पावन संस्मरण व महत्व:</Text>
-          <Text style={styles.fullText}>{dateItem.detailedText}</Text>
+          <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 पावन संस्मरण व महत्व:</Text>
+          <Text style={[styles.fullText, { color: theme.textPrimary }]}>{dateItem.detailedText}</Text>
 
           {/* Quick Actions */}
           <View style={styles.actionsGrid}>
             <TouchableOpacity
-              style={styles.actionCardBtn}
+              style={[styles.actionCardBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
               onPress={() => router.push('/jap' as any)}
               activeOpacity={0.8}
             >
               <Text style={styles.actionIcon}>📿</Text>
-              <Text style={styles.actionText}>108 जाप करें</Text>
+              <Text style={[styles.actionText, { color: theme.textPrimary }]}>108 जाप करें</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.actionCardBtn}
+              style={[styles.actionCardBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
               onPress={() => router.push('/share' as any)}
               activeOpacity={0.8}
             >
               <Text style={styles.actionIcon}>🖼️</Text>
-              <Text style={styles.actionText}>शेयर कार्ड बनाएं</Text>
+              <Text style={[styles.actionText, { color: theme.textPrimary }]}>शेयर कार्ड बनाएं</Text>
             </TouchableOpacity>
           </View>
 
           {/* Share Button */}
-          <TouchableOpacity style={styles.shareBtn} onPress={handleShare} activeOpacity={0.8}>
-            <Text style={styles.shareBtnText}>📤 यह स्मरण संदेश साझा करें</Text>
+          <TouchableOpacity style={[styles.shareBtn, { backgroundColor: theme.primary }]} onPress={handleShare} activeOpacity={0.8}>
+            <Text style={[styles.shareBtnText, { color: theme.textWhite }]}>📤 यह स्मरण संदेश साझा करें</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -21,72 +21,78 @@ export default function BookDetailScreen() {
       <Header title="📖 पुस्तक अध्ययन" subtitle={book.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Book Header Card */}
-        <View style={styles.bookHeaderCard}>
+        <View style={[styles.bookHeaderCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}>
           <Image source={{ uri: book.coverImage }} style={styles.coverImage} />
           <View style={styles.headerMeta}>
-            <Text style={styles.bookTitle}>{book.title}</Text>
-            <Text style={styles.authorText}>लेखक: {book.author}</Text>
-            <Text style={styles.easyHighlight}>✨ आसान भाषा में अध्याय सार</Text>
-            <Text style={styles.descText}>{book.description}</Text>
+            <Text style={[styles.bookTitle, { color: theme.textGold }]}>{book.title}</Text>
+            <Text style={[styles.authorText, { color: theme.textWhite }]}>लेखक: {book.author}</Text>
+            <Text style={[styles.easyHighlight, { color: theme.accent }]}>✨ आसान भाषा में अध्याय सार</Text>
+            <Text style={[styles.descText, { color: theme.textWhite }]}>{book.description}</Text>
           </View>
         </View>
 
         {/* Chapter Selector Tabs */}
         {book.chapters.length > 1 && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chapTabsScroll}>
-            {book.chapters.map((chap, idx) => (
-              <TouchableOpacity
-                key={chap.id}
-                style={[
-                  styles.chapTabBtn,
-                  activeChapterIndex === idx && styles.chapTabBtnActive,
-                ]}
-                onPress={() => setActiveChapterIndex(idx)}
-                activeOpacity={0.8}
-              >
-                <Text
+            {book.chapters.map((chap, idx) => {
+              const isActive = activeChapterIndex === idx;
+              return (
+                <TouchableOpacity
+                  key={chap.id}
                   style={[
-                    styles.chapTabText,
-                    activeChapterIndex === idx && styles.chapTabTextActive,
+                    styles.chapTabBtn,
+                    {
+                      backgroundColor: isActive ? theme.primary : theme.cardBg,
+                      borderColor: isActive ? theme.accent : theme.border,
+                    },
                   ]}
+                  onPress={() => setActiveChapterIndex(idx)}
+                  activeOpacity={0.8}
                 >
-                  अध्याय {chap.chapterNumber}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text
+                    style={[
+                      styles.chapTabText,
+                      { color: isActive ? theme.textWhite : theme.textPrimary },
+                    ]}
+                  >
+                    अध्याय {chap.chapterNumber}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
         )}
 
         {/* Chapter Content Card */}
         {chapter && (
-          <View style={styles.chapterCard}>
-            <Text style={styles.chapterTitle}>{chapter.title}</Text>
+          <View style={[styles.chapterCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+            <Text style={[styles.chapterTitle, { color: theme.primary }]}>{chapter.title}</Text>
 
             {/* "आसान भाषा में समझें" Featured Box */}
-            <View style={styles.easySummaryBox}>
-              <Text style={styles.easyHeader}>💡 आसान भाषा में समझें:</Text>
-              <Text style={styles.easyContent}>{chapter.summaryHindi}</Text>
+            <View style={[styles.easySummaryBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+              <Text style={[styles.easyHeader, { color: theme.primary }]}>💡 आसान भाषा में समझें:</Text>
+              <Text style={[styles.easyContent, { color: theme.textPrimary }]}>{chapter.summaryHindi}</Text>
             </View>
 
             {/* Key Lessons */}
-            <Text style={styles.sectionHeading}>🎯 मुख्य सीख:</Text>
+            <Text style={[styles.sectionHeading, { color: theme.primary }]}>🎯 मुख्य सीख:</Text>
             {chapter.keyLessons.map((lesson, idx) => (
               <View key={idx} style={styles.bulletRow}>
-                <Text style={styles.bulletDot}>•</Text>
-                <Text style={styles.bulletText}>{lesson}</Text>
+                <Text style={[styles.bulletDot, { color: theme.primary }]}>•</Text>
+                <Text style={[styles.bulletText, { color: theme.textSecondary }]}>{lesson}</Text>
               </View>
             ))}
 
             {/* Daily Life Connection */}
-            <View style={styles.dailyConnectionBox}>
-              <Text style={styles.dailyHeader}>🌱 आज की जिंदगी से संबंध:</Text>
-              <Text style={styles.dailyText}>{chapter.dailyLifeConnection}</Text>
+            <View style={[styles.dailyConnectionBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
+              <Text style={[styles.dailyHeader, { color: theme.primary }]}>🌱 आज की जिंदगी से संबंध:</Text>
+              <Text style={[styles.dailyText, { color: theme.textSecondary }]}>{chapter.dailyLifeConnection}</Text>
             </View>
 
             {/* Audio Explanation Button */}
             {chapter.audioUrl && (
               <TouchableOpacity
-                style={styles.audioBtn}
+                style={[styles.audioBtn, { backgroundColor: theme.primary }]}
                 onPress={() =>
                   playTrack({
                     id: chapter.id,
@@ -101,13 +107,13 @@ export default function BookDetailScreen() {
                 }
                 activeOpacity={0.8}
               >
-                <Text style={styles.audioBtnText}>🎧 अध्याय का ऑडियो व्याख्यान सुनें</Text>
+                <Text style={[styles.audioBtnText, { color: theme.textWhite }]}>🎧 अध्याय का ऑडियो व्याख्यान सुनें</Text>
               </TouchableOpacity>
             )}
 
             {/* Full Chapter Text */}
-            <Text style={styles.sectionHeading}>📖 विस्तृत पाठ:</Text>
-            <Text style={styles.fullText}>{chapter.fullText}</Text>
+            <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 विस्तृत पाठ:</Text>
+            <Text style={[styles.fullText, { color: theme.textPrimary }]}>{chapter.fullText}</Text>
           </View>
         )}
       </ScrollView>

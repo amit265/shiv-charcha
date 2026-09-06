@@ -30,14 +30,14 @@ export default function TeachingDetailScreen() {
           <Image source={{ uri: topic.imageUrl }} style={styles.heroImage} />
         )}
 
-        <View style={styles.contentCard}>
-          <Text style={styles.title}>{topic.title}</Text>
-          <Text style={styles.subtitle}>{topic.subTitle}</Text>
+        <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <Text style={[styles.title, { color: theme.primary }]}>{topic.title}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{topic.subTitle}</Text>
 
           {/* Audio Bar */}
           {topic.audioUrl && (
             <TouchableOpacity
-              style={styles.audioBar}
+              style={[styles.audioBar, { backgroundColor: theme.primary }]}
               onPress={() =>
                 playTrack({
                   id: topic.id,
@@ -51,31 +51,31 @@ export default function TeachingDetailScreen() {
               }
               activeOpacity={0.8}
             >
-              <Text style={styles.audioBarText}>🎧 सुनें (Audio Explanation)</Text>
+              <Text style={[styles.audioBarText, { color: theme.textWhite }]}>🎧 सुनें (Audio Explanation)</Text>
             </TouchableOpacity>
           )}
 
           {/* Summary Box */}
-          <View style={styles.summaryBox}>
-            <Text style={styles.summaryTitle}>सरल सार:</Text>
-            <Text style={styles.summaryText}>{topic.summary}</Text>
+          <View style={[styles.summaryBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+            <Text style={[styles.summaryTitle, { color: theme.primary }]}>सरल सार:</Text>
+            <Text style={[styles.summaryText, { color: theme.textPrimary }]}>{topic.summary}</Text>
           </View>
 
           {/* Key Takeaways */}
-          <Text style={styles.sectionHeading}>🎯 मुख्य बिंदु:</Text>
+          <Text style={[styles.sectionHeading, { color: theme.primary }]}>🎯 मुख्य बिंदु:</Text>
           {topic.keyTakeaways.map((item, idx) => (
             <View key={idx} style={styles.bulletRow}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{item}</Text>
+              <Text style={[styles.bulletDot, { color: theme.primary }]}>•</Text>
+              <Text style={[styles.bulletText, { color: theme.textSecondary }]}>{item}</Text>
             </View>
           ))}
 
           {/* Practical Examples */}
           {topic.practicalExamples && topic.practicalExamples.length > 0 && (
-            <View style={styles.examplesBox}>
-              <Text style={styles.examplesTitle}>🌱 दैनिक जीवन में प्रयोग:</Text>
+            <View style={[styles.examplesBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
+              <Text style={[styles.examplesTitle, { color: theme.primary }]}>🌱 दैनिक जीवन में प्रयोग:</Text>
               {topic.practicalExamples.map((ex, idx) => (
-                <Text key={idx} style={styles.exampleItem}>
+                <Text key={idx} style={[styles.exampleItem, { color: theme.textPrimary }]}>
                   - {ex}
                 </Text>
               ))}
@@ -83,12 +83,12 @@ export default function TeachingDetailScreen() {
           )}
 
           {/* Full Text */}
-          <Text style={styles.sectionHeading}>📖 विस्तृत विवेचन:</Text>
-          <Text style={styles.fullText}>{topic.fullContent}</Text>
+          <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 विस्तृत विवेचन:</Text>
+          <Text style={[styles.fullText, { color: theme.textPrimary }]}>{topic.fullContent}</Text>
 
           {/* Share Button */}
-          <TouchableOpacity style={styles.shareBtn} onPress={handleShare} activeOpacity={0.8}>
-            <Text style={styles.shareBtnText}>📤 यह ज्ञान संदेश साझा करें</Text>
+          <TouchableOpacity style={[styles.shareBtn, { backgroundColor: theme.primary }]} onPress={handleShare} activeOpacity={0.8}>
+            <Text style={[styles.shareBtnText, { color: theme.textWhite }]}>📤 यह ज्ञान संदेश साझा करें</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

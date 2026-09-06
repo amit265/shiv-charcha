@@ -423,7 +423,7 @@ export default function SettingsScreen() {
                     }}
                     onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/privacy')}
                   >
-                    <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>
+                    <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 अधिकारी वेबसाइट पर गोपनीयता नीति खोलें
                     </Text>
                   </TouchableOpacity>
@@ -452,7 +452,7 @@ export default function SettingsScreen() {
                     }}
                     onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/terms')}
                   >
-                    <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>
+                    <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 आधिकारिक वेबसाइट पर सेवा शर्तें खोलें
                     </Text>
                   </TouchableOpacity>

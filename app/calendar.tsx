@@ -61,22 +61,28 @@ export default function DedicatedCalendarScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Month Selector Bar */}
-        <View style={styles.monthHeader}>
+        <View style={[styles.monthHeader, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
           <TouchableOpacity style={styles.monthArrow} onPress={handlePrevMonth} activeOpacity={0.7}>
-            <Text style={styles.arrowText}>◀</Text>
+            <Text style={[styles.arrowText, { color: theme.textGold }]}>◀</Text>
           </TouchableOpacity>
-          <Text style={styles.monthTitle}>{selectedMonthText}</Text>
+          <Text style={[styles.monthTitle, { color: theme.textGold }]}>{selectedMonthText}</Text>
           <TouchableOpacity style={styles.monthArrow} onPress={handleNextMonth} activeOpacity={0.7}>
-            <Text style={styles.arrowText}>▶</Text>
+            <Text style={[styles.arrowText, { color: theme.textGold }]}>▶</Text>
           </TouchableOpacity>
         </View>
 
         {/* Calendar Grid View */}
-        <View style={styles.calendarCard}>
+        <View style={[styles.calendarCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           {/* Weekday headers */}
-          <View style={styles.weekRow}>
+          <View style={[styles.weekRow, { borderBottomColor: theme.border }]}>
             {['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'].map((day, idx) => (
-              <Text key={idx} style={[styles.weekCell, idx === 1 && styles.mondayHighlight]}>
+              <Text
+                key={idx}
+                style={[
+                  styles.weekCell,
+                  { color: idx === 1 ? theme.primary : theme.textSecondary },
+                ]}
+              >
                 {day}
               </Text>
             ))}
@@ -101,8 +107,8 @@ export default function DedicatedCalendarScreen() {
                   key={dayNum}
                   style={[
                     styles.dayCell,
-                    isMonday && styles.mondayBg,
-                    isSpecial && styles.specialDayBg,
+                    isMonday && { backgroundColor: theme.surfaceElevated },
+                    isSpecial && { backgroundColor: theme.primary, borderWidth: 1, borderColor: theme.accent },
                   ]}
                   onPress={() => {
                     if (dayNum === 17) router.push('/date/date-harindranand-ji' as any);
@@ -114,8 +120,14 @@ export default function DedicatedCalendarScreen() {
                   <Text
                     style={[
                       styles.dayNumText,
-                      isSpecial && styles.specialDayText,
-                      isMonday && styles.mondayText,
+                      {
+                        color: isSpecial
+                          ? theme.textWhite
+                          : isMonday
+                          ? theme.primary
+                          : theme.textPrimary,
+                        fontWeight: isSpecial || isMonday ? 'bold' : 'normal',
+                      },
                     ]}
                   >
                     {dayNum}
@@ -128,21 +140,21 @@ export default function DedicatedCalendarScreen() {
         </View>
 
         {/* Highlighted Sacred Dates List */}
-        <Text style={styles.listSectionTitle}>महत्वपूर्ण शिव चर्चा तिथियाँ 🌺</Text>
+        <Text style={[styles.listSectionTitle, { color: theme.primary }]}>महत्वपूर्ण शिव चर्चा तिथियाँ 🌺</Text>
 
         {sacredDates.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={styles.dateCard}
+            style={[styles.dateCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             onPress={() => router.push(`/date/${item.id}` as any)}
             activeOpacity={0.9}
           >
             <Image source={{ uri: item.imageUrl }} style={styles.dateThumb} />
             <View style={styles.dateMeta}>
-              <Text style={styles.dateBadge}>📅 {item.date}</Text>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardSub}>{item.subtitle}</Text>
-              <Text style={styles.cardDesc} numberOfLines={2}>
+              <Text style={[styles.dateBadge, { color: theme.primary }]}>📅 {item.date}</Text>
+              <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
+              <Text style={[styles.cardSub, { color: theme.textSecondary }]}>{item.subtitle}</Text>
+              <Text style={[styles.cardDesc, { color: theme.textMuted }]} numberOfLines={2}>
                 {item.description}
               </Text>
             </View>

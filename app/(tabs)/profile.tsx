@@ -97,7 +97,7 @@ export default function ProfileScreen() {
             activeOpacity={0.8}
           >
             <Text style={styles.avatarText}>{prefs.avatarIcon || '🙏'}</Text>
-            <View style={styles.avatarEditBadge}>
+            <View style={[styles.avatarEditBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
               <Text style={{ fontSize: 10 }}>✏️</Text>
             </View>
           </TouchableOpacity>
@@ -105,7 +105,14 @@ export default function ProfileScreen() {
           {isEditingName ? (
             <View style={styles.editNameRow}>
               <TextInput
-                style={styles.nameInput}
+                style={[
+                  styles.nameInput,
+                  {
+                    backgroundColor: theme.surfaceElevated,
+                    color: theme.textPrimary,
+                    borderColor: theme.borderGold,
+                  },
+                ]}
                 value={nameInput}
                 onChangeText={setNameInput}
                 autoFocus
