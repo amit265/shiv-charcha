@@ -63,6 +63,8 @@ function RootNavigator() {
         <Stack.Screen name="sansar/temples/index" options={{ title: '🛕 प्रसिद्ध शिव मंदिर' }} />
         <Stack.Screen name="sansar/yatra" options={{ title: '📍 शिव यात्रा' }} />
         <Stack.Screen name="sansar/festivals/index" options={{ title: '📅 शिव पर्व एवं उत्सव' }} />
+        <Stack.Screen name="sansar/stotra/index" options={{ title: '📿 शिव स्तोत्र व मंत्र' }} />
+        <Stack.Screen name="sansar/stotra/[id]" options={{ title: '📿 शिव स्तोत्र पाठ' }} />
       </Stack>
 
       {/* Global Persistent Mini-Player */}

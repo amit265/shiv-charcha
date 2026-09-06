@@ -91,6 +91,14 @@ export default function ShivSansarHomeScreen() {
       route: '/sansar/festivals',
       image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=600&auto=format&fit=crop',
     },
+    {
+      id: 'stotra',
+      title: '📿 शिव स्तोत्र व मंत्र',
+      subtitle: 'तांडव स्तोत्र, रुद्राष्टकम, महामृत्युंजय व लिंगाष्टकम पाठ',
+      icon: '📿',
+      route: '/sansar/stotra',
+      image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=600&auto=format&fit=crop',
+    },
   ];
 
   return (
