@@ -7,13 +7,13 @@
     "icon": "./assets/images/icon.png",
     "scheme": "shivcharcha",
     "userInterfaceStyle": "light",
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mahavyomastudio.shivcharcha"
     },
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
-      "newArchEnabled": false,
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
