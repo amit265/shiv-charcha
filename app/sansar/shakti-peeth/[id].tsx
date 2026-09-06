@@ -7,6 +7,7 @@ import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
+import { FormattedText } from '@/components/common/FormattedText';
 
 export default function ShaktiPeethDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,7 +20,7 @@ export default function ShaktiPeethDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: item.title,
-      message: `🌺 *${item.title}*\n📍 ${item.location}, ${item.stateRegion}\n🌺 अंग: ${item.associatedBodyPart}\n\n${item.summaryHindi}\n\nशिव चर्चा ऐप — शक्ति पीठ दर्शन 🔱`,
+      message: `🌺 *${item.title}*\n📍 ${item.location}, ${item.stateRegion}\n🌺 अंग: ${item.associatedBodyPart}\n\n${item.summaryHindi}\n\nशिव चर्चा ऐप - शक्ति पीठ दर्शन 🔱`,
     });
   };
 
@@ -70,13 +71,13 @@ export default function ShaktiPeethDetailScreen() {
         {/* SECTION: संक्षिप्त सार */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>💡 संक्षिप्त सार एवं मान्यता</Text>
-          <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.summaryHindi}</Text>
+          <FormattedText text={item.summaryHindi} style={[styles.bodyText, { color: theme.textPrimary }]} />
         </View>
 
         {/* SECTION: विस्तृत इतिहास */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>📖 विस्तृत इतिहास एवं महिमा</Text>
-          <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.detailedHistory}</Text>
+          <FormattedText text={item.detailedHistory} style={[styles.bodyText, { color: theme.textPrimary }]} />
 
           {item.traditionSource && (
             <View style={[styles.sourceBox, { backgroundColor: theme.surfaceElevated }]}>

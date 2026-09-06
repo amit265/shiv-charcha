@@ -46,7 +46,7 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
   const handleShareCard = async () => {
     await safeShare({
       title: '108 जाप पूर्ण',
-      message: `आज का 108 जाप पूरा हुआ 🙏\n\n'ॐ नमः शिवाय'\nशिव गुरु की अहैतुकी दया हम सब पर बनी रहे।\n\n— शिव चर्चा ऐप द्वारा`,
+      message: `आज का 108 जाप पूरा हुआ 🙏\n\n'ॐ नमः शिवाय'\nशिव गुरु की अहैतुकी दया हम सब पर बनी रहे।\n\n- शिव चर्चा ऐप द्वारा`,
     });
   };
 
@@ -55,7 +55,7 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
   return (
     <View style={[styles.container, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
       <Text style={[styles.mantraText, { color: theme.textGold }]}>ॐ नमः शिवाय</Text>
-      <Text style={[styles.subText, { color: theme.textWhite }]}>तृतीय सूत्र — 108 जाप साधना</Text>
+      <Text style={[styles.subText, { color: theme.textWhite }]}>तृतीय सूत्र - 108 जाप साधना</Text>
 
       {/* Counter Ring Touch Area */}
       <TouchableOpacity

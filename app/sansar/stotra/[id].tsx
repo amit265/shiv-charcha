@@ -8,6 +8,7 @@ import { useAudio } from '@/context/AudioContext';
 import { RelatedContentSection } from '@/components/sansar/RelatedContentSection';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
+import { FormattedText } from '@/components/common/FormattedText';
 
 export default function ShivaStotraDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,7 +20,7 @@ export default function ShivaStotraDetailScreen() {
   const handleShareStotra = async () => {
     await safeShare({
       title: stotra.title,
-      message: `📿 *${stotra.title}*\n"${stotra.subtitle}"\n\n${stotra.shareCardPrompt}\n\nशिव चर्चा ऐप — शिव संसार 🔱`,
+      message: `📿 *${stotra.title}*\n"${stotra.subtitle}"\n\n${stotra.shareCardPrompt}\n\nशिव चर्चा ऐप - शिव संसार 🔱`,
     });
   };
 
@@ -72,13 +73,13 @@ export default function ShivaStotraDetailScreen() {
         {/* SECTION: स्तोत्र की पृष्ठभूमि व कथा */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>📖 पृष्ठभूमि एवं कथा</Text>
-          <Text style={[styles.summaryText, { color: theme.textPrimary }]}>{stotra.summaryHindi}</Text>
+          <FormattedText text={stotra.summaryHindi} style={[styles.summaryText, { color: theme.textPrimary }]} />
         </View>
 
         {/* SECTION: फलश्रुति व लाभ */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>✨ फलश्रुति एवं साधना लाभ</Text>
-          <Text style={[styles.summaryText, { color: theme.textPrimary }]}>{stotra.benefits}</Text>
+          <FormattedText text={stotra.benefits} style={[styles.summaryText, { color: theme.textPrimary }]} />
         </View>
 
         {/* SECTION: संस्कृत श्लोक एवं हिंदी अनुवाद */}
@@ -100,7 +101,7 @@ export default function ShivaStotraDetailScreen() {
               <Text style={[styles.sanskritVerse, { color: theme.primary }]}>{verse.sanskrit}</Text>
               <View style={styles.divider} />
               <Text style={[styles.hindiMeaningTitle, { color: theme.secondary }]}>💡 सरल हिंदी भावार्थ:</Text>
-              <Text style={[styles.hindiMeaning, { color: theme.textPrimary }]}>{verse.hindiMeaning}</Text>
+              <FormattedText text={verse.hindiMeaning} style={[styles.hindiMeaning, { color: theme.textPrimary }]} />
             </View>
           ))}
 

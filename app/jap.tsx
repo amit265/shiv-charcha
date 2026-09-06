@@ -9,7 +9,7 @@ export default function JapScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="📿 108 जाप साधना" subtitle="तृतीय सूत्र — मंत्र माला साधना व रिकॉर्ड" showBack />
+      <Header title="📿 108 जाप साधना" subtitle="तृतीय सूत्र - मंत्र माला साधना व रिकॉर्ड" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <JapCounter />

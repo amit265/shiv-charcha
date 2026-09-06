@@ -7,6 +7,7 @@ import { sacredDates } from '@/content/dates';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
+import { FormattedText } from '@/components/common/FormattedText';
 
 export default function SacredDateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -18,7 +19,7 @@ export default function SacredDateDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: dateItem.title,
-      message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
+      message: `🌺 *${dateItem.title}*\n${dateItem.subtitle}\n\n${dateItem.description}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
     });
   };
 
@@ -56,11 +57,11 @@ export default function SacredDateDetailScreen() {
           )}
 
           {/* Description */}
-          <Text style={[styles.descText, { color: theme.textPrimary }]}>{dateItem.description}</Text>
+          <FormattedText text={dateItem.description} style={[styles.descText, { color: theme.textPrimary }]} />
 
           {/* Detailed Text */}
           <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 पावन संस्मरण व महत्व:</Text>
-          <Text style={[styles.fullText, { color: theme.textPrimary }]}>{dateItem.detailedText}</Text>
+          <FormattedText text={dateItem.detailedText} style={[styles.fullText, { color: theme.textPrimary }]} />
 
           {/* Quick Actions */}
           <View style={styles.actionsGrid}>

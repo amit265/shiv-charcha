@@ -8,6 +8,8 @@ import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 
+import { FormattedText } from '@/components/common/FormattedText';
+
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { theme } = useTheme();
@@ -17,7 +19,7 @@ export default function TeachingDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: topic.title,
-      message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`,
+      message: `💡 *${topic.title}*\n\n${topic.summary}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
     });
   };
 
@@ -58,7 +60,7 @@ export default function TeachingDetailScreen() {
           {/* Summary Box */}
           <View style={[styles.summaryBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
             <Text style={[styles.summaryTitle, { color: theme.primary }]}>सरल सार:</Text>
-            <Text style={[styles.summaryText, { color: theme.textPrimary }]}>{topic.summary}</Text>
+            <FormattedText text={topic.summary} style={[styles.summaryText, { color: theme.textPrimary }]} />
           </View>
 
           {/* Key Takeaways */}
@@ -66,7 +68,7 @@ export default function TeachingDetailScreen() {
           {topic.keyTakeaways.map((item, idx) => (
             <View key={idx} style={styles.bulletRow}>
               <Text style={[styles.bulletDot, { color: theme.primary }]}>•</Text>
-              <Text style={[styles.bulletText, { color: theme.textSecondary }]}>{item}</Text>
+              <FormattedText text={item} style={[styles.bulletText, { color: theme.textSecondary }]} />
             </View>
           ))}
 
@@ -76,7 +78,7 @@ export default function TeachingDetailScreen() {
               <Text style={[styles.examplesTitle, { color: theme.primary }]}>🌱 दैनिक जीवन में प्रयोग:</Text>
               {topic.practicalExamples.map((ex, idx) => (
                 <Text key={idx} style={[styles.exampleItem, { color: theme.textPrimary }]}>
-                  - {ex}
+                  - <FormattedText text={ex} />
                 </Text>
               ))}
             </View>
@@ -84,7 +86,7 @@ export default function TeachingDetailScreen() {
 
           {/* Full Text */}
           <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 विस्तृत विवेचन:</Text>
-          <Text style={[styles.fullText, { color: theme.textPrimary }]}>{topic.fullContent}</Text>
+          <FormattedText text={topic.fullContent} style={[styles.fullText, { color: theme.textPrimary }]} />
 
           {/* Share Button */}
           <TouchableOpacity style={[styles.shareBtn, { backgroundColor: theme.primary }]} onPress={handleShare} activeOpacity={0.8}>

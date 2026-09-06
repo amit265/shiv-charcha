@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
+import { DiscipleTitle, UserGender } from '@/types';
+import { StorageService, sanitizeCleanName } from '@/services/storage';
 
 const { width } = Dimensions.get('window');
 
-const AVATAR_OPTIONS = ['🙏', '🔱', '🕉️', '📿', '🌺', '🌸', '🛕'];
+const AVATAR_OPTIONS = ['🙏', '👨', '👩', '🔱', '🕉️', '📿', '🌺', '🌸', '🛕'];
 
 interface OnboardingModalProps {
   visible: boolean;
@@ -30,8 +32,20 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 }) => {
   const { theme } = useTheme();
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [userName, setUserName] = useState('शिव शिष्य');
+  const [selectedTitle, setSelectedTitle] = useState<DiscipleTitle>('शिव शिष्य');
+  const [userName, setUserName] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('🙏');
+
+  const handleTitleSelect = (title: DiscipleTitle) => {
+    setSelectedTitle(title);
+    if (title === 'शिव शिष्या' || title === 'गुरु बहिन') {
+      setSelectedAvatar('👩');
+    } else if (title === 'शिव भक्त') {
+      setSelectedAvatar('🙏');
+    } else {
+      setSelectedAvatar('👨');
+    }
+  };
 
   const handleNext = () => {
     if (step < 3) {
@@ -41,12 +55,28 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     }
   };
 
-  const handleFinish = () => {
-    onComplete(userName.trim() || 'शिव शिष्य', selectedAvatar);
+  const handleFinish = async () => {
+    let gender: UserGender = 'male';
+    if (selectedTitle === 'शिव शिष्या' || selectedTitle === 'गुरु बहिन') gender = 'female';
+    else if (selectedTitle === 'शिव भक्त') gender = 'neutral';
+
+    const cleanName = sanitizeCleanName(userName);
+    const finalFormattedName = cleanName ? `${selectedTitle} ${cleanName}` : selectedTitle;
+
+    await StorageService.savePreferences({
+      userName: finalFormattedName,
+      discipleTitle: selectedTitle,
+      userGender: gender,
+      avatarIcon: selectedAvatar,
+      shareCardDefaultName: finalFormattedName,
+      hasCompletedOnboarding: true,
+    });
+
+    onComplete(finalFormattedName, selectedAvatar);
   };
 
-  const handleSkip = () => {
-    onComplete(userName.trim() || 'शिव शिष्य', selectedAvatar);
+  const handleSkip = async () => {
+    await handleFinish();
   };
 
   return (
@@ -95,7 +125,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <View style={styles.sutraItem}>
                   <Text style={styles.sutraNumber}>१</Text>
                   <View style={styles.sutraTextCol}>
-                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>पहला सूत्र — दया माँगना</Text>
+                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>पहला सूत्र - दया माँगना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
                       "हे शिव! आप मेरे गुरु हैं, मुझ पर दया कर दीजिए।"
                     </Text>
@@ -107,7 +137,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <View style={styles.sutraItem}>
                   <Text style={styles.sutraNumber}>२</Text>
                   <View style={styles.sutraTextCol}>
-                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>दूसरा सूत्र — चर्चा करना</Text>
+                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>दूसरा सूत्र - चर्चा करना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
                       "अन्य लोगों से शिव गुरु की चर्चा करना तथा शिव को गुरु मानने की प्रेरणा देना।"
                     </Text>
@@ -119,7 +149,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <View style={styles.sutraItem}>
                   <Text style={styles.sutraNumber}>३</Text>
                   <View style={styles.sutraTextCol}>
-                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>तीसरा सूत्र — नमः शिवाय प्रणाम</Text>
+                    <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>तीसरा सूत्र - नमः शिवाय प्रणाम</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
                       "नमः शिवाय मंत्र से अपने गुरु शिव को 108 बार नमन/प्रणाम करना।"
                     </Text>
@@ -129,7 +159,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             </View>
           )}
 
-          {/* SLIDE 2: PERSONALIZED NAME & AVATAR */}
+          {/* SLIDE 2: PERSONALIZED NAME & AVATAR & DISCIPLE TITLE */}
           {step === 2 && (
             <View style={styles.slideContainer}>
               <View style={[styles.iconHeroCircle, { backgroundColor: theme.surfaceElevated, borderColor: theme.accent }]}>
@@ -137,14 +167,51 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               </View>
 
               <Text style={[styles.slideTitle, { color: theme.primary }]}>
-                आपका पावन नाम एवं पहचान ✍️
+                आपका पावन नाम एवं संबोधन ✍️
               </Text>
               <Text style={[styles.slideSub, { color: theme.textSecondary }]}>
-                आप इस ऐप में किस नाम व प्रतीक से पहचाने जाना चाहते हैं? (ऐच्छिक)
+                आप ऐप में किस पावन नाम व संबोधन से जाने जाना चाहते हैं?
               </Text>
 
               <View style={[styles.formCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-                <Text style={[styles.label, { color: theme.textPrimary }]}>आपका नाम लिखें:</Text>
+                {/* Disciple Title Honorific Selector */}
+                <Text style={[styles.label, { color: theme.textPrimary }]}>पावन संबोधन चुनें:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
+                  {[
+                    { title: 'शिव शिष्य', label: '👨 शिव शिष्य' },
+                    { title: 'गुरु भाई', label: '👨 गुरु भाई' },
+                    { title: 'शिव शिष्या', label: '👩 शिव शिष्या' },
+                    { title: 'गुरु बहिन', label: '👩 गुरु बहिन' },
+                    { title: 'शिव भक्त', label: '🙏 शिव भक्त' },
+                  ].map((item) => (
+                    <TouchableOpacity
+                      key={item.title}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        borderRadius: 16,
+                        marginRight: 8,
+                        backgroundColor: selectedTitle === item.title ? theme.primary : theme.surfaceElevated,
+                        borderWidth: 1,
+                        borderColor: selectedTitle === item.title ? theme.accent : theme.border,
+                      }}
+                      onPress={() => handleTitleSelect(item.title as DiscipleTitle)}
+                      activeOpacity={0.8}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                          color: selectedTitle === item.title ? theme.textWhite : theme.textPrimary,
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+
+                <Text style={[styles.label, { color: theme.textPrimary }]}>आपका शुभ नाम (ऐच्छिक):</Text>
                 <TextInput
                   style={[
                     styles.nameInput,
@@ -156,7 +223,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   ]}
                   value={userName}
                   onChangeText={setUserName}
-                  placeholder="जैसे: शिव शिष्य, अमित, प्रिया..."
+                  placeholder="जैसे: अमित, नीलम, प्रिया..."
                   placeholderTextColor={theme.textMuted}
                 />
 
@@ -214,8 +281,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
                 <View style={[styles.featureBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
                   <Text style={styles.featureIcon}>🖼️</Text>
-                  <Text style={[styles.featureTitle, { color: theme.textPrimary }]}>शेयर स्टूडियो</Text>
-                  <Text style={[styles.featureDesc, { color: theme.textSecondary }]}>पावन विचार कार्ड साझा करें</Text>
+                  <Text style={[styles.featureTitle, { color: theme.textPrimary }]}>शिव सुविचार</Text>
+                  <Text style={[styles.featureDesc, { color: theme.textSecondary }]}>पावन सुविचार कार्ड साझा करें</Text>
                 </View>
 
                 <View style={[styles.featureBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>

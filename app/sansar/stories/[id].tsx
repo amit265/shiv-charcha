@@ -8,6 +8,7 @@ import { useAudio } from '@/context/AudioContext';
 import { RelatedContentSection } from '@/components/sansar/RelatedContentSection';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
+import { FormattedText } from '@/components/common/FormattedText';
 
 export default function ShivaStoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -21,7 +22,7 @@ export default function ShivaStoryDetailScreen() {
   const handleShareStory = async () => {
     await safeShare({
       title: story.title,
-      message: `📖 *${story.title}*\n"${story.subtitle}"\n\n${story.shortSummaryHindi}\n\nशिव चर्चा ऐप — शिव संसार 🔱`,
+      message: `📖 *${story.title}*\n"${story.subtitle}"\n\n${story.shortSummaryHindi}\n\nशिव चर्चा ऐप - शिव संसार 🔱`,
     });
   };
 
@@ -76,7 +77,7 @@ export default function ShivaStoryDetailScreen() {
         {/* SECTION: कहानी का सरल सार */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>💡 कहानी का सरल सार</Text>
-          <Text style={[styles.summaryText, { color: theme.textPrimary }]}>{story.shortSummaryHindi}</Text>
+          <FormattedText text={story.shortSummaryHindi} style={[styles.summaryText, { color: theme.textPrimary }]} />
         </View>
 
         {/* SECTION: VISUAL STORY MODE (दृश्य कथा) */}
@@ -134,7 +135,7 @@ export default function ShivaStoryDetailScreen() {
         {/* SECTION: विस्तार से पढ़ें */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>📖 विस्तार से पढ़ें</Text>
-          <Text style={[styles.detailedText, { color: theme.textPrimary }]}>{story.detailedText}</Text>
+          <FormattedText text={story.detailedText} style={[styles.detailedText, { color: theme.textPrimary }]} />
 
           {story.sourceReference && (
             <View style={[styles.sourceBox, { backgroundColor: theme.surfaceElevated }]}>

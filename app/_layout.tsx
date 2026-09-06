@@ -20,12 +20,32 @@ import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import { MiniPlayer } from '@/components/player/MiniPlayer';
 import { WebDeviceFrame } from '@/components/common/WebDeviceFrame';
 import { colors } from '@/theme/colors';
+import { useDeepLinkHandler } from '@/hooks/useDeepLinkHandler';
+import { UpdateService, UpdateCheckResult } from '@/services/updateService';
+import { UpdateModal } from '@/components/common/UpdateModal';
 
 // Prevent native splash screen from auto-hiding until initial mount is done
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function RootNavigator() {
   const { theme } = useTheme();
+  const [updateInfo, setUpdateInfo] = useState<UpdateCheckResult | null>(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  // Deep link handler hook for cold start & foreground URL handling
+  useDeepLinkHandler();
+
+  useEffect(() => {
+    checkForAppUpdates();
+  }, []);
+
+  const checkForAppUpdates = async () => {
+    const result = await UpdateService.checkForUpdates();
+    if (result && result.hasUpdate) {
+      setUpdateInfo(result);
+      setShowUpdateModal(true);
+    }
+  };
 
   return (
     <>
@@ -50,6 +70,7 @@ function RootNavigator() {
         <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
         <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
         <Stack.Screen name="calendar" options={{ title: '📅 शिव चर्चा कैलेंडर' }} />
+        <Stack.Screen name="audio-hub" options={{ title: '🎧 ऑडियो अमृत वाणी' }} />
 
         {/* Shiv Sansar Routes */}
         <Stack.Screen name="sansar/index" options={{ title: '🔱 शिव संसार' }} />
@@ -71,6 +92,13 @@ function RootNavigator() {
 
       {/* Global Persistent Mini-Player */}
       <MiniPlayer />
+
+      {/* Devotional In-App Update Modal */}
+      <UpdateModal
+        visible={showUpdateModal}
+        updateInfo={updateInfo}
+        onClose={() => setShowUpdateModal(false)}
+      />
     </>
   );
 }

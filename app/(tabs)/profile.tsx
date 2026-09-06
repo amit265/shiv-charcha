@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
-import { StorageService, getFormattedUserName, getDiscipleTitle, defaultPreferences, defaultStats } from '@/services/storage';
+import { StorageService, getFormattedUserName, getDiscipleTitle, sanitizeCleanName, defaultPreferences, defaultStats } from '@/services/storage';
 import { UserPreferences, UserStats, DiscipleTitle, UserGender } from '@/types';
 import { OnboardingModal } from '@/components/common/OnboardingModal';
 
@@ -42,9 +42,20 @@ export default function ProfileScreen() {
   };
 
   const handleSaveName = async () => {
-    const trimmed = nameInput.trim() || getFormattedUserName(prefs);
-    await StorageService.savePreferences({ userName: trimmed });
-    setPrefs((prev) => ({ ...prev, userName: trimmed }));
+    const title = getDiscipleTitle(prefs);
+    const cleanName = sanitizeCleanName(nameInput);
+    const newFormattedName = cleanName ? `${title} ${cleanName}` : title;
+
+    await StorageService.savePreferences({
+      userName: newFormattedName,
+      shareCardDefaultName: newFormattedName,
+    });
+    setPrefs((prev) => ({
+      ...prev,
+      userName: newFormattedName,
+      shareCardDefaultName: newFormattedName,
+    }));
+    setNameInput(newFormattedName);
     setIsEditingName(false);
   };
 
@@ -56,9 +67,8 @@ export default function ProfileScreen() {
     const defaultAvatar = gender === 'female' ? '👩' : gender === 'neutral' ? '🙏' : '👨';
     const newAvatar = (!prefs.avatarIcon || prefs.avatarIcon === '🙏' || prefs.avatarIcon === '👨' || prefs.avatarIcon === '👩') ? defaultAvatar : prefs.avatarIcon;
 
-    // Check if user has a custom clean name without titles
-    const rawName = prefs.userName?.trim() || '';
-    const cleanName = rawName.replace(/^(शिव शिष्य|शिव शिष्या|गुरु भाई|गुरु बहिन|शिव भक्त)\s*/, '');
+    // Sanitize any existing stored name
+    const cleanName = sanitizeCleanName(prefs.userName);
     const newFormattedName = cleanName ? `${title} ${cleanName}` : title;
 
     const updatedPrefs = {
@@ -144,6 +154,8 @@ export default function ProfileScreen() {
                 ]}
                 value={nameInput}
                 onChangeText={setNameInput}
+                placeholder="अपना नाम दर्ज करें"
+                placeholderTextColor={theme.textSecondary}
                 autoFocus
               />
               <TouchableOpacity style={[styles.saveNameBtn, { backgroundColor: theme.accent }]} onPress={handleSaveName}>
@@ -151,16 +163,18 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </View>
           ) : (
-            <TouchableOpacity style={styles.nameRow} onPress={() => setIsEditingName(true)}>
+            <TouchableOpacity style={styles.nameRow} onPress={() => setIsEditingName(true)} activeOpacity={0.7}>
               <Text style={[styles.userNameText, { color: theme.textGold }]}>
-                {getFormattedUserName(prefs)} 🙏
+                {getFormattedUserName(prefs)}
               </Text>
-              <Text style={styles.editIcon}>✏️</Text>
+              <View style={[styles.editIconBadge, { backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
+                <Text style={{ fontSize: 11 }}>✏️</Text>
+              </View>
             </TouchableOpacity>
           )}
 
           <Text style={[styles.userSubText, { color: theme.textWhite }]}>
-            {currentTitle} • नमः शिवाय साधना
+            नमः शिवाय साधना • शिव शिष्यता
           </Text>
 
           {/* Disciple Title Honorific Selector Pills */}
@@ -460,6 +474,14 @@ const styles = StyleSheet.create({
   editIcon: {
     fontSize: 14,
     marginLeft: 8,
+  },
+  editIconBadge: {
+    marginLeft: 8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   editNameRow: {
     flexDirection: 'row',

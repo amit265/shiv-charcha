@@ -25,8 +25,8 @@ export const defaultPreferences: UserPreferences = {
   shareCardDefaultName: 'शिव शिष्य',
 };
 
-export const getDiscipleTitle = (prefsOrGender?: Partial<UserPreferences> | string): string => {
-  if (typeof prefsOrGender === 'object' && prefsOrGender) {
+export const getDiscipleTitle = (prefsOrGender?: Partial<UserPreferences> | string | null): string => {
+  if (typeof prefsOrGender === 'object' && prefsOrGender !== null) {
     if (prefsOrGender.discipleTitle) return prefsOrGender.discipleTitle;
     if (prefsOrGender.userGender === 'female') return 'शिव शिष्या';
     if (prefsOrGender.userGender === 'neutral') return 'शिव भक्त';
@@ -39,25 +39,39 @@ export const getDiscipleTitle = (prefsOrGender?: Partial<UserPreferences> | stri
   return 'शिव शिष्य';
 };
 
-export const getFormattedUserName = (prefs?: Partial<UserPreferences>): string => {
+/**
+ * Sanitizes raw user name by removing existing title words, emojis,
+ * zero-width characters, and extraneous whitespace.
+ */
+export const sanitizeCleanName = (rawName?: string): string => {
+  if (!rawName) return '';
+
+  return rawName
+    // Remove honorific titles wherever present (LONGER STRINGS FIRST to prevent leaving matra 'ा' behind)
+    .replace(/(शिव शिष्या|शिव शिष्य|गुरु बहिन|गुरु भाई|शिव भक्त)/g, '')
+    // Remove any orphaned/dangling Devanagari matras/vowel signs (e.g. standalone 'ा')
+    .replace(/(^|\s)[\u0900-\u0903\u093A-\u094F\u0951-\u0957\u0962\u0963]+/g, ' ')
+    // Remove emojis, symbols, and pictographs
+    .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FACC}\u{1F300}-\u{1F5FF}]/gu, '')
+    // Remove control/zero-width characters and non-breaking spaces
+    .replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '')
+    // Collapse spaces
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+export const getFormattedUserName = (prefs?: Partial<UserPreferences> | null): string => {
   const title = getDiscipleTitle(prefs);
-  const rawName = prefs?.userName?.trim();
+  const cleanName = sanitizeCleanName(prefs?.userName);
   
-  if (!rawName) return title;
-
-  // If rawName is purely one of the titles, return the new title
-  if (['शिव शिष्य', 'शिव शिष्या', 'गुरु भाई', 'गुरु बहिन', 'शिव भक्त'].includes(rawName)) {
-    return title;
-  }
-
-  // Remove any old title prefix if user typed custom name
-  const cleanName = rawName.replace(/^(शिव शिष्य|शिव शिष्या|गुरु भाई|गुरु बहिन|शिव भक्त)\s*/, '');
+  if (!cleanName) return title;
   return `${title} ${cleanName}`;
 };
 
-export const getFirstSutraText = (genderOrPrefs?: string | Partial<UserPreferences>): string => {
-  const gender = typeof genderOrPrefs === 'object' ? genderOrPrefs.userGender : genderOrPrefs;
-  const title = typeof genderOrPrefs === 'object' ? genderOrPrefs.discipleTitle : undefined;
+export const getFirstSutraText = (genderOrPrefs?: string | Partial<UserPreferences> | null): string => {
+  const isObj = typeof genderOrPrefs === 'object' && genderOrPrefs !== null;
+  const gender = isObj ? genderOrPrefs.userGender : typeof genderOrPrefs === 'string' ? genderOrPrefs : undefined;
+  const title = isObj ? genderOrPrefs.discipleTitle : undefined;
 
   if (gender === 'female' || title === 'शिव शिष्या' || title === 'गुरु बहिन') {
     return 'हे शिव! आप मेरे गुरु हैं, मैं आपकी शिष्या हूँ। मुझ पर दया कर दीजिए।';
@@ -194,7 +208,7 @@ export const StorageService = {
     }
   },
 
-  // Daily 3 Sutras Tracking
+  // Daily 3 Sutras Tracking & Streak Calculation
   async getDaily3Sutras(): Promise<{ day: string; sutra1: boolean; sutra2: boolean; sutra3: boolean }> {
     try {
       const today = new Date().toISOString().split('T')[0];
@@ -214,9 +228,73 @@ export const StorageService = {
       const current = await this.getDaily3Sutras();
       const updated = { ...current, ...sutras };
       await AsyncStorage.setItem('shiv_charcha_daily_sutras_v1', JSON.stringify(updated));
+
+      // Save to historical record
+      const historyStr = (await AsyncStorage.getItem('shiv_charcha_sutra_history_v1')) || '{}';
+      const history = JSON.parse(historyStr);
+      history[updated.day] = { sutra1: updated.sutra1, sutra2: updated.sutra2, sutra3: updated.sutra3 };
+      await AsyncStorage.setItem('shiv_charcha_sutra_history_v1', JSON.stringify(history));
+
       return updated;
     } catch (e) {
       return await this.getDaily3Sutras();
+    }
+  },
+
+  async getSutraStreak(): Promise<{ streak: number; past7Days: Array<{ date: string; dayName: string; completed: boolean }> }> {
+    try {
+      const historyStr = (await AsyncStorage.getItem('shiv_charcha_sutra_history_v1')) || '{}';
+      const history = JSON.parse(historyStr);
+      const currentDaily = await this.getDaily3Sutras();
+      const today = new Date();
+      
+      const dayNames = ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
+      const past7Days: Array<{ date: string; dayName: string; completed: boolean }> = [];
+      let streak = 0;
+
+      // Generate 7 day status (from 6 days ago up to today)
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+        const dateStr = d.toISOString().split('T')[0];
+        const dayName = dayNames[d.getDay()];
+
+        const record = dateStr === currentDaily.day ? currentDaily : history[dateStr];
+        const isComplete = Boolean(record && record.sutra1 && record.sutra2 && record.sutra3);
+
+        past7Days.push({
+          date: dateStr,
+          dayName,
+          completed: isComplete,
+        });
+      }
+
+      // Calculate streak backwards starting from today
+      let checkDate = new Date();
+      while (true) {
+        const dateStr = checkDate.toISOString().split('T')[0];
+        const rec = dateStr === currentDaily.day ? currentDaily : history[dateStr];
+        if (rec && rec.sutra1 && rec.sutra2 && rec.sutra3) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          // If today isn't completed yet, check yesterday to preserve ongoing streak
+          if (streak === 0 && dateStr === currentDaily.day) {
+            checkDate.setDate(checkDate.getDate() - 1);
+            const yestStr = checkDate.toISOString().split('T')[0];
+            const yestRec = history[yestStr];
+            if (yestRec && yestRec.sutra1 && yestRec.sutra2 && yestRec.sutra3) {
+              // Streak is preserved from yesterday
+              continue;
+            }
+          }
+          break;
+        }
+      }
+
+      return { streak, past7Days };
+    } catch (e) {
+      return { streak: 0, past7Days: [] };
     }
   },
 };

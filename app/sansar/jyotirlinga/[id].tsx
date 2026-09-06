@@ -8,6 +8,8 @@ import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 
+import { FormattedText } from '@/components/common/FormattedText';
+
 export default function JyotirlingaDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -19,7 +21,7 @@ export default function JyotirlingaDetailScreen() {
   const handleShare = async () => {
     await safeShare({
       title: item.title,
-      message: `🛕 *${item.nameHindi}*\n📍 ${item.location}, ${item.state}\n\n${item.summaryHindi}\n\nशिव चर्चा ऐप — 12 ज्योतिर्लिंग दर्शन 🔱`,
+      message: `🛕 *${item.nameHindi}*\n📍 ${item.location}, ${item.state}\n\n${item.summaryHindi}\n\nशिव चर्चा ऐप - 12 ज्योतिर्लिंग दर्शन 🔱`,
     });
   };
 
@@ -70,13 +72,13 @@ export default function JyotirlingaDetailScreen() {
         {/* SECTION: संक्षिप्त सार */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>💡 संक्षिप्त सार एवं मान्यता</Text>
-          <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.summaryHindi}</Text>
+          <FormattedText text={item.summaryHindi} style={[styles.bodyText, { color: theme.textPrimary }]} />
         </View>
 
         {/* SECTION: पौराणिक इतिहास व कथा */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>📖 पौराणिक उत्पत्ति एवं इतिहास</Text>
-          <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.detailedHistory}</Text>
+          <FormattedText text={item.detailedHistory} style={[styles.bodyText, { color: theme.textPrimary }]} />
 
           {item.relatedFestivals && item.relatedFestivals.length > 0 && (
             <View style={[styles.festivalsBox, { backgroundColor: theme.surfaceElevated }]}>

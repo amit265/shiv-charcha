@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
     ]}>
       <View style={styles.topRow}>
         <View style={styles.logoRow}>
-          {showBack && (
+          {showBack ? (
             <TouchableOpacity
               style={[
                 styles.backBtn,
@@ -64,11 +64,12 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Text style={[styles.backIcon, { color: theme.textGold }]}>◀</Text>
             </TouchableOpacity>
+          ) : (
+            <View style={[styles.omBadge, { backgroundColor: theme.accent, borderColor: theme.accentGlow }]}>
+              <Text style={[styles.omText, { color: theme.primaryDark }]}>ॐ</Text>
+            </View>
           )}
 
-          <View style={[styles.omBadge, { backgroundColor: theme.accent, borderColor: theme.accentGlow }]}>
-            <Text style={[styles.omText, { color: theme.primaryDark }]}>ॐ</Text>
-          </View>
           <View style={styles.textColumn}>
             <Text style={[styles.titleText, { color: theme.textGold }]} numberOfLines={1}>{title}</Text>
             {subtitle ? <Text style={[styles.subtitleText, { color: theme.textWhite }]} numberOfLines={1}>{subtitle}</Text> : null}

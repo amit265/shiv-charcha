@@ -19,7 +19,7 @@ An authentic, modern, audio-first devotional and spiritual knowledge platform fo
 - **आसान भाषा में पुस्तकें**: Complete Shiv Charcha literature (*शिव शिष्यता क्यों और कैसे*, *आओ शिव को गुरु बनाएं*) broken down into chapter summaries, key lessons, and daily life connections.
 - **ऑडियो पुस्तकालय**: Guided audio teachings and bhajan collection.
 
-### 3. 🔱 शिव संसार (Shiv Sansar — Mahadev Knowledge Base)
+### 3. 🔱 शिव संसार (Shiv Sansar - Mahadev Knowledge Base)
 - **📖 शिव कथाएँ**: Authentic mythological stories (Sati & Shiv, Samudra Manthan, Ganga Avataran) featuring:
   - **दृश्य कथा मोड (Visual Scene Stepper)**: Interactive artwork scene-by-scene stepper.
   - **सरल सार & विस्तृत पाठ**: Easy language summary and full scriptural references.

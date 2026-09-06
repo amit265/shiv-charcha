@@ -63,7 +63,7 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
 
   const handleShare = async () => {
     triggerHaptic();
-    const shareMessage = `🌸 *शिव चर्चा पावन विचार* 🌸\n\n"${quote.quote}"\n\n— ${quote.author}\n\nशिव चर्चा ऐप — हर हर महादेव 🙏`;
+    const shareMessage = `🌸 *शिव चर्चा पावन विचार* 🌸\n\n"${quote.quote}"\n\n- ${quote.author}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`;
 
     try {
       if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
@@ -178,7 +178,7 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
             <Text style={styles.quoteSymbolClose}>”</Text>
 
             <View style={styles.authorDivider} />
-            <Text style={styles.authorText}>— {quote.author}</Text>
+            <Text style={styles.authorText}>- {quote.author}</Text>
             <Text style={styles.appBrandingText}>शिव चर्चा • हर हर महादेव 🙏</Text>
           </View>
         </ImageBackground>

@@ -7,7 +7,9 @@ export interface ShareOptions {
 }
 
 export const safeShare = async (options: ShareOptions): Promise<boolean> => {
-  const textToShare = options.url ? `${options.message}\n\n${options.url}` : options.message;
+  const cleanMessage = (options.message || '').replace(/[—–]/g, '-');
+  const cleanTitle = (options.title || '').replace(/[—–]/g, '-');
+  const textToShare = options.url ? `${cleanMessage}\n\n${options.url}` : cleanMessage;
 
   // Web Platform Handling
   if (Platform.OS === 'web' && typeof window !== 'undefined') {
@@ -15,7 +17,7 @@ export const safeShare = async (options: ShareOptions): Promise<boolean> => {
     if (typeof navigator !== 'undefined' && (navigator as any).share) {
       try {
         await (navigator as any).share({
-          title: options.title || 'शिव चर्चा — हर हर महादेव',
+          title: options.title || 'शिव चर्चा - हर हर महादेव',
           text: options.message,
           url: options.url,
         });

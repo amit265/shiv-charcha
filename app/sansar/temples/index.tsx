@@ -16,7 +16,7 @@ export default function FamousTemplesScreen() {
   const handleShare = async (title: string, loc: string, history: string) => {
     await safeShare({
       title,
-      message: `🛕 *${title}*\n📍 ${loc}\n\n${history}\n\nशिव चर्चा ऐप — प्रसिद्ध शिव मंदिर निर्देशिका 🔱`,
+      message: `🛕 *${title}*\n📍 ${loc}\n\n${history}\n\nशिव चर्चा ऐप - प्रसिद्ध शिव मंदिर निर्देशिका 🔱`,
     });
   };
 

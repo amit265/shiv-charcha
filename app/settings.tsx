@@ -206,7 +206,7 @@ export default function SettingsScreen() {
             <Text style={styles.appPromoIcon}>🌺</Text>
 
             <View style={{ flex: 1 }}>
-              <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>भक्ति माला — आरती व स्तोत्र</Text>
+              <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>भक्ति माला - आरती व स्तोत्र</Text>
 
               <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
                 सर्व देवी-देवताओं के पावन मंत्र, चालीसा एवं दैनिक आरती संग्रह

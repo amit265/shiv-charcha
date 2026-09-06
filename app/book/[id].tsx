@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { booksLibrary } from '@/content/books';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
+import { FormattedText } from '@/components/common/FormattedText';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -71,7 +72,7 @@ export default function BookDetailScreen() {
             {/* "आसान भाषा में समझें" Featured Box */}
             <View style={[styles.easySummaryBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
               <Text style={[styles.easyHeader, { color: theme.primary }]}>💡 आसान भाषा में समझें:</Text>
-              <Text style={[styles.easyContent, { color: theme.textPrimary }]}>{chapter.summaryHindi}</Text>
+              <FormattedText text={chapter.summaryHindi} style={[styles.easyContent, { color: theme.textPrimary }]} />
             </View>
 
             {/* Key Lessons */}
@@ -79,14 +80,14 @@ export default function BookDetailScreen() {
             {chapter.keyLessons.map((lesson, idx) => (
               <View key={idx} style={styles.bulletRow}>
                 <Text style={[styles.bulletDot, { color: theme.primary }]}>•</Text>
-                <Text style={[styles.bulletText, { color: theme.textSecondary }]}>{lesson}</Text>
+                <FormattedText text={lesson} style={[styles.bulletText, { color: theme.textSecondary }]} />
               </View>
             ))}
 
             {/* Daily Life Connection */}
             <View style={[styles.dailyConnectionBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
               <Text style={[styles.dailyHeader, { color: theme.primary }]}>🌱 आज की जिंदगी से संबंध:</Text>
-              <Text style={[styles.dailyText, { color: theme.textSecondary }]}>{chapter.dailyLifeConnection}</Text>
+              <FormattedText text={chapter.dailyLifeConnection} style={[styles.dailyText, { color: theme.textSecondary }]} />
             </View>
 
             {/* Audio Explanation Button */}
@@ -96,7 +97,7 @@ export default function BookDetailScreen() {
                 onPress={() =>
                   playTrack({
                     id: chapter.id,
-                    title: `${book.title} — ${chapter.title}`,
+                    title: `${book.title} - ${chapter.title}`,
                     subtitle: 'अध्याय ऑडियो व्याख्या',
                     category: 'teachings',
                     duration: chapter.audioDuration || 300,
@@ -113,7 +114,7 @@ export default function BookDetailScreen() {
 
             {/* Full Chapter Text */}
             <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 विस्तृत पाठ:</Text>
-            <Text style={[styles.fullText, { color: theme.textPrimary }]}>{chapter.fullText}</Text>
+            <FormattedText text={chapter.fullText} style={[styles.fullText, { color: theme.textPrimary }]} />
           </View>
         )}
       </ScrollView>
