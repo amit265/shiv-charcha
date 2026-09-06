@@ -30,7 +30,7 @@ export default function ShareStudioScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="शेयर स्टूडियो" subtitle="डिजाइन चुनें • नाम दर्ज करें • साझा करें" />
+      <Header title="शिव सुविचार" subtitle="डिजाइन चुनें • नाम दर्ज करें • साझा करें" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Full-Screen Reels Mode Feature Banner */}
