@@ -2,6 +2,17 @@ import { ShivaFestival, ShivaSymbol, ShivaTemple } from '@/types/sansar';
 
 export const shivaSymbols: ShivaSymbol[] = [
   {
+    id: 'shivling',
+    title: 'शिवलिंग (Shivling - Pillar of Light)',
+    hindiName: 'शिवलिंग (निराकार ब्रह्म प्रतीक)',
+    image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioDuration: 200,
+    simpleMeaning: 'निराकार ब्रह्म, अनंत प्रकाश स्तंभ और समस्त ब्रह्मांड की उत्पत्ति व लय का प्रतीक।',
+    spiritualSignificance: 'बिना आदि और अंत का सर्वव्यापी परमात्मा जो शून्य और अनंत दोनों को समेटे है।',
+    detailedText: `संस्कृत में 'लिंग' का अर्थ है 'प्रतीक' या 'चिह्न'। शिवलिंग पुरुष और प्रकृति (शिव और शक्ति) के एकात्म योग का रूप है। निचला भाग (पीठ) माता पार्वती (जलहरी) और लिंग रूप स्वयंभू महादेव हैं। यह ब्रह्मांडीय ऊर्जा स्तंभ (Jyotirlinga) को दर्शाता है जिसका न प्रारंभ है और न अंत।`,
+  },
+  {
     id: 'trishula',
     title: 'त्रिशूल (Trishula)',
     hindiName: 'त्रिशूल',

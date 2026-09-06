@@ -7,7 +7,7 @@ export interface StoryScene {
 
 export interface RelatedContentItem {
   id: string;
-  type: 'story' | 'jyotirlinga' | 'shakti_peeth' | 'family' | 'swaroop' | 'symbol' | 'temple' | 'festival';
+  type: 'story' | 'jyotirlinga' | 'shakti_peeth' | 'family' | 'swaroop' | 'symbol' | 'temple' | 'festival' | 'stotra';
   title: string;
   subtitle: string;
   image: string;
