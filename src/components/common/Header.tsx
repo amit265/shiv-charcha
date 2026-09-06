@@ -145,6 +145,22 @@ const styles = StyleSheet.create({
   omText: {
     fontSize: 22,
     fontWeight: 'bold',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    ...Platform.select({
+      android: {
+        includeFontPadding: false,
+        transform: [{ translateY: -2 }],
+      },
+      ios: {
+        lineHeight: 26,
+        transform: [{ translateY: -1 }],
+      },
+      web: {
+        lineHeight: 26,
+        transform: [{ translateY: -1 }],
+      },
+    }),
   },
   textColumn: {
     flex: 1,
