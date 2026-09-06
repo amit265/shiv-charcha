@@ -2,9 +2,10 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { Text, StyleSheet, Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '@/theme/colors';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function TabLayout() {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   
   // Dynamic bottom inset to clear 3-button navigation on Android and gesture bar on iOS
@@ -16,11 +17,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.saffronPrimary,
-        tabBarInactiveTintColor: colors.textLight,
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textMuted,
         tabBarStyle: [
           styles.tabBar,
           {
+            backgroundColor: theme.navigationBackground,
+            borderTopColor: theme.accent,
             height: tabBarHeight,
             paddingBottom: paddingBottom,
           },
@@ -79,9 +82,7 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.bgIvory,
     borderTopWidth: 2,
-    borderTopColor: colors.borderGold,
     paddingTop: 6,
     elevation: 8,
   },

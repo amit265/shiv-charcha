@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Share, Platform, Modal } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { StorageService } from '../../services/storage';
 import { safeShare } from '../../services/shareService';
 
@@ -11,6 +12,7 @@ interface JapCounterProps {
 }
 
 export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onComplete }) => {
+  const { theme } = useTheme();
   const [count, setCount] = useState<number>(0);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showCompletionModal, setShowCompletionModal] = useState<boolean>(false);
@@ -51,9 +53,9 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
   const progressPercent = Math.min(100, Math.round((count / targetCount) * 100));
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.mantraText}>ॐ नमः शिवाय</Text>
-      <Text style={styles.subText}>तृतीय सूत्र — 108 जाप साधना</Text>
+    <View style={[styles.container, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
+      <Text style={[styles.mantraText, { color: theme.textGold }]}>ॐ नमः शिवाय</Text>
+      <Text style={[styles.subText, { color: theme.textWhite }]}>तृतीय सूत्र — 108 जाप साधना</Text>
 
       {/* Counter Ring Touch Area */}
       <TouchableOpacity
@@ -62,40 +64,40 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
         onPress={handleTap}
         disabled={isCompleted}
       >
-        <View style={styles.outerRing}>
-          <View style={styles.innerCircle}>
-            <Text style={styles.countNumber}>{count}</Text>
-            <Text style={styles.targetLabel}>/ {targetCount}</Text>
-            <Text style={styles.tapPrompt}>{isCompleted ? 'जाप पूर्ण 🙏' : 'यहाँ स्पर्श करें'}</Text>
+        <View style={[styles.outerRing, { borderColor: theme.accent }]}>
+          <View style={[styles.innerCircle, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
+            <Text style={[styles.countNumber, { color: theme.textGold }]}>{count}</Text>
+            <Text style={[styles.targetLabel, { color: theme.textWhite }]}>/ {targetCount}</Text>
+            <Text style={[styles.tapPrompt, { color: theme.textGold }]}>{isCompleted ? 'जाप पूर्ण 🙏' : 'यहाँ स्पर्श करें'}</Text>
           </View>
         </View>
       </TouchableOpacity>
 
       {/* Progress Bar */}
       <View style={styles.progressBg}>
-        <View style={[styles.progressFill, { width: `${progressPercent}%` }]} />
+        <View style={[styles.progressFill, { width: `${progressPercent}%`, backgroundColor: theme.accent }]} />
       </View>
-      <Text style={styles.percentText}>{progressPercent}% जाप पूर्ण</Text>
+      <Text style={[styles.percentText, { color: theme.textWhite }]}>{progressPercent}% जाप पूर्ण</Text>
 
       {/* Actions */}
       <View style={styles.controlsRow}>
-        <TouchableOpacity style={styles.resetBtn} onPress={handleReset} activeOpacity={0.7}>
-          <Text style={styles.resetText}>↺ पुनः आरम्भ करें</Text>
+        <TouchableOpacity style={[styles.resetBtn, { borderColor: theme.borderGold }]} onPress={handleReset} activeOpacity={0.7}>
+          <Text style={[styles.resetText, { color: theme.textGold }]}>↺ पुनः आरम्भ करें</Text>
         </TouchableOpacity>
       </View>
 
       {/* Completion Modal */}
       <Modal visible={showCompletionModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
+          <View style={[styles.modalCard, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}>
             <Text style={styles.modalEmoji}>🌺🙏📿</Text>
-            <Text style={styles.modalTitle}>आज का 108 जाप पूरा हुआ</Text>
-            <Text style={styles.modalMessage}>
+            <Text style={[styles.modalTitle, { color: theme.primary }]}>आज का 108 जाप पूरा हुआ</Text>
+            <Text style={[styles.modalMessage, { color: theme.textSecondary }]}>
               हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए।
             </Text>
 
-            <TouchableOpacity style={styles.shareCardBtn} onPress={handleShareCard} activeOpacity={0.8}>
-              <Text style={styles.shareCardBtnText}>📤 108 जाप कार्ड साझा करें</Text>
+            <TouchableOpacity style={[styles.shareCardBtn, { backgroundColor: theme.primary }]} onPress={handleShareCard} activeOpacity={0.8}>
+              <Text style={[styles.shareCardBtnText, { color: theme.textWhite }]}>📤 108 जाप कार्ड साझा करें</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -103,7 +105,7 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
               onPress={() => setShowCompletionModal(false)}
               activeOpacity={0.7}
             >
-              <Text style={styles.closeModalText}>बन्द करें</Text>
+              <Text style={[styles.closeModalText, { color: theme.textSecondary }]}>बन्द करें</Text>
             </TouchableOpacity>
           </View>
         </View>

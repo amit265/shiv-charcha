@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
+import { useTheme } from '../../context/ThemeContext';
 import { useAudio } from '../../context/AudioContext';
 
 interface OfferingState {
@@ -14,6 +15,7 @@ interface OfferingState {
 }
 
 export const ShivlingPujaCanvas: React.FC = () => {
+  const { theme } = useTheme();
   const { playSoundEffect } = useAudio();
   const [offerings, setOfferings] = useState<OfferingState>({
     flowers: 0,
@@ -73,8 +75,8 @@ export const ShivlingPujaCanvas: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Devotional Canvas Stage */}
-      <View style={styles.stage}>
+      {/* Visual Altar Stage */}
+      <View style={[styles.stage, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
         {/* Background Aura */}
         <View style={styles.auraGlow} />
 
@@ -86,7 +88,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
         )}
 
         {/* Shivling Shrine Visualization */}
-        <View style={styles.shivlingFrame}>
+        <View style={[styles.shivlingFrame, { borderColor: theme.borderGold }]}>
           <Text style={styles.shivlingEmoji}>🕉️</Text>
           <View style={styles.shivlingBase}>
             <Text style={styles.shivlingIcon}>🪨</Text>
@@ -101,8 +103,8 @@ export const ShivlingPujaCanvas: React.FC = () => {
 
           {/* Flowers & Bel Patra Offered Count Badge */}
           {(offerings.flowers > 0 || offerings.belpatra > 0) && (
-            <View style={styles.offeringBadge}>
-              <Text style={styles.offeringBadgeText}>
+            <View style={[styles.offeringBadge, { backgroundColor: theme.accent }]}>
+              <Text style={[styles.offeringBadgeText, { color: theme.primaryDark }]}>
                 {offerings.flowers > 0 ? `🌸 x${offerings.flowers} ` : ''}
                 {offerings.belpatra > 0 ? `🍃 x${offerings.belpatra}` : ''}
               </Text>
@@ -122,31 +124,31 @@ export const ShivlingPujaCanvas: React.FC = () => {
 
         {/* Closing Devotional Blessing */}
         <View style={styles.blessingBox}>
-          <Text style={styles.blessingText}>ॐ नमः शिवाय 🙏</Text>
-          <Text style={styles.subBlessing}>शिव गुरु का आशीर्वाद सदा आपके साथ है</Text>
+          <Text style={[styles.blessingText, { color: theme.textGold }]}>ॐ नमः शिवाय 🙏</Text>
+          <Text style={[styles.subBlessing, { color: theme.textWhite }]}>शिव गुरु का आशीर्वाद सदा आपके साथ है</Text>
         </View>
       </View>
 
       {/* Interactive Worship Actions Bar */}
-      <View style={styles.actionsBar}>
-        <Text style={styles.barTitle}>पूजा सेवा भाव अर्पित करें:</Text>
+      <View style={[styles.actionsBar, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+        <Text style={[styles.barTitle, { color: theme.textPrimary }]}>पूजा सेवा भाव अर्पित करें:</Text>
         <View style={styles.buttonsGrid}>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('flower')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('flower')} activeOpacity={0.7}>
             <Text style={styles.actionIcon}>🌸</Text>
-            <Text style={styles.actionLabel}>पुष्प</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>पुष्प</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('belpatra')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('belpatra')} activeOpacity={0.7}>
             <Text style={styles.actionIcon}>🍃</Text>
-            <Text style={styles.actionLabel}>बेलपत्र</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>बेलपत्र</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('water')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('water')} activeOpacity={0.7}>
             <Text style={styles.actionIcon}>💧</Text>
-            <Text style={styles.actionLabel}>जलधारा</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>जलधारा</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('milk')} activeOpacity={0.7}>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('milk')} activeOpacity={0.7}>
             <Text style={styles.actionIcon}>🥛</Text>
             <Text style={styles.actionLabel}>दुग्धधारा</Text>
           </TouchableOpacity>

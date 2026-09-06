@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Share, Platform, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Platform, StatusBar } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
+import { useTheme } from '../../context/ThemeContext';
 import { colors, shadows } from '../../theme/colors';
 import { safeShare } from '../../services/shareService';
 
@@ -12,6 +13,7 @@ interface AudioPlayerModalProps {
 
 export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onClose }) => {
   const { currentTrack, isPlaying, position, duration, togglePlayPause, seekTo } = useAudio();
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
   if (!currentTrack) return null;
@@ -36,13 +38,13 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
 
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
-      <View style={[styles.container, { paddingTop: topPadding }]}>
+      <View style={[styles.container, { backgroundColor: theme.primaryDark, paddingTop: topPadding }]}>
         {/* Header Bar */}
-        <View style={styles.headerRow}>
+        <View style={[styles.headerRow, { borderBottomColor: theme.accent }]}>
           <TouchableOpacity onPress={onClose} style={styles.backBtn} activeOpacity={0.7}>
-            <Text style={styles.backIcon}>✕</Text>
+            <Text style={[styles.backIcon, { color: theme.textWhite }]}>✕</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>शिव गुरु ऑडियो खिलाड़ी</Text>
+          <Text style={[styles.headerTitle, { color: theme.textGold }]}>शिव गुरु ऑडियो खिलाड़ी</Text>
           <TouchableOpacity onPress={handleShare} style={styles.shareBtn} activeOpacity={0.7}>
             <Text style={styles.shareIcon}>📤</Text>
           </TouchableOpacity>
@@ -50,16 +52,16 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Devotional Cover Artwork */}
-          <View style={styles.artContainer}>
+          <View style={[styles.artContainer, { borderColor: theme.accent }]}>
             <Image source={{ uri: currentTrack.coverImage }} style={styles.coverImage} />
-            <View style={styles.omWatermark}>
-              <Text style={styles.omText}>ॐ</Text>
+            <View style={[styles.omWatermark, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
+              <Text style={[styles.omText, { color: theme.textGold }]}>ॐ</Text>
             </View>
           </View>
 
           {/* Title & Artist */}
-          <Text style={styles.trackTitle}>{currentTrack.title}</Text>
-          <Text style={styles.artistName}>
+          <Text style={[styles.trackTitle, { color: theme.textGold }]}>{currentTrack.title}</Text>
+          <Text style={[styles.artistName, { color: theme.textWhite }]}>
             {currentTrack.artist || currentTrack.subtitle || 'शिव चर्चा भक्ति ध्वनि'}
           </Text>
 
@@ -78,13 +80,13 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
               <View
                 style={[
                   styles.sliderTrackFill,
-                  { width: `${duration > 0 ? (position / duration) * 100 : 0}%` },
+                  { width: `${duration > 0 ? (position / duration) * 100 : 0}%`, backgroundColor: theme.accent },
                 ]}
               />
             </TouchableOpacity>
             <View style={styles.timeRow}>
-              <Text style={styles.timeText}>{formatTime(position)}</Text>
-              <Text style={styles.timeText}>{formatTime(duration)}</Text>
+              <Text style={[styles.timeText, { color: theme.textWhite }]}>{formatTime(position)}</Text>
+              <Text style={[styles.timeText, { color: theme.textWhite }]}>{formatTime(duration)}</Text>
             </View>
           </View>
 
@@ -95,11 +97,11 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
               onPress={() => seekTo(Math.max(0, position - 15))}
               activeOpacity={0.7}
             >
-              <Text style={styles.secIcon}>⏪ 15s</Text>
+              <Text style={[styles.secIcon, { color: theme.textWhite }]}>⏪ 15s</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.mainPlayBtn} onPress={togglePlayPause} activeOpacity={0.8}>
-              <Text style={styles.mainPlayIcon}>{isPlaying ? '⏸️' : '▶️'}</Text>
+            <TouchableOpacity style={[styles.mainPlayBtn, { backgroundColor: theme.accent }]} onPress={togglePlayPause} activeOpacity={0.8}>
+              <Text style={[styles.mainPlayIcon, { color: theme.primaryDark }]}>{isPlaying ? '⏸️' : '▶️'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -107,15 +109,15 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
               onPress={() => seekTo(Math.min(duration, position + 15))}
               activeOpacity={0.7}
             >
-              <Text style={styles.secIcon}>15s ⏩</Text>
+              <Text style={[styles.secIcon, { color: theme.textWhite }]}>15s ⏩</Text>
             </TouchableOpacity>
           </View>
 
           {/* Lyrics / Description if available */}
           {currentTrack.lyrics && (
-            <View style={styles.lyricsCard}>
-              <Text style={styles.lyricsHeader}>📖 भजन बोल / भाव</Text>
-              <Text style={styles.lyricsText}>{currentTrack.lyrics}</Text>
+            <View style={[styles.lyricsCard, { borderColor: theme.accent }]}>
+              <Text style={[styles.lyricsHeader, { color: theme.textGold }]}>📖 भजन बोल / भाव</Text>
+              <Text style={[styles.lyricsText, { color: theme.textWhite }]}>{currentTrack.lyrics}</Text>
             </View>
           )}
         </ScrollView>
