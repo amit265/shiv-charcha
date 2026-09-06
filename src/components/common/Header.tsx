@@ -149,24 +149,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     includeFontPadding: false,
-    ...Platform.select({
-      web: {
-        lineHeight: 38,
-        height: 40,
-        width: 40,
-        marginTop: -3,
-      },
-      android: {
-        lineHeight: 38,
-        height: 40,
-        marginTop: -2,
-      },
-      ios: {
-        lineHeight: 38,
-        height: 40,
-        marginTop: -2,
-      },
-    }),
+    lineHeight: 40
   },
   textColumn: {
     flex: 1,
