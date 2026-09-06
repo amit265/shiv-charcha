@@ -52,6 +52,13 @@
       ],
       "expo-sharing"
     ],
+    "owner": "mindcraftlearning",
+    "updates": {
+      "enabled": true
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "experiments": {
       "typedRoutes": false
     }
