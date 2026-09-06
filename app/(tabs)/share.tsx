@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
-import { colors } from '@/theme/colors';
+import { colors, shadows } from '@/theme/colors';
 import { shareTemplates } from '@/content/shareTemplates';
 import { ShareCardRenderer } from '@/components/share/ShareCardRenderer';
 import { ShareTemplate } from '@/types';
 
 export default function ShareStudioScreen() {
+  const router = useRouter();
   const [selectedTemplate, setSelectedTemplate] = useState<ShareTemplate>(shareTemplates[0]);
 
   return (
@@ -14,6 +16,26 @@ export default function ShareStudioScreen() {
       <Header title="शेयर स्टूडियो" subtitle="डिजाइन चुनें • नाम दर्ज करें • साझा करें" />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Full-Screen Reels Mode Feature Banner */}
+        <TouchableOpacity
+          style={styles.reelsBanner}
+          onPress={() => router.push('/reels' as any)}
+          activeOpacity={0.9}
+        >
+          <View style={styles.reelsBannerLeft}>
+            <View style={styles.reelsBadge}>
+              <Text style={styles.reelsBadgeText}>✨ 100+ पावन विचार रील्स</Text>
+            </View>
+            <Text style={styles.reelsBannerTitle}>🎬 विचार रील स्क्रॉल (Reels Mode)</Text>
+            <Text style={styles.reelsBannerSub}>
+              फुल-स्क्रीन शिव वॉलपेपर पर 100 विचार स्क्रॉल करें, सहेजें और शेयर करें ➔
+            </Text>
+          </View>
+          <View style={styles.reelsPlayCircle}>
+            <Text style={styles.reelsPlayIcon}>▶️</Text>
+          </View>
+        </TouchableOpacity>
+
         <Text style={styles.sectionHeaderTitle}>टैम्पलेट डिजाइन चुनें 🎨</Text>
         <Text style={styles.sectionHeaderSub}>
           अपनी पसंद का भक्ति कार्ड स्टाइल चुनें और अपना नाम लिखकर शेयर करें:
@@ -63,6 +85,62 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingBottom: 110,
+  },
+  reelsBanner: {
+    backgroundColor: colors.maroonPrimary,
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1.8,
+    borderColor: colors.goldPrimary,
+    ...shadows.gold,
+  },
+  reelsBannerLeft: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  reelsBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.goldPrimary,
+    marginBottom: 6,
+  },
+  reelsBadgeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: colors.goldLight,
+  },
+  reelsBannerTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: colors.goldLight,
+    letterSpacing: 0.3,
+  },
+  reelsBannerSub: {
+    fontSize: 12,
+    color: colors.bgIvory,
+    opacity: 0.9,
+    marginTop: 4,
+    lineHeight: 17,
+  },
+  reelsPlayCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.goldPrimary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadows.medium,
+  },
+  reelsPlayIcon: {
+    fontSize: 20,
   },
   sectionHeaderTitle: {
     fontSize: 18,

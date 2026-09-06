@@ -149,19 +149,29 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* SECTION: आज का शेयर कार्ड Quick Teaser */}
+        {/* SECTION: आज का शेयर कार्ड & 100 रील्स Quick Teaser */}
         <View style={styles.shareTeaserCard}>
-          <Text style={styles.shareTeaserTitle}>आज का शेयर कार्ड बनाएं 🖼️</Text>
+          <Text style={styles.shareTeaserTitle}>शिव चर्चा विचार रील्स व शेयर 🎬</Text>
           <Text style={styles.shareTeaserSub}>
-            अपना नाम लिखकर शिव गुरु का पावन संदेश परिजनों व व्हाट्सएप पर साझा करें।
+            100+ पावन भक्ति विचारों को फुल-स्क्रीन रील मोड में देखें, वॉलपेपर बदलें व साझा करें।
           </Text>
-          <TouchableOpacity
-            style={styles.shareTeaserBtn}
-            onPress={() => router.push('/share' as any)}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.shareTeaserBtnText}>✨ शेयर कार्ड बनाएं</Text>
-          </TouchableOpacity>
+          <View style={styles.teaserBtnRow}>
+            <TouchableOpacity
+              style={styles.shareTeaserBtn}
+              onPress={() => router.push('/reels' as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.shareTeaserBtnText}>🎬 100 रील्स स्क्रॉल</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.shareTeaserOutlineBtn}
+              onPress={() => router.push('/share' as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.shareTeaserOutlineBtnText}>🎨 शेयर कार्ड</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -435,16 +445,35 @@ const styles = StyleSheet.create({
     marginTop: 6,
     lineHeight: 18,
   },
+  teaserBtnRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 14,
+  },
   shareTeaserBtn: {
     backgroundColor: colors.goldPrimary,
     borderRadius: 14,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginTop: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginRight: 8,
   },
   shareTeaserBtnText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
     color: colors.maroonDark,
+  },
+  shareTeaserOutlineBtn: {
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: colors.goldPrimary,
+  },
+  shareTeaserOutlineBtnText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: colors.goldLight,
   },
 });

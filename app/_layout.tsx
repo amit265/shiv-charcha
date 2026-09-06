@@ -110,6 +110,7 @@ export default function RootLayout() {
               <Stack.Screen name="book/[id]" options={{ title: '📖 पुस्तक अध्ययन' }} />
               <Stack.Screen name="teaching/[id]" options={{ title: '💡 शिव गुरु ज्ञान' }} />
               <Stack.Screen name="date/[id]" options={{ title: '📅 पावन दिवस स्मरण' }} />
+              <Stack.Screen name="reels" options={{ headerShown: false, presentation: 'fullScreenModal' }} />
               <Stack.Screen name="gallery" options={{ title: '🖼️ पावन गैलरी व वॉलपेपर' }} />
               <Stack.Screen name="ringtones" options={{ title: '🔔 भक्तिमय ध्वनियाँ' }} />
             </Stack>
