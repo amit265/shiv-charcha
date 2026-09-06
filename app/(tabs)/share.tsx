@@ -11,7 +11,22 @@ import { ShareTemplate } from '@/types';
 export default function ShareStudioScreen() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [selectedTemplate, setSelectedTemplate] = useState<ShareTemplate>(shareTemplates[0]);
+
+  const activeThemeTemplate: ShareTemplate = {
+    id: 'st-active-app-theme',
+    title: `🎨 आपकी थीम (${theme.nameHindi})`,
+    category: 'personal',
+    style: 'premium',
+    bgGradient: [theme.primaryDark, theme.primary],
+    textColor: theme.textWhite,
+    accentColor: theme.accent,
+    defaultText: 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए। 🙏',
+    defaultAuthor: '— शिव शिष्य',
+    artworkUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+  };
+
+  const allTemplates = [activeThemeTemplate, ...shareTemplates];
+  const [selectedTemplate, setSelectedTemplate] = useState<ShareTemplate>(activeThemeTemplate);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -50,7 +65,7 @@ export default function ShareStudioScreen() {
           style={styles.templateScroll}
           contentContainerStyle={styles.templateScrollContainer}
         >
-          {shareTemplates.map((template) => {
+          {allTemplates.map((template) => {
             const isSelected = template.id === selectedTemplate.id;
             return (
               <TouchableOpacity
