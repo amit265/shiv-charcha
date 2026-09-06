@@ -150,6 +150,25 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* SECTION 2.5: LANGUAGE SELECTION */}
+        <Text style={[styles.sectionTitle, { color: theme.primary }]}>भाषा (Language Preference) 🌐</Text>
+        <View style={[styles.settingGroupCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+          <TouchableOpacity
+            style={styles.actionRow}
+            onPress={() => Alert.alert('Language / भाषा', 'App language set to English & Hindi bilingual mode.')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.actionLeft}>
+              <Text style={styles.actionIcon}>🌐</Text>
+              <View>
+                <Text style={[styles.itemTitle, { color: theme.textPrimary }]}>App Language / ऐप भाषा</Text>
+                <Text style={[styles.itemDesc, { color: theme.textSecondary }]}>English & हिंदी (Bilingual Mode)</Text>
+              </View>
+            </View>
+            <Text style={{ color: theme.accent, fontWeight: 'bold' }}>English / हिंदी</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* SECTION 3: SHARE & RATE APP */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>पुण्य प्रसार एवं समीक्षा (Share & Rate) 🌸</Text>
         <View style={[styles.settingGroupCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
