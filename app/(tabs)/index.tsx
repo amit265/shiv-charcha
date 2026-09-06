@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 110,
+    paddingBottom: 140,
   },
   greetingBanner: {
     borderRadius: 20,

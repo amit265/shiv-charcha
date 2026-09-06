@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 50,
+    paddingBottom: 140,
   },
   headerRightBtn: {
     width: 38,
