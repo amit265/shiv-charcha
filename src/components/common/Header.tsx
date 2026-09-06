@@ -52,11 +52,19 @@ export const Header: React.FC<HeaderProps> = ({
         <View style={styles.logoRow}>
           {showBack && (
             <TouchableOpacity
-              style={styles.backBtn}
+              style={[
+                styles.circularBackBtn,
+                {
+                  backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                  borderColor: theme.borderGold,
+                },
+              ]}
               onPress={handleBack}
-              activeOpacity={0.7}
+              activeOpacity={0.75}
             >
-              <Text style={[styles.backIcon, { color: theme.textGold }]}>◀</Text>
+              <View style={styles.iconCenterWrapper}>
+                <Text style={[styles.backArrowSymbol, { color: theme.textGold }]}>←</Text>
+              </View>
             </TouchableOpacity>
           )}
 
@@ -98,18 +106,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  circularBackBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1.2,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 8,
+    marginRight: 10,
   },
-  backIcon: {
-    fontSize: 16,
+  iconCenterWrapper: {
+    width: 38,
+    height: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backArrowSymbol: {
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    ...Platform.select({
+      android: {
+        includeFontPadding: false,
+      },
+      ios: {
+        lineHeight: 20,
+      },
+      web: {
+        lineHeight: 20,
+      },
+    }),
   },
   omBadge: {
     width: 42,
