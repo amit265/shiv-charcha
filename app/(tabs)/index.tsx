@@ -40,7 +40,9 @@ export default function HomeScreen() {
   const loadUserData = async () => {
     const prefs = await StorageService.getPreferences();
     if (!prefs.hasCompletedOnboarding) {
-      setShowOnboarding(true);
+      setTimeout(() => {
+        setShowOnboarding(true);
+      }, 3200);
     }
     setFormattedName(getFormattedUserName(prefs));
 

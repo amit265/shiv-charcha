@@ -175,6 +175,7 @@ export default function RootLayout() {
               {/* Custom Animated Splash Screen Overlay */}
               {isSplashVisible && (
                 <Animated.View style={[StyleSheet.absoluteFill, styles.splashContainer, animatedSplashStyle]}>
+                  <StatusBar style="light" animated />
                   <View style={styles.splashContent}>
                     {/* Rotating & Scaling App Icon */}
                     <Animated.View style={[styles.splashIconWrapper, animatedLogoStyle]}>

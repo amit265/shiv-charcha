@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Dimensions,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { DiscipleTitle, UserGender } from '@/types';
@@ -82,6 +83,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={handleSkip}>
       <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <StatusBar style={theme.isDark ? 'light' : 'dark'} animated />
         {/* TOP BAR */}
         <View style={styles.topBar}>
           {/* Step Indicator */}
