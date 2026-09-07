@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { Header } from '@/components/common/Header';
@@ -25,7 +25,7 @@ export default function ShivaStotraDetailScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title={stotra.title} subtitle={stotra.subtitle} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
@@ -140,7 +140,7 @@ export default function ShivaStotraDetailScreen() {
           ]}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

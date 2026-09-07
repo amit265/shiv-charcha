@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,107 +6,77 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Alert,
   Modal,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
-import { StorageService, getFormattedUserName, getDiscipleTitle, sanitizeCleanName, defaultPreferences, defaultStats } from '@/services/storage';
-import { UserPreferences, UserStats, DiscipleTitle, UserGender } from '@/types';
+import { StorageService, getFormattedUserName, defaultPreferences, defaultStats } from '@/services/storage';
+import { UserPreferences, UserStats } from '@/types';
 import { OnboardingModal } from '@/components/common/OnboardingModal';
 
-const AVATAR_OPTIONS = ['🙏', '🔱', '🕉️', '📿', '🌺', '🌸', '🛕'];
+const AVATAR_OPTIONS = ['🙏', '👨', '👩', '🔱', '🕉️', '📿', '🌺', '🌸', '🛕'];
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [stats, setStats] = useState<UserStats>(defaultStats);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [nameInput, setNameInput] = useState('');
-  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+
+  // Unified Edit Profile Modal states
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editAvatar, setEditAvatar] = useState('🙏');
+
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const loadData = async () => {
     const p = await StorageService.getPreferences();
     const s = await StorageService.getStats();
     setPrefs(p);
     setStats(s);
-    setNameInput(getFormattedUserName(p));
   };
 
-  const handleSaveName = async () => {
-    const title = getDiscipleTitle(prefs);
-    const cleanName = sanitizeCleanName(nameInput);
-    const newFormattedName = cleanName ? `${title} ${cleanName}` : title;
-
-    await StorageService.savePreferences({
-      userName: newFormattedName,
-      shareCardDefaultName: newFormattedName,
-    });
-    setPrefs((prev) => ({
-      ...prev,
-      userName: newFormattedName,
-      shareCardDefaultName: newFormattedName,
-    }));
-    setNameInput(newFormattedName);
-    setIsEditingName(false);
+  const handleOpenEditModal = () => {
+    setEditName(getFormattedUserName(prefs));
+    setEditAvatar(prefs.avatarIcon || '🙏');
+    setShowEditProfileModal(true);
   };
 
-  const handleSelectTitle = async (title: DiscipleTitle) => {
-    let gender: UserGender = 'male';
-    if (title === 'शिव शिष्या' || title === 'गुरु बहिन') gender = 'female';
-    else if (title === 'शिव भक्त') gender = 'neutral';
+  const handleSaveCombinedProfile = async () => {
+    const formatted = editName.trim() || getFormattedUserName(prefs);
 
-    const defaultAvatar = gender === 'female' ? '👩' : gender === 'neutral' ? '🙏' : '👨';
-    const newAvatar = (!prefs.avatarIcon || prefs.avatarIcon === '🙏' || prefs.avatarIcon === '👨' || prefs.avatarIcon === '👩') ? defaultAvatar : prefs.avatarIcon;
-
-    // Sanitize any existing stored name
-    const cleanName = sanitizeCleanName(prefs.userName);
-    const newFormattedName = cleanName ? `${title} ${cleanName}` : title;
-
-    const updatedPrefs = {
+    const updatedPrefs: UserPreferences = {
       ...prefs,
-      discipleTitle: title,
-      userGender: gender,
-      userName: newFormattedName,
-      avatarIcon: newAvatar,
-      shareCardDefaultName: newFormattedName,
+      userName: formatted,
+      avatarIcon: editAvatar,
+      shareCardDefaultName: formatted,
     };
 
     await StorageService.savePreferences(updatedPrefs);
     setPrefs(updatedPrefs);
-    setNameInput(newFormattedName);
-  };
-
-  const handleSelectAvatar = async (icon: string) => {
-    await StorageService.savePreferences({ avatarIcon: icon });
-    setPrefs((prev) => ({ ...prev, avatarIcon: icon }));
-    setShowAvatarPicker(false);
+    setShowEditProfileModal(false);
   };
 
   const handleOnboardingComplete = async (userName: string, avatarIcon: string) => {
-    await StorageService.savePreferences({
+    const updatedPrefs: UserPreferences = {
+      ...prefs,
       userName,
       avatarIcon,
+      shareCardDefaultName: userName,
       hasCompletedOnboarding: true,
-    });
-    setPrefs((prev) => ({
-      ...prev,
-      userName,
-      avatarIcon,
-      hasCompletedOnboarding: true,
-    }));
+    };
+    await StorageService.savePreferences(updatedPrefs);
+    setPrefs(updatedPrefs);
     setShowOnboardingModal(false);
   };
-
-  const currentTitle = prefs.discipleTitle || (prefs.userGender === 'female' ? 'शिव शिष्या' : prefs.userGender === 'neutral' ? 'शिव भक्त' : 'शिव शिष्य');
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -130,121 +100,28 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* USER PROFILE IDENTITY CARD */}
         <View style={[styles.userCard, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
+          {/* Top-Right Single Edit Button */}
           <TouchableOpacity
-            style={[styles.avatarCircle, { backgroundColor: theme.accent, borderColor: theme.borderGold }]}
-            onPress={() => setShowAvatarPicker(true)}
+            style={[styles.editBoxBtn, { backgroundColor: 'rgba(255, 255, 255, 0.18)', borderColor: theme.borderGold }]}
+            onPress={handleOpenEditModal}
             activeOpacity={0.8}
           >
-            <Text style={styles.avatarText}>{prefs.avatarIcon || '🙏'}</Text>
-            <View style={[styles.avatarEditBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
-              <Text style={{ fontSize: 10 }}>✏️</Text>
-            </View>
+            <Text style={[styles.editBoxBtnText, { color: theme.textGold }]}>✏️ संपादित करें</Text>
           </TouchableOpacity>
 
-          {isEditingName ? (
-            <View style={styles.editNameRow}>
-              <TextInput
-                style={[
-                  styles.nameInput,
-                  {
-                    backgroundColor: theme.surfaceElevated,
-                    color: theme.textPrimary,
-                    borderColor: theme.borderGold,
-                  },
-                ]}
-                value={nameInput}
-                onChangeText={setNameInput}
-                placeholder="अपना नाम दर्ज करें"
-                placeholderTextColor={theme.textSecondary}
-                autoFocus
-              />
-              <TouchableOpacity style={[styles.saveNameBtn, { backgroundColor: theme.accent }]} onPress={handleSaveName}>
-                <Text style={[styles.saveNameText, { color: theme.primaryDark }]}>सहेजें</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.nameRow} onPress={() => setIsEditingName(true)} activeOpacity={0.7}>
-              <Text style={[styles.userNameText, { color: theme.textGold }]}>
-                {getFormattedUserName(prefs)}
-              </Text>
-              <View style={[styles.editIconBadge, { backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                <Text style={{ fontSize: 11 }}>✏️</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          {/* Avatar Circle */}
+          <View style={[styles.avatarCircle, { backgroundColor: theme.accent, borderColor: theme.borderGold }]}>
+            <Text style={styles.avatarText}>{prefs.avatarIcon || '🙏'}</Text>
+          </View>
+
+          {/* User Name */}
+          <Text style={[styles.userNameText, { color: theme.textGold }]}>
+            {getFormattedUserName(prefs)}
+          </Text>
 
           <Text style={[styles.userSubText, { color: theme.textWhite }]}>
             नमः शिवाय साधना • शिव शिष्यता
           </Text>
-
-          {/* Disciple Title Honorific Selector Pills */}
-          <Text style={[styles.titleSelectLabel, { color: theme.textWhite }]}>पावन संबोधन चुनें:</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.genderRow}>
-            <TouchableOpacity
-              style={[
-                styles.genderPill,
-                { backgroundColor: currentTitle === 'शिव शिष्य' ? theme.accent : 'rgba(255,255,255,0.15)' },
-              ]}
-              onPress={() => handleSelectTitle('शिव शिष्य')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.genderPillText, { color: currentTitle === 'शिव शिष्य' ? theme.primaryDark : '#FFF' }]}>
-                👨 शिव शिष्य
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.genderPill,
-                { backgroundColor: currentTitle === 'गुरु भाई' ? theme.accent : 'rgba(255,255,255,0.15)' },
-              ]}
-              onPress={() => handleSelectTitle('गुरु भाई')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.genderPillText, { color: currentTitle === 'गुरु भाई' ? theme.primaryDark : '#FFF' }]}>
-                👨 गुरु भाई
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.genderPill,
-                { backgroundColor: currentTitle === 'शिव शिष्या' ? theme.accent : 'rgba(255,255,255,0.15)' },
-              ]}
-              onPress={() => handleSelectTitle('शिव शिष्या')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.genderPillText, { color: currentTitle === 'शिव शिष्या' ? theme.primaryDark : '#FFF' }]}>
-                👩 शिव शिष्या
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.genderPill,
-                { backgroundColor: currentTitle === 'गुरु बहिन' ? theme.accent : 'rgba(255,255,255,0.15)' },
-              ]}
-              onPress={() => handleSelectTitle('गुरु बहिन')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.genderPillText, { color: currentTitle === 'गुरु बहिन' ? theme.primaryDark : '#FFF' }]}>
-                👩 गुरु बहिन
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.genderPill,
-                { backgroundColor: currentTitle === 'शिव भक्त' ? theme.accent : 'rgba(255,255,255,0.15)' },
-              ]}
-              onPress={() => handleSelectTitle('शिव भक्त')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.genderPillText, { color: currentTitle === 'शिव भक्त' ? theme.primaryDark : '#FFF' }]}>
-                🙏 शिव भक्त
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
         </View>
 
         {/* SECTION: MY SHIV GURU DEVOTIONAL STATS */}
@@ -366,17 +243,19 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* AVATAR PICKER MODAL */}
+      {/* UNIFIED EDIT PROFILE MODAL */}
       <Modal
-        visible={showAvatarPicker}
+        visible={showEditProfileModal}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setShowAvatarPicker(false)}
+        onRequestClose={() => setShowEditProfileModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.avatarModalContainer, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}>
-            <Text style={[styles.avatarModalTitle, { color: theme.primary }]}>अपना पावन प्रतीक चुनें 🙏</Text>
+          <View style={[styles.editModalContainer, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}>
+            <Text style={[styles.modalTitle, { color: theme.primary }]}>प्रोफाइल संपादित करें ✏️</Text>
 
+            {/* Avatar Picker Section */}
+            <Text style={[styles.inputSectionLabel, { color: theme.textPrimary }]}>पावन प्रतीक (Avatar) चुनें:</Text>
             <View style={styles.avatarPickerGrid}>
               {AVATAR_OPTIONS.map((icon) => (
                 <TouchableOpacity
@@ -384,11 +263,11 @@ export default function ProfileScreen() {
                   style={[
                     styles.avatarSelectBtn,
                     {
-                      backgroundColor: prefs.avatarIcon === icon ? theme.primary : theme.surfaceElevated,
-                      borderColor: prefs.avatarIcon === icon ? theme.accent : theme.border,
+                      backgroundColor: editAvatar === icon ? theme.primary : theme.surfaceElevated,
+                      borderColor: editAvatar === icon ? theme.accent : theme.border,
                     },
                   ]}
-                  onPress={() => handleSelectAvatar(icon)}
+                  onPress={() => setEditAvatar(icon)}
                   activeOpacity={0.8}
                 >
                   <Text style={{ fontSize: 28 }}>{icon}</Text>
@@ -396,9 +275,39 @@ export default function ProfileScreen() {
               ))}
             </View>
 
-            <TouchableOpacity style={styles.avatarModalCloseBtn} onPress={() => setShowAvatarPicker(false)}>
-              <Text style={[styles.avatarModalCloseText, { color: theme.textSecondary }]}>बंद करें</Text>
-            </TouchableOpacity>
+            {/* Name Input Section */}
+            <Text style={[styles.inputSectionLabel, { color: theme.textPrimary }]}>आपका नाम लिखें:</Text>
+            <TextInput
+              style={[
+                styles.modalNameInput,
+                {
+                  backgroundColor: theme.surfaceElevated,
+                  color: theme.textPrimary,
+                  borderColor: theme.border,
+                },
+              ]}
+              value={editName}
+              onChangeText={setEditName}
+              placeholder="जैसे: शिव शिष्य अमित"
+              placeholderTextColor={theme.textMuted}
+            />
+
+            {/* Action Buttons */}
+            <View style={styles.modalActionRow}>
+              <TouchableOpacity
+                style={[styles.modalCloseBtn, { borderColor: theme.border }]}
+                onPress={() => setShowEditProfileModal(false)}
+              >
+                <Text style={[styles.modalCloseText, { color: theme.textSecondary }]}>रद्द करें</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.modalSaveBtn, { backgroundColor: theme.primary }]}
+                onPress={handleSaveCombinedProfile}
+              >
+                <Text style={[styles.modalSaveText, { color: theme.textWhite }]}>सहेजें ✓</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -430,12 +339,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userCard: {
+    position: 'relative',
     borderRadius: 20,
     padding: 20,
     alignItems: 'center',
     marginBottom: 20,
     borderWidth: 1.5,
     ...shadows.medium,
+  },
+  editBoxBtn: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    zIndex: 10,
+  },
+  editBoxBtnText: {
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   avatarCircle: {
     width: 70,
@@ -445,92 +369,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
     borderWidth: 2,
-    position: 'relative',
   },
   avatarText: {
     fontSize: 34,
   },
-  avatarEditBadge: {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#CCC',
-  },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   userNameText: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  editIcon: {
-    fontSize: 14,
-    marginLeft: 8,
-  },
-  editIconBadge: {
-    marginLeft: 8,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  editNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  nameInput: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    fontSize: 16,
-    color: '#000000',
-    width: 160,
-  },
-  saveNameBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-    marginLeft: 8,
-  },
-  saveNameText: {
-    fontSize: 13,
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
   userSubText: {
     fontSize: 12,
     opacity: 0.9,
     marginTop: 4,
-  },
-  titleSelectLabel: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    opacity: 0.9,
-    marginTop: 12,
-    marginBottom: 4,
-  },
-  genderRow: {
-    flexDirection: 'row',
-    marginTop: 4,
-    marginBottom: 4,
-  },
-  genderPill: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-  },
-  genderPillText: {
-    fontSize: 11,
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
   sectionHeaderTitle: {
     fontSize: 16,
@@ -658,39 +510,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  avatarModalContainer: {
+  editModalContainer: {
     width: '100%',
     borderRadius: 20,
     padding: 20,
     borderWidth: 2,
-    alignItems: 'center',
     ...shadows.medium,
   },
-  avatarModalTitle: {
-    fontSize: 16,
+  modalTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 16,
+  },
+  inputSectionLabel: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
   avatarPickerGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
     justifyContent: 'center',
     marginBottom: 16,
   },
   avatarSelectBtn: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
   },
-  avatarModalCloseBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+  modalNameInput: {
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 15,
+    borderWidth: 1,
+    marginBottom: 20,
   },
-  avatarModalCloseText: {
+  modalActionRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+  },
+  modalCloseBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  modalCloseText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  modalSaveBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+  },
+  modalSaveText: {
     fontSize: 14,
     fontWeight: 'bold',
   },

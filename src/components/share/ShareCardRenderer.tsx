@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { ShareTemplate } from '../../types';
 import { shadows } from '../../theme/colors';
 import { useTheme } from '../../context/ThemeContext';
 import { safeShare } from '../../services/shareService';
+import { StorageService, getFormattedUserName } from '../../services/storage';
 
 interface ShareCardRendererProps {
   template: ShareTemplate;
@@ -34,15 +35,26 @@ const PRESET_QUOTES = [
 
 export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
   template,
-  userName: initialUserName = 'शिव शिष्य',
+  userName: initialUserName,
   customText: initialCustomText,
 }) => {
   const { theme } = useTheme();
   const viewShotRef = useRef<any>(null);
-  const [userName, setUserName] = useState<string>(initialUserName);
+  const [userName, setUserName] = useState<string>(initialUserName || 'शिव शिष्य');
   const [customMessage, setCustomMessage] = useState<string>(
     initialCustomText || template.defaultText
   );
+
+  useEffect(() => {
+    if (initialUserName) {
+      setUserName(initialUserName);
+    } else {
+      StorageService.getPreferences().then((p) => {
+        const formatted = getFormattedUserName(p);
+        if (formatted) setUserName(formatted);
+      });
+    }
+  }, [initialUserName]);
 
   // Customization Options
   const [aspectRatio, setAspectRatio] = useState<'1:1' | '9:16'>('1:1');

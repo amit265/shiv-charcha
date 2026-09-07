@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert, ScrollView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
 import { useTheme } from '../../context/ThemeContext';
 import { useAudio } from '../../context/AudioContext';
+import { ShivlingShrine } from './ShivlingShrine';
+import { PujaMantraCard, OfferingType } from './PujaMantraCard';
+import { safeShare } from '../../services/shareService';
+
+type PujaMode = 'freeform' | 'sankalp' | 'aarti';
 
 interface OfferingState {
   flowers: number;
@@ -12,11 +17,19 @@ interface OfferingState {
   milkCount: number;
   diyaLit: boolean;
   garlandPlaced: boolean;
+  dhoopActive: boolean;
 }
 
 export const ShivlingPujaCanvas: React.FC = () => {
   const { theme } = useTheme();
-  const { playSoundEffect } = useAudio();
+  const { playSoundEffect, playTrack, pauseTrack, isPlaying } = useAudio();
+
+  const [mode, setMode] = useState<PujaMode>('freeform');
+  const [activeOffering, setActiveOffering] = useState<OfferingType>(null);
+  const [sankalpTarget, setSankalpTarget] = useState<number>(108);
+  const [isWaterFlowing, setIsWaterFlowing] = useState<boolean>(false);
+  const [isMilkFlowing, setIsMilkFlowing] = useState<boolean>(false);
+
   const [offerings, setOfferings] = useState<OfferingState>({
     flowers: 0,
     belpatra: 0,
@@ -24,45 +37,96 @@ export const ShivlingPujaCanvas: React.FC = () => {
     milkCount: 0,
     diyaLit: false,
     garlandPlaced: false,
+    dhoopActive: false,
   });
+
+  const totalOfferingsCount =
+    offerings.flowers + offerings.belpatra + offerings.waterCount + offerings.milkCount;
 
   const triggerHaptic = () => {
     try {
       if (Platform.OS !== 'web') {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
     } catch (e) {}
   };
 
-  const handleOffering = (type: 'flower' | 'belpatra' | 'water' | 'milk' | 'diya' | 'garland' | 'bell' | 'shankh') => {
+  const handleOffering = (type: NonNullable<OfferingType>) => {
     triggerHaptic();
+    setActiveOffering(type);
 
     if (type === 'flower') {
-      setOfferings(prev => ({ ...prev, flowers: prev.flowers + 1 }));
+      setOfferings((prev) => ({ ...prev, flowers: prev.flowers + 1 }));
       playSoundEffect('chime');
     } else if (type === 'belpatra') {
-      setOfferings(prev => ({ ...prev, belpatra: prev.belpatra + 1 }));
+      setOfferings((prev) => ({ ...prev, belpatra: prev.belpatra + 1 }));
       playSoundEffect('chime');
     } else if (type === 'water') {
-      setOfferings(prev => ({ ...prev, waterCount: prev.waterCount + 1 }));
-      playSoundEffect('chime');
+      setOfferings((prev) => ({ ...prev, waterCount: prev.waterCount + 1 }));
+      setIsWaterFlowing(true);
+      playSoundEffect('water');
+      setTimeout(() => setIsWaterFlowing(false), 4500);
     } else if (type === 'milk') {
-      setOfferings(prev => ({ ...prev, milkCount: prev.milkCount + 1 }));
-      playSoundEffect('chime');
+      setOfferings((prev) => ({ ...prev, milkCount: prev.milkCount + 1 }));
+      setIsMilkFlowing(true);
+      playSoundEffect('water');
+      setTimeout(() => setIsMilkFlowing(false), 4500);
     } else if (type === 'diya') {
-      setOfferings(prev => ({ ...prev, diyaLit: !prev.diyaLit }));
+      setOfferings((prev) => ({ ...prev, diyaLit: !prev.diyaLit }));
       playSoundEffect('chime');
     } else if (type === 'garland') {
-      setOfferings(prev => ({ ...prev, garlandPlaced: !prev.garlandPlaced }));
+      setOfferings((prev) => ({ ...prev, garlandPlaced: !prev.garlandPlaced }));
       playSoundEffect('chime');
     } else if (type === 'bell') {
       playSoundEffect('bell');
     } else if (type === 'shankh') {
       playSoundEffect('shankh');
     }
+
+    // Sankalp Completion Check
+    if (mode === 'sankalp') {
+      const nextTotal = totalOfferingsCount + 1;
+      if (nextTotal >= sankalpTarget) {
+        playSoundEffect('bell');
+        Alert.alert(
+          '🔱 संकल्प पूर्ण हुआ!',
+          `हर हर महादेव! आपका ${sankalpTarget} मन्त्र/पुष्प समर्पण का संकल्प सफलतापूर्वक पूर्ण हुआ। शिव गुरु का आशीर्वाद सदा आप पर बना रहे।`,
+          [{ text: 'ॐ नमः शिवाय 🙏' }]
+        );
+      }
+    }
+  };
+
+  const toggleAartiMode = () => {
+    triggerHaptic();
+    if (mode === 'aarti') {
+      setMode('freeform');
+    } else {
+      setMode('aarti');
+      playSoundEffect('bell');
+      setOfferings((prev) => ({ ...prev, diyaLit: true }));
+    }
+  };
+
+  const toggleBackgroundChanting = async () => {
+    triggerHaptic();
+    if (isPlaying) {
+      await pauseTrack();
+    } else {
+      await playTrack({
+        id: 'puja_om_namah_shivaya',
+        title: 'ॐ नमः शिवाय (शिव धुन)',
+        category: 'mantra',
+        artist: 'शिव चर्चा भक्ति धारा',
+        audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=om-namah-shivaya-114422.mp3',
+        coverImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=400',
+        duration: 300,
+      });
+    }
   };
 
   const resetPuja = () => {
+    triggerHaptic();
     setOfferings({
       flowers: 0,
       belpatra: 0,
@@ -70,113 +134,210 @@ export const ShivlingPujaCanvas: React.FC = () => {
       milkCount: 0,
       diyaLit: false,
       garlandPlaced: false,
+      dhoopActive: false,
+    });
+    setActiveOffering(null);
+  };
+
+  const sharePujaBlessing = async () => {
+    triggerHaptic();
+    const message =
+      `🔱 *शिव लिंग पूजन सेवा - शिव चर्चा ऐप* 🔱\n\n` +
+      `आज मैंने भावपूर्वक शिव लिंग पर अर्पण किया:\n` +
+      `🌸 पुष्प: ${offerings.flowers} बार\n` +
+      `🍃 बिल्वपत्र: ${offerings.belpatra} बार\n` +
+      `💧 जलधारा: ${offerings.waterCount} बार\n` +
+      `🥛 दुग्धधारा: ${offerings.milkCount} बार\n\n` +
+      `*ॐ नमः शिवाय!* शिव गुरु सब पर अपनी असीम अनुकंपा बनाए रखें। 🙏✨\n\n` +
+      `आप भी घर बैठे डिजिटल शिव पूजा करें - डाउनलोड करें शिव चर्चा ऐप।`;
+
+    await safeShare({
+      title: 'शिव पूजन आशीर्वाद',
+      message,
     });
   };
 
   return (
     <View style={styles.container}>
-      {/* Visual Altar Stage */}
-      <View style={[styles.stage, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
-        {/* Background Aura */}
-        <View style={styles.auraGlow} />
+      {/* Top Puja Mode Switcher Pills */}
+      <View style={[styles.modeBar, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+        <TouchableOpacity
+          style={[styles.modeTab, mode === 'freeform' && { backgroundColor: theme.primary }]}
+          onPress={() => setMode('freeform')}
+        >
+          <Text style={[styles.modeTabText, mode === 'freeform' ? { color: '#FFF' } : { color: theme.textSecondary }]}>
+            🌱 स्वतंत्र पूजा
+          </Text>
+        </TouchableOpacity>
 
-        {/* Diya Flames on sides if lit */}
-        {offerings.diyaLit && (
-          <View style={styles.diyaContainer}>
-            <Text style={styles.diyaFlame}>🪔✨</Text>
-          </View>
-        )}
+        <TouchableOpacity
+          style={[styles.modeTab, mode === 'sankalp' && { backgroundColor: theme.primary }]}
+          onPress={() => setMode('sankalp')}
+        >
+          <Text style={[styles.modeTabText, mode === 'sankalp' ? { color: '#FFF' } : { color: theme.textSecondary }]}>
+            📿 संकल्प ({sankalpTarget})
+          </Text>
+        </TouchableOpacity>
 
-        {/* Shivling Shrine Visualization */}
-        <View style={[styles.shivlingFrame, { borderColor: theme.borderGold }]}>
-          <Text style={styles.shivlingEmoji}>🕉️</Text>
-          <View style={styles.shivlingBase}>
-            <Text style={styles.shivlingIcon}>🪨</Text>
-          </View>
-
-          {/* Garland on Shivling */}
-          {offerings.garlandPlaced && (
-            <View style={styles.garlandOverlay}>
-              <Text style={styles.garlandText}>🌸🌼🌺🌼🌸</Text>
-            </View>
-          )}
-
-          {/* Flowers & Bel Patra Offered Count Badge */}
-          {(offerings.flowers > 0 || offerings.belpatra > 0) && (
-            <View style={[styles.offeringBadge, { backgroundColor: theme.accent }]}>
-              <Text style={[styles.offeringBadgeText, { color: theme.primaryDark }]}>
-                {offerings.flowers > 0 ? `🌸 x${offerings.flowers} ` : ''}
-                {offerings.belpatra > 0 ? `🍃 x${offerings.belpatra}` : ''}
-              </Text>
-            </View>
-          )}
-
-          {/* Abhishek Liquids */}
-          {(offerings.waterCount > 0 || offerings.milkCount > 0) && (
-            <View style={styles.liquidStream}>
-              <Text style={styles.liquidText}>
-                {offerings.waterCount > 0 ? '💧' : ''}
-                {offerings.milkCount > 0 ? '🥛' : ''}
-              </Text>
-            </View>
-          )}
-        </View>
-
-        {/* Closing Devotional Blessing */}
-        <View style={styles.blessingBox}>
-          <Text style={[styles.blessingText, { color: theme.textGold }]}>ॐ नमः शिवाय 🙏</Text>
-          <Text style={[styles.subBlessing, { color: theme.textWhite }]}>शिव गुरु का आशीर्वाद सदा आपके साथ है</Text>
-        </View>
+        <TouchableOpacity
+          style={[styles.modeTab, mode === 'aarti' && { backgroundColor: colors.goldPrimary }]}
+          onPress={toggleAartiMode}
+        >
+          <Text style={[styles.modeTabText, mode === 'aarti' ? { color: colors.maroonDark } : { color: theme.textSecondary }]}>
+            🪔 महा आरती
+          </Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Interactive Worship Actions Bar */}
+      {/* Sankalp Mode Target Selector Bar */}
+      {mode === 'sankalp' && (
+        <View style={[styles.sankalpBar, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+          <Text style={[styles.sankalpText, { color: theme.textGold }]}>
+            संकल्प लक्ष्य ({totalOfferingsCount} / {sankalpTarget}):
+          </Text>
+          <View style={styles.sankalpBtnRow}>
+            {[11, 21, 108].map((count) => (
+              <TouchableOpacity
+                key={count}
+                style={[
+                  styles.sankalpPill,
+                  sankalpTarget === count && { backgroundColor: theme.accent },
+                ]}
+                onPress={() => setSankalpTarget(count)}
+              >
+                <Text
+                  style={[
+                    styles.sankalpPillText,
+                    sankalpTarget === count ? { color: theme.primaryDark, fontWeight: 'bold' } : { color: theme.textPrimary },
+                  ]}
+                >
+                  {count}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      )}
+
+      {/* Digital Shivling Shrine Canvas */}
+      <ShivlingShrine
+        diyaLit={offerings.diyaLit}
+        garlandPlaced={offerings.garlandPlaced}
+        isWaterFlowing={isWaterFlowing}
+        isMilkFlowing={isMilkFlowing}
+        flowersCount={offerings.flowers}
+        belpatraCount={offerings.belpatra}
+        isAartiActive={mode === 'aarti'}
+        isDhoopActive={offerings.dhoopActive}
+      />
+
+      {/* Devotional Sanskrit Mantra Card */}
+      <PujaMantraCard activeOffering={activeOffering} />
+
+      {/* Puja Action Buttons Grid */}
       <View style={[styles.actionsBar, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-        <Text style={[styles.barTitle, { color: theme.textPrimary }]}>पूजा सेवा भाव अर्पित करें:</Text>
+        <View style={styles.actionHeader}>
+          <Text style={[styles.barTitle, { color: theme.textGold }]}>🌸 पूजन द्रव्य अर्पित करें</Text>
+
+          <TouchableOpacity style={styles.chantingToggleBtn} onPress={toggleBackgroundChanting}>
+            <Text style={styles.chantingToggleText}>
+              {isPlaying ? '🔊 शिव धुन बंद करें' : '🎵 शिव धुन चलाएं'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.buttonsGrid}>
-          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('flower')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('flower')}
+            activeOpacity={0.7}
+          >
+            {offerings.flowers > 0 && <Text style={styles.badgeCount}>{offerings.flowers}</Text>}
             <Text style={styles.actionIcon}>🌸</Text>
             <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>पुष्प</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('belpatra')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('belpatra')}
+            activeOpacity={0.7}
+          >
+            {offerings.belpatra > 0 && <Text style={styles.badgeCount}>{offerings.belpatra}</Text>}
             <Text style={styles.actionIcon}>🍃</Text>
             <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>बेलपत्र</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('water')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('water')}
+            activeOpacity={0.7}
+          >
+            {offerings.waterCount > 0 && <Text style={styles.badgeCount}>{offerings.waterCount}</Text>}
             <Text style={styles.actionIcon}>💧</Text>
             <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>जलधारा</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated }]} onPress={() => handleOffering('milk')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('milk')}
+            activeOpacity={0.7}
+          >
+            {offerings.milkCount > 0 && <Text style={styles.badgeCount}>{offerings.milkCount}</Text>}
             <Text style={styles.actionIcon}>🥛</Text>
-            <Text style={styles.actionLabel}>दुग्धधारा</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>दुग्धधारा</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('diya')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: offerings.diyaLit ? colors.goldPrimary : theme.border }]}
+            onPress={() => handleOffering('diya')}
+            activeOpacity={0.7}
+          >
             <Text style={styles.actionIcon}>🪔</Text>
-            <Text style={styles.actionLabel}>दीपक</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>दीपक</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('garland')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: offerings.garlandPlaced ? colors.goldPrimary : theme.border }]}
+            onPress={() => handleOffering('garland')}
+            activeOpacity={0.7}
+          >
             <Text style={styles.actionIcon}>🌺</Text>
-            <Text style={styles.actionLabel}>माला</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>पुष्पमाला</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('bell')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('bell')}
+            activeOpacity={0.7}
+          >
             <Text style={styles.actionIcon}>🔔</Text>
-            <Text style={styles.actionLabel}>घंटी</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>घंटी</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionBtn} onPress={() => handleOffering('shankh')} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={[styles.actionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+            onPress={() => handleOffering('shankh')}
+            activeOpacity={0.7}
+          >
             <Text style={styles.actionIcon}>🐚</Text>
-            <Text style={styles.actionLabel}>शंखनाद</Text>
+            <Text style={[styles.actionLabel, { color: theme.textPrimary }]}>शंखनाद</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.resetBtn} onPress={resetPuja} activeOpacity={0.7}>
-          <Text style={styles.resetText}>↺ पुनः पूजा आरम्भ करें</Text>
-        </TouchableOpacity>
+        {/* Action Row: Reset & Share */}
+        <View style={styles.bottomRow}>
+          <TouchableOpacity style={styles.resetBtn} onPress={resetPuja} activeOpacity={0.7}>
+            <Text style={[styles.resetText, { color: theme.textSecondary }]}>↺ पुन: पूजा आरम्भ करें</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.shareBtn, { backgroundColor: theme.primary }]}
+            onPress={sharePujaBlessing}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.shareBtnText}>✨ पूजा आशीर्वाद शेयर करें</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -185,141 +346,138 @@ export const ShivlingPujaCanvas: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    backgroundColor: colors.maroonDark,
-    borderRadius: 24,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: colors.goldPrimary,
-    ...shadows.medium,
   },
-  stage: {
-    height: 280,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: '#200408',
+  modeBar: {
+    flexDirection: 'row',
+    borderRadius: 14,
+    padding: 4,
+    borderWidth: 1,
+    marginBottom: 12,
+    justifyContent: 'space-between',
   },
-  auraGlow: {
-    position: 'absolute',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: 'rgba(255, 111, 0, 0.25)',
-  },
-  diyaContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 24,
-  },
-  diyaFlame: {
-    fontSize: 28,
-  },
-  shivlingFrame: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  shivlingEmoji: {
-    fontSize: 32,
-    marginBottom: -8,
-  },
-  shivlingBase: {
+  modeTab: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 10,
     alignItems: 'center',
   },
-  shivlingIcon: {
-    fontSize: 84,
+  modeTabText: {
+    fontSize: 12,
+    fontWeight: 'bold',
   },
-  garlandOverlay: {
-    position: 'absolute',
-    top: 36,
-  },
-  garlandText: {
-    fontSize: 16,
-  },
-  offeringBadge: {
-    position: 'absolute',
-    bottom: -10,
-    backgroundColor: colors.maroonPrimary,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+  sankalpBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.goldPrimary,
+    marginBottom: 12,
   },
-  offeringBadgeText: {
+  sankalpText: {
     fontSize: 12,
-    color: colors.goldLight,
     fontWeight: 'bold',
   },
-  liquidStream: {
-    position: 'absolute',
-    top: 10,
+  sankalpBtnRow: {
+    flexDirection: 'row',
   },
-  liquidText: {
-    fontSize: 22,
+  sankalpPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginLeft: 6,
   },
-  blessingBox: {
-    position: 'absolute',
-    bottom: 12,
-    alignItems: 'center',
-  },
-  blessingText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.goldLight,
-  },
-  subBlessing: {
-    fontSize: 11,
-    color: colors.bgIvory,
-    opacity: 0.8,
-    marginTop: 2,
+  sankalpPillText: {
+    fontSize: 12,
   },
   actionsBar: {
-    backgroundColor: colors.maroonPrimary,
+    borderRadius: 20,
     padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.goldPrimary,
+    borderWidth: 1,
+    ...shadows.soft,
+  },
+  actionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   barTitle: {
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  chantingToggleBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+  },
+  chantingToggleText: {
+    fontSize: 11,
     fontWeight: 'bold',
     color: colors.goldPrimary,
-    marginBottom: 10,
-    textAlign: 'center',
   },
   buttonsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   actionBtn: {
     width: '23%',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 12,
+    borderRadius: 14,
     paddingVertical: 10,
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.15)',
+    position: 'relative',
+  },
+  badgeCount: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: colors.goldPrimary,
+    color: colors.maroonDark,
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   actionIcon: {
-    fontSize: 22,
+    fontSize: 24,
   },
   actionLabel: {
     fontSize: 11,
-    color: colors.bgIvory,
     marginTop: 4,
-    fontWeight: '500',
+    fontWeight: '600',
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 215, 0, 0.15)',
   },
   resetBtn: {
-    alignSelf: 'center',
-    marginTop: 8,
-    paddingHorizontal: 16,
     paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   resetText: {
+    fontSize: 11,
+  },
+  shareBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    ...shadows.soft,
+  },
+  shareBtnText: {
     fontSize: 12,
-    color: colors.goldPrimary,
-    opacity: 0.9,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
 });

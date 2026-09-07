@@ -62,6 +62,36 @@
       "description": "Transparent Shiva Silhouette / Symbol for Headers and Cards"
     }
   ],
+  "puja_seva_assets": [
+    {
+      "filename": "diya.png",
+      "path": "assets/images/pooja/diya.png",
+      "dimensions": "384x384",
+      "format": "PNG (Transparent)",
+      "description": "Brass Oil Lamp with glowing flame for Puja Seva and Aarti"
+    },
+    {
+      "filename": "flower.png",
+      "path": "assets/images/pooja/flower.png",
+      "dimensions": "384x256",
+      "format": "PNG (Transparent)",
+      "description": "Devotional Flower for Pushpa shower and pedestal resting"
+    },
+    {
+      "filename": "garland.png",
+      "path": "assets/images/pooja/garland.png",
+      "dimensions": "320x384",
+      "format": "PNG (Transparent)",
+      "description": "Marigold Flower Garland for Shivling draping animation"
+    },
+    {
+      "filename": "water.png",
+      "path": "assets/images/pooja/water.png",
+      "dimensions": "256x384",
+      "format": "PNG (Transparent)",
+      "description": "Fluid Stream for Jal and Milk Abhishek animations"
+    }
+  ],
   "fallbacks": [
     {
       "id": "fallback-hero",

@@ -7,10 +7,12 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  SafeAreaView,
   Dimensions,
+  Platform,
+  StatusBar as RNStatusBar,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
 import { DiscipleTitle, UserGender } from '@/types';
@@ -32,6 +34,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   onComplete,
 }) => {
   const { theme } = useTheme();
+
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedTitle, setSelectedTitle] = useState<DiscipleTitle>('शिव शिष्य');
   const [userName, setUserName] = useState('');
@@ -125,7 +128,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
               <View style={[styles.sutraContainer, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
                 <View style={styles.sutraItem}>
-                  <Text style={styles.sutraNumber}>१</Text>
+                  <Text style={styles.sutraNumber}>1</Text>
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>पहला सूत्र - दया माँगना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
@@ -137,7 +140,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <View style={styles.sutraDivider} />
 
                 <View style={styles.sutraItem}>
-                  <Text style={styles.sutraNumber}>२</Text>
+                  <Text style={styles.sutraNumber}>2</Text>
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>दूसरा सूत्र - चर्चा करना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
@@ -149,7 +152,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 <View style={styles.sutraDivider} />
 
                 <View style={styles.sutraItem}>
-                  <Text style={styles.sutraNumber}>३</Text>
+                  <Text style={styles.sutraNumber}>3</Text>
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>तीसरा सूत्र - नमः शिवाय प्रणाम</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>

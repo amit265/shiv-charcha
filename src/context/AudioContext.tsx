@@ -117,33 +117,81 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (typeof window !== 'undefined' && ('AudioContext' in window || 'webkitAudioContext' in window)) {
         const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
         const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
+        
         if (soundType === 'bell') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(880, ctx.currentTime);
-          gain.gain.setValueAtTime(0.5, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
-          osc.start();
-          osc.stop(ctx.currentTime + 2.5);
+          // Temple Bell: Fundamental + Harmonic overtone
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(880, ctx.currentTime); // A5
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(1760, ctx.currentTime); // A6 overtone
+          
+          gain.gain.setValueAtTime(0.6, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 2.8);
+          
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc1.start();
+          osc2.start();
+          osc1.stop(ctx.currentTime + 2.8);
+          osc2.stop(ctx.currentTime + 2.8);
         } else if (soundType === 'shankh') {
+          // Shankh Naad: Low triangle wave swelling up
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 1.2);
-          gain.gain.setValueAtTime(0.4, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3.0);
+          osc.frequency.setValueAtTime(280, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 1.5);
+          osc.frequency.exponentialRampToValueAtTime(360, ctx.currentTime + 3.2);
+          
+          gain.gain.setValueAtTime(0.05, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.6);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.5);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
           osc.start();
-          osc.stop(ctx.currentTime + 3.0);
-        } else {
+          osc.stop(ctx.currentTime + 3.5);
+        } else if (soundType === 'water') {
+          // Water Stream: Modulated noise flow
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-          gain.gain.setValueAtTime(0.3, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(600, ctx.currentTime + 0.3);
+          osc.frequency.linearRampToValueAtTime(350, ctx.currentTime + 0.8);
+          
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
           osc.start();
-          osc.stop(ctx.currentTime + 1.5);
+          osc.stop(ctx.currentTime + 1.0);
+        } else {
+          // Chime / Flower Drop
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1046.5, ctx.currentTime); // C6
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+          
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
         }
       }
     } catch (e) {

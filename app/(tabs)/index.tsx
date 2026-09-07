@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
@@ -21,21 +21,23 @@ export default function HomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
+  const panchang = getTodayPanchang();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [formattedName, setFormattedName] = useState<string>('शिव शिष्य');
   const [sutraStreak, setSutraStreak] = useState<number>(0);
   const [past7Days, setPast7Days] = useState<Array<{ date: string; dayName: string; completed: boolean }>>([]);
 
-  const panchang = getTodayPanchang();
   const todayMsg = dailyMessages[0];
   const todayBhajan = audioLibrary[0];
   const specialDate = sacredDates[0];
   const todayPrompt = getTodayCharchaPrompt();
   const featuredPravachan = pravachanLibrary[0];
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadUserData();
+    }, [])
+  );
 
   const loadUserData = async () => {
     const prefs = await StorageService.getPreferences();
@@ -188,7 +190,7 @@ export default function HomeScreen() {
                 {sutraStreak > 0 ? `🔥 ${sutraStreak} दिन से निरंतर साधना जारी` : 'प्रतिदिन 3 सूत्र पूरे करें व कमल खिलाएँ'}
               </Text>
             </View>
-            <Text style={[styles.streakArrow, { color: theme.secondary }]}>३ सूत्र ➔</Text>
+            <Text style={[styles.streakArrow, { color: theme.secondary }]}>3 सूत्र ➔</Text>
           </View>
 
           <View style={styles.lotusStreakRow}>
@@ -206,7 +208,7 @@ export default function HomeScreen() {
         {/* PROMINENT SHIV SANSAR SPOTLIGHT CARD */}
         <TouchableOpacity
           style={[styles.sansarSpotlightCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
-          onPress={() => router.push('/sansar' as any)}
+          onPress={() => router.push('/(tabs)/sansar' as any)}
           activeOpacity={0.9}
         >
           <View style={styles.sansarHeaderRow}>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { colors, shadows } from '@/theme/colors';
@@ -8,18 +8,25 @@ import { shareTemplates } from '@/content/shareTemplates';
 import { ShareCardRenderer } from '@/components/share/ShareCardRenderer';
 import { ShareTemplate } from '@/types';
 
-import { StorageService, getFirstSutraText, getDiscipleTitle } from '@/services/storage';
+import { StorageService, getFirstSutraText, getDiscipleTitle, getFormattedUserName } from '@/services/storage';
 
 export default function ShareStudioScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const [userGender, setUserGender] = useState<'male' | 'female' | 'neutral'>('male');
+  const [userProfileName, setUserProfileName] = useState<string>('शिव शिष्य');
 
-  useEffect(() => {
-    StorageService.getPreferences().then((p) => {
-      setUserGender(p.userGender || 'male');
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      StorageService.getPreferences().then((p) => {
+        setUserGender(p.userGender || 'male');
+        const formatted = getFormattedUserName(p);
+        if (formatted) {
+          setUserProfileName(formatted);
+        }
+      });
+    }, [])
+  );
 
   const activeThemeTemplate: ShareTemplate = {
     id: 'st-active-app-theme',
@@ -97,7 +104,7 @@ export default function ShareStudioScreen() {
         </ScrollView>
 
         {/* Live Card Renderer & Customization Form */}
-        <ShareCardRenderer template={selectedTemplate} />
+        <ShareCardRenderer key={selectedTemplate.id + userProfileName} template={selectedTemplate} userName={userProfileName} />
       </ScrollView>
     </View>
   );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
@@ -36,9 +36,11 @@ export default function ShivCharchaScreen() {
     sutra3: false,
   });
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const loadData = async () => {
     const data = await StorageService.getDaily3Sutras();
@@ -128,7 +130,7 @@ export default function ShivCharchaScreen() {
               styles.headerActionBtn,
               { backgroundColor: 'rgba(255, 255, 255, 0.15)', borderColor: theme.borderGold },
             ]}
-            onPress={() => router.push('/sansar' as any)}
+            onPress={() => router.push('/(tabs)/sansar' as any)}
             activeOpacity={0.8}
           >
             <Text style={{ fontSize: 18 }}>🛕</Text>
@@ -140,7 +142,7 @@ export default function ShivCharchaScreen() {
         {/* SHIV SANSAR SPOTLIGHT BANNER */}
         <TouchableOpacity
           style={[styles.sansarBanner, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}
-          onPress={() => router.push('/sansar' as any)}
+          onPress={() => router.push('/(tabs)/sansar' as any)}
           activeOpacity={0.88}
         >
           <View style={styles.sansarBannerContent}>
@@ -424,7 +426,7 @@ export default function ShivCharchaScreen() {
 
         {/* PHASE 2: CORE PILLARS OF SHIV CHARCHA */}
         <View style={styles.pillarsContainer}>
-          <Text style={[styles.pillarsTitle, { color: theme.primary }]}>🔱 शिव चर्चा के ५ पावन स्तम्भ</Text>
+          <Text style={[styles.pillarsTitle, { color: theme.primary }]}>🔱 शिव चर्चा के 5 पावन स्तम्भ</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillarsScroll}>
             {/* Pillar 1: Sutra 1 */}
             <TouchableOpacity

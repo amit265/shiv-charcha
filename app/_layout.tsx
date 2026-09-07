@@ -72,8 +72,7 @@ function RootNavigator() {
         <Stack.Screen name="calendar" options={{ title: '📅 शिव चर्चा कैलेंडर' }} />
         <Stack.Screen name="audio-hub" options={{ title: '🎧 ऑडियो अमृत वाणी' }} />
 
-        {/* Shiv Sansar Routes */}
-        <Stack.Screen name="sansar/index" options={{ title: '🔱 शिव संसार' }} />
+        {/* Shiv Sansar Sub-Routes */}
         <Stack.Screen name="sansar/stories/index" options={{ title: '📖 शिव कथाएँ' }} />
         <Stack.Screen name="sansar/stories/[id]" options={{ title: '📖 शिव कथा' }} />
         <Stack.Screen name="sansar/jyotirlinga/index" options={{ title: '🛕 12 ज्योतिर्लिंग' }} />
