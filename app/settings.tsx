@@ -18,6 +18,7 @@ import { colors, shadows } from '@/theme/colors';
 import { StorageService, defaultPreferences } from '@/services/storage';
 import { UserPreferences } from '@/types';
 import { safeShare } from '@/services/shareService';
+import { APP_CONFIG, APP_LINKS, CROSS_PROMO_LINKS } from '@/constants/links';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -52,13 +53,12 @@ export default function SettingsScreen() {
   const handleShareApp = async () => {
     await safeShare({
       title: 'शिव चर्चा ऐप शेयर करें',
-      message:
-        '🌸 *शिव चर्चा एवं साधना ऐप* 🌸\n\nसाहब श्री हरिंद्रानंद जी एवं दीदी नीलम आनंद जी के विचार, 12 ज्योतिर्लिंग दर्शन, 51 शक्ति पीठ, शिव कथाएँ, स्तोत्र पाठ एवं 108 जाप साधना!\n\nडाउनलोड करें: https://play.google.com/store/apps/details?id=com.destyastudio.shivcharcha\n\nहर हर महादेव 🙏',
+      message: `🌸 *${APP_CONFIG.appNameHindi}* 🌸\n\nसाहब श्री हरिंद्रानंद जी एवं दीदी नीलम आनंद जी के विचार, 12 ज्योतिर्लिंग दर्शन, 51 शक्ति पीठ, शिव कथाएँ, स्तोत्र पाठ एवं 108 जाप साधना!\n\nडाउनलोड करें: ${APP_LINKS.playStoreUrl}\n\nहर हर महादेव 🙏`,
     });
   };
 
   const handleRateApp = async () => {
-    const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.destyastudio.shivcharcha';
+    const playStoreUrl = APP_LINKS.playStoreUrl;
     try {
       const supported = await Linking.canOpenURL(playStoreUrl);
       if (supported) {
@@ -195,12 +195,12 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* SECTION 4: OUR OTHER APPS (DESTYA STUDIO CROSS PROMOTION) */}
+        {/* SECTION 4: OUR OTHER APPS (MAHAVYOMA STUDIO CROSS PROMOTION) */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>हमारे अन्य पावन ऐप (Our Devotional Apps) 📱</Text>
         <View style={styles.otherAppsContainer}>
           <TouchableOpacity
             style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('भक्ति माला', 'https://play.google.com/store/search?q=bhakti%20mala%20destya')}
+            onPress={() => handleOpenOtherApp('भक्ति माला', CROSS_PROMO_LINKS.bhaktiMala)}
             activeOpacity={0.85}
           >
             <Text style={styles.appPromoIcon}>🌺</Text>
@@ -219,7 +219,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity
             style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('गीता चर्चा', 'https://play.google.com/store/search?q=gita%20charcha%20destya')}
+            onPress={() => handleOpenOtherApp('गीता चर्चा', CROSS_PROMO_LINKS.gitaCharcha)}
             activeOpacity={0.85}
           >
             <Text style={styles.appPromoIcon}>📜</Text>
@@ -238,7 +238,7 @@ export default function SettingsScreen() {
 
           <TouchableOpacity
             style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('हनुमान साधना', 'https://play.google.com/store/search?q=hanuman%20sadhana%20destya')}
+            onPress={() => handleOpenOtherApp('हनुमान साधना', CROSS_PROMO_LINKS.hanumanSadhana)}
             activeOpacity={0.85}
           >
             <Text style={styles.appPromoIcon}>📿</Text>
@@ -421,7 +421,7 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/privacy')}
+                    onPress={() => Linking.openURL(APP_LINKS.privacyPolicyUrl)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 अधिकारी वेबसाइट पर गोपनीयता नीति खोलें
@@ -450,7 +450,7 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => Linking.openURL('https://mahavyomastudio.com/apps/shiv-charcha/terms')}
+                    onPress={() => Linking.openURL(APP_LINKS.termsOfServiceUrl)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 आधिकारिक वेबसाइट पर सेवा शर्तें खोलें

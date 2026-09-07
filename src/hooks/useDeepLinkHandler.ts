@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Linking } from 'react-native';
 import { useRouter } from 'expo-router';
+import { APP_LINKS } from '@/constants/links';
 
 export function useDeepLinkHandler() {
   const router = useRouter();
@@ -34,7 +35,10 @@ export function useDeepLinkHandler() {
       // shivcharcha://stories/st-sati-parvati
       // shivcharcha://jap
 
-      const cleanUrl = url.replace('shivcharcha://', '').replace('https://mahavyomastudio.com/apps/shiv-charcha/', '');
+      const cleanUrl = url
+        .replace(APP_LINKS.deepLinkScheme, '')
+        .replace(`${APP_LINKS.appLandingPage}/`, '')
+        .replace(APP_LINKS.appLandingPage, '');
       const parts = cleanUrl.split('?')[0].split('/');
 
       const routeType = parts[0];

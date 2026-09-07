@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { APP_LINKS } from '@/constants/links';
 
 export interface UpdateManifest {
   latestVersion: string;
@@ -66,7 +67,7 @@ export const UpdateService = {
           latestVersion: manifest.latestVersion,
           whatsNew: manifest.whatsNew || [],
           forceUpdate: Boolean(manifest.forceUpdate),
-          updateUrl: manifest.updateUrl || 'https://play.google.com/store/apps/details?id=com.mahavyomastudio.shivcharcha',
+          updateUrl: manifest.updateUrl || APP_LINKS.playStoreUrl,
         };
       }
 
