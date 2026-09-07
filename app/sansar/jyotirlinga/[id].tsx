@@ -32,7 +32,7 @@ export default function JyotirlingaDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Image & Title */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(item.id || item.image, 'jyotirlinga')} style={styles.coverImage} />
+          <Image source={resolveImageSource(item.image || item.id, 'jyotirlinga')} style={styles.coverImage} />
           <View style={styles.coverOverlay}>
             <Text style={styles.locationBadge}>📍 {item.location}, {item.state}</Text>
             <Text style={styles.heroTitle}>{item.nameHindi}</Text>

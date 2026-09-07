@@ -78,8 +78,11 @@ export const SHAKTI_PEETH_IMAGES: Record<string, ImageSourcePropType> = {
   bakreshwar: require('../../assets/images/shakti_peeth/shakti_peeth_20_bakreshwar.jpg'),
 };
 
-// Story bundled images
 export const STORY_IMAGES: Record<string, ImageSourcePropType> = {
+  'sati-and-shiva': require('../../assets/images/story/story_shiva_and_sati_beneath_himalayan_skies.jpg'),
+  'shiva-and-parvati': require('../../assets/images/story/story_shiva_and_parvatis_himalayan_wedding.jpg'),
+  'samudra-manthan': require('../../assets/images/story/story_neelkanth_during_the_ocean_churning.jpg'),
+  'ganga-avataran': require('../../assets/images/story/story_divine_descent_of_the_ganga.jpg'),
   'ganga-avtaran': require('../../assets/images/story/story_divine_descent_of_the_ganga.jpg'),
   'sati-dahan': require('../../assets/images/story/story_satis_sacred_fire_ceremony.jpg'),
   'shiv-parvati-vivah': require('../../assets/images/story/story_shiva_and_parvatis_himalayan_wedding.jpg'),

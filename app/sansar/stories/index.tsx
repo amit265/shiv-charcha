@@ -32,7 +32,7 @@ export default function ShivaStoriesListScreen() {
             onPress={() => router.push(`/sansar/stories/${story.id}` as any)}
             activeOpacity={0.88}
           >
-            <Image source={resolveImageSource(story.id || story.coverImage, 'story')} style={styles.storyCover} />
+            <Image source={resolveImageSource(story.coverImage || story.id, 'story')} style={styles.storyCover} />
 
             <View style={styles.storyContent}>
               <View style={styles.badgeRow}>

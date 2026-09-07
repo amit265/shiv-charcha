@@ -33,7 +33,7 @@ export default function ShivaStoryDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(story.id || story.coverImage, 'story')} style={styles.coverImage} />
+          <Image source={resolveImageSource(story.coverImage || story.id, 'story')} style={styles.coverImage} />
           <View style={styles.coverOverlay}>
             {story.tradition && (
               <Text style={[styles.traditionTag, { backgroundColor: theme.primary, color: theme.textWhite }]}>

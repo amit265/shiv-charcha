@@ -41,7 +41,7 @@ export default function JyotirlingaListScreen() {
               onPress={() => router.push(`/sansar/jyotirlinga/${item.id}` as any)}
               activeOpacity={0.88}
             >
-              <Image source={resolveImageSource(item.id || item.image, 'jyotirlinga')} style={styles.cardImage} />
+              <Image source={resolveImageSource(item.image || item.id, 'jyotirlinga')} style={styles.cardImage} />
 
               <View style={styles.cardContent}>
                 <View style={styles.numBadgeRow}>
