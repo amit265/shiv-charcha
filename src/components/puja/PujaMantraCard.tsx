@@ -73,9 +73,9 @@ export const PujaMantraCard: React.FC<PujaMantraCardProps> = ({ activeOffering }
   if (!activeOffering) {
     return (
       <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-        <Text style={[styles.defaultTitle, { color: theme.textGold }]}>🌸 शिव पूजा भावना 🌸</Text>
+        <Text style={[styles.defaultTitle, { color: theme.textGold }]}>शिव पूजा भावना</Text>
         <Text style={[styles.defaultSub, { color: theme.textSecondary }]}>
-          नीचे दिए गए पूजन द्रव्यों (जल, पुष्प, बेलपत्र, घंटी, शंख) पर टैप करके भावपूर्वक अर्पित करें और पवित्र मंत्र देखें।
+          पूजन द्रव्यों (जल, दुग्ध, पुष्प, बेलपत्र, घंटी, शंख) पर टैप करके भावपूर्वक अर्पित करें और पवित्र मंत्र देखें।
         </Text>
       </View>
     );
@@ -86,7 +86,6 @@ export const PujaMantraCard: React.FC<PujaMantraCardProps> = ({ activeOffering }
   return (
     <View style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
       <View style={styles.headerRow}>
-        <Text style={styles.icon}>{info.icon}</Text>
         <Text style={[styles.title, { color: theme.textGold }]}>{info.title}</Text>
       </View>
 

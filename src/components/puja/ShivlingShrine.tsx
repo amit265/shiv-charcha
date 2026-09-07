@@ -17,6 +17,7 @@ interface ShivlingShrineProps {
   belpatraCount: number;
   isAartiActive: boolean;
   isDhoopActive: boolean;
+  children?: React.ReactNode;
 }
 
 export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
@@ -28,6 +29,7 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
   belpatraCount,
   isAartiActive,
   isDhoopActive,
+  children,
 }) => {
   const { theme } = useTheme();
 
@@ -229,24 +231,24 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
     outputRange: [1, 0.5, 0],
   });
 
-  // Single-pass flower falling interpolations for multi-particle shower
+  // Single-pass flower falling interpolations for multi-particle shower (Falls from high above down to Shivling base)
   const showerTranslateY1 = showerYAnim.interpolate({
-    inputRange: [0, 0.75, 1],
-    outputRange: [-35, 140, 148],
+    inputRange: [0, 0.8, 1],
+    outputRange: [-130, 140, 148],
   });
 
   const showerTranslateY2 = showerYAnim.interpolate({
-    inputRange: [0, 0.7, 1],
-    outputRange: [-50, 132, 140],
+    inputRange: [0, 0.75, 1],
+    outputRange: [-145, 132, 140],
   });
 
   const showerTranslateY3 = showerYAnim.interpolate({
-    inputRange: [0, 0.8, 1],
-    outputRange: [-25, 145, 152],
+    inputRange: [0, 0.85, 1],
+    outputRange: [-120, 145, 152],
   });
 
   const showerOpacity1 = showerYAnim.interpolate({
-    inputRange: [0, 0.15, 0.85, 1],
+    inputRange: [0, 0.1, 0.85, 1],
     outputRange: [0, 1, 1, 0],
   });
 
@@ -423,45 +425,28 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
             </View>
           </View>
 
-          {/* Single-Pass Devotional Flower & Belpatra Shower (Falls IN FRONT of Shivling) */}
+          {/* Single-Pass Devotional Flower & Belpatra Shower (Falls IN FRONT of Shivling from Top Center) */}
           {(flowersCount > 0 || belpatraCount > 0) && (
             <View style={styles.centerShowerContainer}>
-              <Animated.Text
+              <Animated.View
                 style={[
-                  styles.centerShowerEmoji,
+                  styles.flowerShowerRow,
                   {
-                    left: -14,
-                    opacity: showerOpacity1,
-                    transform: [{ translateY: showerTranslateY2 }],
-                  },
-                ]}
-              >
-                {belpatraCount > flowersCount ? '🍃' : '🌸'}
-              </Animated.Text>
-              <Animated.Text
-                style={[
-                  styles.centerShowerEmoji,
-                  {
-                    left: 0,
                     opacity: showerOpacity1,
                     transform: [{ translateY: showerTranslateY1 }],
                   },
                 ]}
               >
-                {belpatraCount > flowersCount ? '🍃' : (flowersCount % 2 === 0 ? '🌸' : '🌺')}
-              </Animated.Text>
-              <Animated.Text
-                style={[
-                  styles.centerShowerEmoji,
-                  {
-                    left: 14,
-                    opacity: showerOpacity1,
-                    transform: [{ translateY: showerTranslateY3 }],
-                  },
-                ]}
-              >
-                {belpatraCount > flowersCount ? '🍃' : '🌼'}
-              </Animated.Text>
+                <Text style={styles.centerShowerEmojiSide}>
+                  {belpatraCount > flowersCount ? '🍃' : '🌸'}
+                </Text>
+                <Text style={styles.centerShowerEmojiMain}>
+                  {belpatraCount > flowersCount ? '🍃' : (flowersCount % 2 === 0 ? '🌸' : '🌺')}
+                </Text>
+                <Text style={styles.centerShowerEmojiSide}>
+                  {belpatraCount > flowersCount ? '🍃' : '🌼'}
+                </Text>
+              </Animated.View>
             </View>
           )}
 
@@ -518,14 +503,6 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
               ))}
             </View>
           </View>
-
-          {/* Offered Totals Badge below Jaladhari Base */}
-          {(flowersCount > 0 || belpatraCount > 0) && (
-            <View style={styles.offeredTray}>
-              {flowersCount > 0 && <Text style={styles.offeredBadge}>🌸 {flowersCount}</Text>}
-              {belpatraCount > 0 && <Text style={styles.offeredBadge}>🍃 {belpatraCount}</Text>}
-            </View>
-          )}
         </View>
 
         {/* Maha Aarti Wave Motion Thali (Diyas stay UPRIGHT facing upwards!) */}
@@ -559,6 +536,9 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
           <Text style={styles.blessingTitle}>ॐ नमः शिवाय 🙏</Text>
           <Text style={styles.blessingSub}>हर हर महादेव • सर्व मंगल मङ्गल्ये</Text>
         </View>
+
+        {/* Floating Overlay Children (e.g. Offering Action Buttons Grid directly on image canvas) */}
+        {children}
       </View>
     </View>
   );
@@ -575,7 +555,7 @@ const styles = StyleSheet.create({
     ...shadows.medium,
   },
   stage: {
-    height: 340,
+    height: 470,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -588,8 +568,8 @@ const styles = StyleSheet.create({
   },
   crescentMoon: {
     position: 'absolute',
-    top: 14,
-    left: 20,
+    top: 54,
+    left: 75,
   },
   moonText: {
     fontSize: 22,
@@ -597,15 +577,17 @@ const styles = StyleSheet.create({
   },
   leftDiya: {
     position: 'absolute',
-    left: 16,
-    bottom: 54,
+    left: 72,
+    bottom: 58,
     alignItems: 'center',
+    zIndex: 15,
   },
   rightDiya: {
     position: 'absolute',
-    right: 16,
-    bottom: 54,
+    right: 72,
+    bottom: 58,
     alignItems: 'center',
+    zIndex: 15,
   },
   customDiyaImg: {
     width: 44,
@@ -707,14 +689,25 @@ const styles = StyleSheet.create({
   centerShowerContainer: {
     position: 'absolute',
     top: -30,
-    width: 90,
+    width: 140,
     height: 180,
     zIndex: 50,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  centerShowerEmoji: {
-    position: 'absolute',
-    fontSize: 22,
+  flowerShowerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centerShowerEmojiMain: {
+    fontSize: 26,
+    marginHorizontal: 3,
+  },
+  centerShowerEmojiSide: {
+    fontSize: 18,
+    marginHorizontal: 3,
+    opacity: 0.9,
   },
   lingaTopContainer: {
     alignItems: 'center',
