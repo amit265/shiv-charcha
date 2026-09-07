@@ -229,14 +229,24 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
     outputRange: [1, 0.5, 0],
   });
 
-  // Single-pass flower falling interpolation
+  // Single-pass flower falling interpolations for multi-particle shower
   const showerTranslateY1 = showerYAnim.interpolate({
+    inputRange: [0, 0.75, 1],
+    outputRange: [-35, 140, 148],
+  });
+
+  const showerTranslateY2 = showerYAnim.interpolate({
+    inputRange: [0, 0.7, 1],
+    outputRange: [-50, 132, 140],
+  });
+
+  const showerTranslateY3 = showerYAnim.interpolate({
     inputRange: [0, 0.8, 1],
-    outputRange: [-35, 120, 125],
+    outputRange: [-25, 145, 152],
   });
 
   const showerOpacity1 = showerYAnim.interpolate({
-    inputRange: [0, 0.2, 0.85, 1],
+    inputRange: [0, 0.15, 0.85, 1],
     outputRange: [0, 1, 1, 0],
   });
 
@@ -420,12 +430,37 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
                 style={[
                   styles.centerShowerEmoji,
                   {
+                    left: -14,
+                    opacity: showerOpacity1,
+                    transform: [{ translateY: showerTranslateY2 }],
+                  },
+                ]}
+              >
+                {belpatraCount > flowersCount ? '🍃' : '🌸'}
+              </Animated.Text>
+              <Animated.Text
+                style={[
+                  styles.centerShowerEmoji,
+                  {
+                    left: 0,
                     opacity: showerOpacity1,
                     transform: [{ translateY: showerTranslateY1 }],
                   },
                 ]}
               >
                 {belpatraCount > flowersCount ? '🍃' : (flowersCount % 2 === 0 ? '🌸' : '🌺')}
+              </Animated.Text>
+              <Animated.Text
+                style={[
+                  styles.centerShowerEmoji,
+                  {
+                    left: 14,
+                    opacity: showerOpacity1,
+                    transform: [{ translateY: showerTranslateY3 }],
+                  },
+                ]}
+              >
+                {belpatraCount > flowersCount ? '🍃' : '🌼'}
               </Animated.Text>
             </View>
           )}
@@ -451,15 +486,33 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
               <Text style={styles.spoutArrow}>▶</Text>
             </View>
 
-            {/* Accumulated Resting Emoji Flowers & Belpatras on Jaladhari Base */}
+            {/* Accumulated Resting Emoji Flowers & Belpatras (Accumulate IN FRONT of Shivling) */}
             <View style={styles.restingItemsContainer}>
               {Array.from({ length: totalRestingFlowers }).map((_, i) => (
-                <Text key={`flw_${i}`} style={[styles.restingEmojiText, { left: 4 + i * 13 }]}>
+                <Text
+                  key={`flw_${i}`}
+                  style={[
+                    styles.restingEmojiText,
+                    {
+                      left: 8 + i * 13,
+                      top: i % 2 === 0 ? 0 : 5,
+                    },
+                  ]}
+                >
                   {i % 2 === 0 ? '🌸' : '🌼'}
                 </Text>
               ))}
               {Array.from({ length: totalRestingBelpatra }).map((_, i) => (
-                <Text key={`bel_${i}`} style={[styles.restingEmojiText, { right: 4 + i * 13 }]}>
+                <Text
+                  key={`bel_${i}`}
+                  style={[
+                    styles.restingEmojiText,
+                    {
+                      right: 8 + i * 13,
+                      top: i % 2 === 0 ? 0 : 5,
+                    },
+                  ]}
+                >
                   🍃
                 </Text>
               ))}
@@ -654,14 +707,14 @@ const styles = StyleSheet.create({
   centerShowerContainer: {
     position: 'absolute',
     top: -30,
-    width: 60,
-    height: 120,
-    zIndex: 30,
+    width: 90,
+    height: 180,
+    zIndex: 50,
     alignItems: 'center',
   },
   centerShowerEmoji: {
     position: 'absolute',
-    fontSize: 26,
+    fontSize: 22,
   },
   lingaTopContainer: {
     alignItems: 'center',
@@ -767,10 +820,10 @@ const styles = StyleSheet.create({
   },
   restingItemsContainer: {
     position: 'absolute',
-    top: -6,
+    top: 6,
     width: '100%',
-    height: 20,
-    zIndex: 35,
+    height: 24,
+    zIndex: 40,
   },
   restingEmojiText: {
     position: 'absolute',
