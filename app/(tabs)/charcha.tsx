@@ -11,6 +11,7 @@ import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { StorageService, getFirstSutraText, getDiscipleTitle, defaultPreferences } from '@/services/storage';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
+import { resolveImageSource } from '@/constants/imageAssets';
 
 type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -573,7 +574,7 @@ export default function ShivCharchaScreen() {
             {filteredTeachings.map((topic) => (
               <View key={topic.id} style={[styles.topicCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
                 {topic.imageUrl ? (
-                  <Image source={{ uri: topic.imageUrl }} style={styles.topicImage} />
+                  <Image source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')} style={styles.topicImage} />
                 ) : null}
                 <Text style={[styles.topicTitle, { color: theme.textPrimary }]}>{topic.title}</Text>
                 <Text style={[styles.topicSubtitle, { color: theme.secondary }]}>{topic.subTitle}</Text>
@@ -633,7 +634,7 @@ export default function ShivCharchaScreen() {
                 onPress={() => router.push(`/book/${book.id}` as any)}
                 activeOpacity={0.9}
               >
-                <Image source={{ uri: book.coverImage }} style={styles.bookCover} />
+                <Image source={resolveImageSource(book.id || book.coverImage, 'book')} style={styles.bookCover} />
                 <View style={styles.bookDetails}>
                   <Text style={[styles.bookTitle, { color: theme.primary }]}>{book.title}</Text>
                   <Text style={[styles.bookAuthor, { color: theme.textMuted }]}>लेखक: {book.author}</Text>
@@ -664,7 +665,7 @@ export default function ShivCharchaScreen() {
 
             {filteredAudio.map((audio) => (
               <View key={audio.id} style={[styles.audioRowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-                <Image source={{ uri: audio.coverImage }} style={styles.audioCover} />
+                <Image source={resolveImageSource(audio.id || audio.coverImage, 'stotra')} style={styles.audioCover} />
                 <View style={styles.audioMeta}>
                   <Text style={[styles.audioRowTitle, { color: theme.textPrimary }]}>{audio.title}</Text>
                   <Text style={[styles.audioRowSubtitle, { color: theme.textMuted }]}>

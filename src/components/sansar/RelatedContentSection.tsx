@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { RelatedContentItem } from '@/types/sansar';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
 
 interface RelatedContentSectionProps {
@@ -30,7 +31,7 @@ export const RelatedContentSection: React.FC<RelatedContentSectionProps> = ({ it
             onPress={() => router.push(item.routePath as any)}
             activeOpacity={0.85}
           >
-            <Image source={{ uri: item.image }} style={styles.cardImage} />
+            <Image source={resolveImageSource(item.id || item.image, item.type || 'hero')} style={styles.cardImage} />
             <View style={styles.cardInfo}>
               <Text style={[styles.cardTitle, { color: theme.textPrimary }]} numberOfLines={1}>
                 {item.title}

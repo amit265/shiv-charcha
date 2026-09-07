@@ -8,7 +8,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'bhajans',
     duration: 345,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'शिव शिष्य मंडली',
     isPopular: true,
     lyrics: `शिव गुरु मेरे आधार, तुम बिन कौन सहारा...
@@ -22,7 +22,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'bhajans',
     duration: 290,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'भक्ति स्वर तरंग',
     isPopular: true,
   },
@@ -33,7 +33,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'mantra',
     duration: 640,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'वैदिक ध्यान ध्वनि',
     isPopular: true,
   },
@@ -44,7 +44,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'teachings',
     duration: 420,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'साहब श्री हरिंद्रानंद जी',
   },
   {
@@ -54,7 +54,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'charcha_songs',
     duration: 310,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'शिव परिवार',
   },
   {
@@ -64,7 +64,7 @@ export const audioLibrary: AudioItem[] = [
     category: 'ambience',
     duration: 480,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    coverImage: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=600&q=80',
+    coverImage: '',
     artist: 'शिव चर्चा भक्ति ध्वनि',
   },
 ];

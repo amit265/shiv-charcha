@@ -14,6 +14,7 @@ import * as Sharing from 'expo-sharing';
 import { ShareTemplate } from '../../types';
 import { shadows } from '../../theme/colors';
 import { useTheme } from '../../context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { safeShare } from '../../services/shareService';
 import { StorageService, getFormattedUserName } from '../../services/storage';
 
@@ -194,9 +195,9 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
         ]}
       >
         {/* Optional Artwork Overlay */}
-        {usePhotoBg && template.artworkUrl && (
-          <Image source={{ uri: template.artworkUrl }} style={StyleSheet.absoluteFill} resizeMode="cover" />
-        )}
+        {usePhotoBg && template.artworkUrl ? (
+          <Image source={resolveImageSource(template.id || template.artworkUrl, 'hero')} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        ) : null}
 
         {/* Inner Framed Container with Horizontal & Vertical Padding */}
         <View style={styles.cardPaddingWrapper}>

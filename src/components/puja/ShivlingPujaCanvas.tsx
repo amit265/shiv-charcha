@@ -119,7 +119,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
         category: 'mantra',
         artist: 'शिव चर्चा भक्ति धारा',
         audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=om-namah-shivaya-114422.mp3',
-        coverImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=400',
+        coverImage: '',
         duration: 300,
       });
     }

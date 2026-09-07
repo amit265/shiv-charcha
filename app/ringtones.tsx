@@ -60,7 +60,7 @@ export default function RingtonesScreen() {
                   category: 'ambience',
                   duration: item.duration,
                   audioUrl: item.audioUrl,
-                  coverImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
+                  coverImage: '',
                 })
               }
               activeOpacity={0.8}

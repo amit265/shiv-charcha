@@ -146,8 +146,8 @@ export const REEL_IMAGES: ImageSourcePropType[] = [
  * Universal resolver function that accepts either:
  * - A require() asset number
  * - An ID string (e.g. 'kamakhya', 'somnath', 'sati-dahan')
- * - An image path/url string ('https://...', 'assets/images/...')
- * and returns a valid ImageSourcePropType for <Image source={...} />
+ * - An asset key or filename
+ * and ALWAYS returns a bundled local ImageSourcePropType (never remote web URLs).
  */
 export const resolveImageSource = (
   sourceOrKey?: any,
@@ -157,20 +157,15 @@ export const resolveImageSource = (
     return FALLBACK_IMAGES[fallbackCategory] || FALLBACK_IMAGES.hero;
   }
 
-  // Direct require asset
-  if (typeof sourceOrKey === 'number' || (typeof sourceOrKey === 'object' && sourceOrKey.uri)) {
+  // Direct static require() asset number
+  if (typeof sourceOrKey === 'number') {
     return sourceOrKey;
   }
 
   if (typeof sourceOrKey === 'string') {
     const key = sourceOrKey.trim();
 
-    // Web URLs
-    if (key.startsWith('http://') || key.startsWith('https://')) {
-      return { uri: key };
-    }
-
-    // Check dictionaries
+    // Check dictionaries by exact key
     if (SHAKTI_PEETH_IMAGES[key]) return SHAKTI_PEETH_IMAGES[key];
     if (JYOTIRLINGA_IMAGES[key]) return JYOTIRLINGA_IMAGES[key];
     if (STORY_IMAGES[key]) return STORY_IMAGES[key];
@@ -186,6 +181,7 @@ export const resolveImageSource = (
     if (FALLBACK_IMAGES[cleanKey]) return FALLBACK_IMAGES[cleanKey];
   }
 
+  // Fallback to local generated domain fallback asset
   return FALLBACK_IMAGES[fallbackCategory] || FALLBACK_IMAGES.hero;
 };
 

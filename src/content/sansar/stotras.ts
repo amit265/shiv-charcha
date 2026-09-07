@@ -21,7 +21,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'शिव पंचाक्षर स्तोत्रम्',
     subtitle: 'नागेंद्रहाराय त्रिलोचनाय... ॐ नमः शिवाय महिमा',
     author: 'आदि शंकराचार्य',
-    image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 240,
     summaryHindi:
@@ -56,7 +56,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'शिव तांडव स्तोत्रम्',
     subtitle: 'लंकापति रावण रचित अलौकिक शिव स्तुति',
     author: 'रावण (शिवभक्त)',
-    image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 300,
     summaryHindi:
@@ -79,7 +79,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'शिव महिम्न स्तोत्रम्',
     subtitle: 'गंधर्वराज पुष्पदंत रचित सर्वोत्तम शिव स्तुति',
     author: 'पुष्पदंत (गंधर्वराज)',
-    image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 360,
     summaryHindi:
@@ -102,7 +102,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'श्री रुद्राष्टकम्',
     subtitle: 'गोस्वामी तुलसीदास रचित भक्तिप्रद अष्टक',
     author: 'गोस्वामी तुलसीदास (उत्तरकांड)',
-    image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 240,
     summaryHindi:
@@ -125,7 +125,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'महामृत्युंजय मंत्र',
     subtitle: 'ऋग्वेदोक्त संजीवनी महामंत्र',
     author: 'महर्षि मार्कण्डेय',
-    image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 180,
     summaryHindi:
@@ -144,7 +144,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'दारिद्र्य दहन शिव स्तोत्रम्',
     subtitle: 'महर्षि वशिष्ठ रचित दरिद्रता व संकट नाशक स्तुति',
     author: 'महर्षि वशिष्ठ',
-    image: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 210,
     summaryHindi:
@@ -163,7 +163,7 @@ export const shivaStotras: ShivaStotra[] = [
     title: 'श्री लिंगाष्टकम्',
     subtitle: 'शिवलिंग की अष्टक स्तुति',
     author: 'आदि शंकराचार्य',
-    image: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=800&auto=format&fit=crop',
+    image: '',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 210,
     summaryHindi:

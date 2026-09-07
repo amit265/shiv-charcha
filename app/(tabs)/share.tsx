@@ -38,7 +38,7 @@ export default function ShareStudioScreen() {
     accentColor: theme.accent,
     defaultText: getFirstSutraText(userGender),
     defaultAuthor: `- ${getDiscipleTitle(userGender)}`,
-    artworkUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   };
 
   const allTemplates = [activeThemeTemplate, ...shareTemplates];

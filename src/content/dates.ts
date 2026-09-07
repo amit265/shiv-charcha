@@ -12,7 +12,7 @@ export const sacredDates: SacredDate[] = [
 
 उन्होंने तीन सरल सूत्रों (दया माँगना, चर्चा करना, 108 जाप करना) के माध्यम से एक अभूतपूर्व आध्यात्मिक जागरण की शुरुआत की। आज उनके द्वारा शुरू किया गया शिव चर्चा का यह कारवाँ देश-विदेश में करोड़ों शिष्यों को शिव गुरु से जोड़ रहा है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-1',
   },
   {
@@ -24,7 +24,7 @@ export const sacredDates: SacredDate[] = [
     description: 'साहब श्री हरिंद्रानंद जी का जन्म सिवान, बिहार के आमलोरी ग्राम में हुआ। उन्होंने सम्पूर्ण जीवन शिव शिष्यता को जन-जन तक पहुँचाने में समर्पित कर दिया।',
     detailedText: `31 अक्टूबर को शिव शिष्य मण्डली द्वारा साहब श्री का अवतरण दिवस अत्यंत श्रद्धा और उल्लास के साथ मनाया जाता है। इस दिन विशेष शिव चर्चा गोष्ठियों और वृक्षारोपण कार्यक्रमों का आयोजन किया जाता है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-1',
   },
   {
@@ -36,7 +36,7 @@ export const sacredDates: SacredDate[] = [
     description: '4 सितंबर 2022 को साहब श्री हरिंद्रानंद जी शिव गुरु के चरणों में लीन हुए। उनकी वाणी और तीन सूत्र आज भी करोड़ों शिष्यों का मार्गदर्शन कर रहे हैं।',
     detailedText: `इस पावन अवसर पर शिव शिष्य मण्डली द्वारा संकल्प लिया जाता है कि साहब श्री के संदेश "शिव सबके गुरु हैं" को घर-घर पहुँचाया जाएगा।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-1',
   },
   {
@@ -50,7 +50,7 @@ export const sacredDates: SacredDate[] = [
 
 उनकी वाणी में ऐसा वात्सल्य और मिठास थी कि हर शिव शिष्य स्वयं को उनके निकट अनुभव करता था। उन्होंने महिलाओं और ग्रामीण क्षेत्रों के लोगों को शिव शिष्यता से जोड़ने में ऐतिहासिक योगदान दिया।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-2',
   },
   {
@@ -62,7 +62,7 @@ export const sacredDates: SacredDate[] = [
     description: 'दीदी माँ नीलम आनंद जी का अवतरण दिवस 27 जुलाई को सम्पूर्ण शिव शिष्य परिवार द्वारा सेवा, दया और पर्यावरण संरक्षण (वृक्षारोपण) के रूप में मनाया जाता है।',
     detailedText: `दीदी माँ हमेशा प्रकृति और जीव मात्र पर दया की सीख देती थीं। उनके अवतरण दिवस पर देश-विदेश में शिव चर्चाओं के साथ-साथ हजारों पौधे लगाए जाते हैं।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-2',
   },
   {
@@ -74,7 +74,7 @@ export const sacredDates: SacredDate[] = [
     description: '17 जून को दीदी माँ नीलम आनंद जी की पावन पुण्यतिथि पर शिव शिष्याओं द्वारा विशेष भक्ति संगीतमय शिव चर्चा का आयोजन किया जाता है।',
     detailedText: `दीदी माँ का पावन संदेश था - "शिव गुरु पर अटूट विश्वास ही जीवन की हर विपत्ति का एकमात्र समाधान है।"`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-2',
   },
   {
@@ -86,7 +86,7 @@ export const sacredDates: SacredDate[] = [
     description: 'महाशिवरात्रि शिव और शक्ति के दिव्य मिलन का महापर्व है। इस रात्रि में 108 जाप और विशेष शिव आराधना से अपार पुण्य प्राप्त होता है।',
     detailedText: `महाशिवरात्रि की रात्रि में शिव गुरु की विशेष कृपा बरसती है। इस दिन जागरण, जाप और शिव चर्चा करने से जीवन के समस्त कष्टों का निवारण होता है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-mantra-108',
   },
   {
@@ -98,7 +98,7 @@ export const sacredDates: SacredDate[] = [
     description: 'प्रत्येक मास की त्रयोदशी तिथि को प्रदोष व्रत मनाया जाता है। संध्या काल (सूर्यास्त समय) में शिव आराधना विशेष फलदायी होती है।',
     detailedText: `प्रदोष काल में शिव गुरु कैलाश पर्वत पर प्रसन्नचित्त मुद्रा में नृत्य करते हैं। इस समय दया माँगने और नमः शिवाय का जाप करने से पापों का क्षय होता है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-mantra-108',
   },
   {
@@ -110,7 +110,7 @@ export const sacredDates: SacredDate[] = [
     description: 'कृष्ण पक्ष की चतुर्दशी तिथि को मासिक शिवरात्रि मनाई जाती है। यह रात्रि साधना के लिए अत्यंत फलदायी है।',
     detailedText: `हर माह की शिवरात्रि पर शिव गुरु के चरणों में विशेष दया माँगी जाती है और 108 मणके जाप द्वारा गुरु नमन अर्पित किया जाता है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-mantra-108',
   },
   {
@@ -122,7 +122,7 @@ export const sacredDates: SacredDate[] = [
     description: 'श्रावण मास में शिव गुरु की विशेष आराधना, जलाभिषेक और शिव चर्चा गोष्ठियों का आयोजन किया जाता है।',
     detailedText: `श्रावण मास में पूरे भारतवर्ष और विश्व में शिव शिष्य मण्डली द्वारा विशेष दया माँगने के कार्यक्रम और विशाल शिव चर्चाएँ आयोजित की जाती हैं।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-1',
   },
   {
@@ -134,7 +134,7 @@ export const sacredDates: SacredDate[] = [
     description: 'श्रावण शुक्ल पंचमी को नाग पंचमी मनाई जाती है। इस दिन महादेव के गले में सुशोभित नागराज वासुकी की पूजा की जाती है।',
     detailedText: `नाग पंचमी के दिन शिव मंदिर में दुग्धाभिषेक और नमः शिवाय का जाप करने से सर्प दोष एवं भय से मुक्ति मिलती है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-mantra-108',
   },
   {
@@ -146,7 +146,7 @@ export const sacredDates: SacredDate[] = [
     description: 'कार्तिक पूर्णिमा को त्रिपुरारी पूर्णिमा भी कहा जाता है। इस दिन महादेव ने त्रिपुरासुर का वध कर देवताओं को भयमुक्त किया था।',
     detailedText: `इस रात्रि में दीपदान, 108 मणके जाप और शिव चर्चा करने से अपार सुख, समृद्धि और आत्मिक बल प्राप्त होता है।`,
     audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
     relatedBhajanId: 'a-bhajan-1',
   },
 ];

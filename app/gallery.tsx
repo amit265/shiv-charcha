@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Platform } from 'react-native';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { wallpapersData } from '@/content/wallpapers';
 import { shadows } from '@/theme/colors';
 import { WallpaperItem } from '@/types';
@@ -44,7 +45,7 @@ export default function GalleryScreen() {
               onPress={() => setSelectedWallpaper(item)}
               activeOpacity={0.9}
             >
-              <Image source={{ uri: item.imageUrl }} style={styles.image} />
+              <Image source={resolveImageSource(item.id || item.imageUrl, 'hero')} style={styles.image} />
               <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
               <TouchableOpacity
                 style={[styles.setBtn, { backgroundColor: theme.primary }]}

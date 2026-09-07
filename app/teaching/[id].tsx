@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { teachingTopics } from '@/content/teachings';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
@@ -28,9 +29,9 @@ export default function TeachingDetailScreen() {
       <Header title="💡 शिव गुरु ज्ञान" subtitle={topic.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Topic Header Image */}
-        {topic.imageUrl && (
-          <Image source={{ uri: topic.imageUrl }} style={styles.heroImage} />
-        )}
+        {topic.imageUrl ? (
+          <Image source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')} style={styles.heroImage} />
+        ) : null}
 
         <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.title, { color: theme.primary }]}>{topic.title}</Text>

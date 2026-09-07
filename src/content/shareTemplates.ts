@@ -13,7 +13,7 @@ export const shareTemplates: ShareTemplate[] = [
     defaultText: 'शिव ही गुरु हैं, गुरु ही शिव हैं। आओ चलें शिव की ओर! 🌺',
     defaultAuthor: '- साहब श्री हरिंद्रानंद जी',
     iconName: 'sparkles',
-    artworkUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   },
   {
     id: 'st-saffron-classic',
@@ -26,7 +26,7 @@ export const shareTemplates: ShareTemplate[] = [
     defaultText: 'हे शिव! आप मेरे गुरु हैं, मैं आपका शिष्य हूँ। मुझ पर दया कर दीजिए। 🙏',
     defaultAuthor: '- शिव चर्चा',
     iconName: 'sun',
-    artworkUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   },
   {
     id: 'st-premium-dark',
@@ -39,7 +39,7 @@ export const shareTemplates: ShareTemplate[] = [
     defaultText: 'ॐ नमः शिवाय! शिव गुरु की अहैतुकी दया हम सब पर बनी रहे। 📿',
     defaultAuthor: '- 108 जाप साधना',
     iconName: 'flame',
-    artworkUrl: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   },
   {
     id: 'st-ocean-blue',
@@ -52,7 +52,7 @@ export const shareTemplates: ShareTemplate[] = [
     defaultText: 'नागेन्द्रहाराय त्रिलोचनाय भस्माङ्गरागाय महेश्वराय... ॐ नमः शिवाय 🔱',
     defaultAuthor: '- शिव पंचाक्षर स्तोत्रम्',
     iconName: 'water',
-    artworkUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   },
   {
     id: 'st-morning-ivory',
@@ -65,6 +65,6 @@ export const shareTemplates: ShareTemplate[] = [
     defaultText: 'शुभ प्रभात! आज का दिन शिव गुरु के नाम। ॐ नमः शिवाय 🙏',
     defaultAuthor: '- आज का संदेश',
     iconName: 'sunrise',
-    artworkUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop',
+    artworkUrl: '',
   },
 ];

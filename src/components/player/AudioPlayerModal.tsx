@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Modal, Image, TouchableOpacity, ScrollView, Pla
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
 import { useTheme } from '../../context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '../../theme/colors';
 import { safeShare } from '../../services/shareService';
 
@@ -53,7 +54,7 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Devotional Cover Artwork */}
           <View style={[styles.artContainer, { borderColor: theme.accent }]}>
-            <Image source={{ uri: currentTrack.coverImage }} style={styles.coverImage} />
+            <Image source={resolveImageSource(currentTrack.id || currentTrack.coverImage, 'stotra')} style={styles.coverImage} />
             <View style={[styles.omWatermark, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}>
               <Text style={[styles.omText, { color: theme.textGold }]}>ॐ</Text>
             </View>

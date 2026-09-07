@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAudio } from '../../context/AudioContext';
 import { useTheme } from '../../context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '../../theme/colors';
 import { AudioPlayerModal } from './AudioPlayerModal';
 
@@ -45,7 +46,7 @@ export const MiniPlayer: React.FC = () => {
         </View>
 
         <View style={styles.contentRow}>
-          <Image source={{ uri: currentTrack.coverImage }} style={styles.coverImage} />
+          <Image source={resolveImageSource(currentTrack.id || currentTrack.coverImage, 'stotra')} style={styles.coverImage} />
 
           <View style={styles.textContainer}>
             <Text style={[styles.trackTitle, { color: theme.textGold }]} numberOfLines={1}>

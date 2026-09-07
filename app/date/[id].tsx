@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { sacredDates } from '@/content/dates';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
@@ -28,7 +29,7 @@ export default function SacredDateDetailScreen() {
       <Header title="📅 पावन दिवस स्मरण" subtitle={dateItem.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Large Devotional Artwork */}
-        <Image source={{ uri: dateItem.imageUrl }} style={styles.heroImage} />
+        <Image source={resolveImageSource(dateItem.id || dateItem.imageUrl, 'hero')} style={styles.heroImage} />
 
         <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.dateTag, { color: theme.primary }]}>📅 {dateItem.date} पावन तिथि</Text>

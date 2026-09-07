@@ -26,7 +26,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'सती, पार्वती, नीलकंठ व गंगा अवतरण की पावन गाथाएँ',
       icon: '📖',
       route: '/sansar/stories',
-      image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'jyotirlinga',
@@ -34,7 +34,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'सोमनाथ से घृष्णेश्वर तक द्वादश पावन धाम दर्शन व ऑडियो',
       icon: '🛕',
       route: '/sansar/jyotirlinga',
-      image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'shakti-peeth',
@@ -42,7 +42,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'सती के पावन अंगों से सिद्ध 51 शक्ति पीठ दर्शन व इतिहास',
       icon: '🌺',
       route: '/sansar/shakti-peeth',
-      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'family',
@@ -50,7 +50,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'पार्वती, गणेश, कार्तिकेय व नंदी की अलौकिक महिमा',
       icon: '👨‍👩‍👧',
       route: '/sansar/family',
-      image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'swaroop',
@@ -58,7 +58,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'महादेव, नीलकंठ, नटराज, अर्धनारीश्वर व महाकाल रूप',
       icon: '🔱',
       route: '/sansar/swaroop',
-      image: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'symbols',
@@ -66,7 +66,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'त्रिशूल, डमरू, रुद्राक्ष, चंद्रमा, भस्म व त्रिनेत्र का अर्थ',
       icon: '🕉️',
       route: '/sansar/symbols',
-      image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'yatra',
@@ -74,7 +74,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'भारत के नक्शे पर ज्योतिर्लिंग व तीर्थों की डिजिटल यात्रा',
       icon: '📍',
       route: '/sansar/yatra',
-      image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'temples',
@@ -82,7 +82,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'पशुपतिनाथ, तुंगनाथ, अमरनाथ व देश-विदेश के शिवालय',
       icon: '🛕',
       route: '/sansar/temples',
-      image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'festivals',
@@ -90,7 +90,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत की विधि',
       icon: '📅',
       route: '/sansar/festivals',
-      image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
     {
       id: 'stotra',
@@ -98,7 +98,7 @@ export default function ShivSansarHomeScreen() {
       subtitle: 'तांडव स्तोत्र, रुद्राष्टकम, महामृत्युंजय व लिंगाष्टकम पाठ',
       icon: '📿',
       route: '/sansar/stotra',
-      image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=80&w=600&auto=format&fit=crop',
+      image: '',
     },
   ];
 

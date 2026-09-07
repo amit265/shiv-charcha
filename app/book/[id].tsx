@@ -4,6 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { booksLibrary } from '@/content/books';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { FormattedText } from '@/components/common/FormattedText';
@@ -23,7 +24,7 @@ export default function BookDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Book Header Card */}
         <View style={[styles.bookHeaderCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}>
-          <Image source={{ uri: book.coverImage }} style={styles.coverImage} />
+          <Image source={resolveImageSource(book.id || book.coverImage, 'book')} style={styles.coverImage} />
           <View style={styles.headerMeta}>
             <Text style={[styles.bookTitle, { color: theme.textGold }]}>{book.title}</Text>
             <Text style={[styles.authorText, { color: theme.textWhite }]}>लेखक: {book.author}</Text>

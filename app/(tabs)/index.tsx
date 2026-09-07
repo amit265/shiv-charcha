@@ -16,6 +16,7 @@ import { StorageService, getFormattedUserName } from '@/services/storage';
 import { OnboardingModal } from '@/components/common/OnboardingModal';
 import { getTodayPanchang } from '@/services/panchangService';
 import { FormattedText } from '@/components/common/FormattedText';
+import { resolveImageSource } from '@/constants/imageAssets';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -240,7 +241,7 @@ export default function HomeScreen() {
             <Text style={[styles.dateText, { color: theme.textMuted }]}>{todayMsg.date}</Text>
           </View>
 
-          <Image source={{ uri: todayMsg.imageUrl }} style={styles.msgImage} />
+          <Image source={resolveImageSource(todayMsg.id || todayMsg.imageUrl, 'hero')} style={styles.msgImage} />
 
           <Text style={[styles.msgTitle, { color: theme.textPrimary }]}>{todayMsg.title}</Text>
           <FormattedText text={todayMsg.shortMessage} style={[styles.msgShort, { color: theme.textSecondary }]} />
@@ -328,7 +329,7 @@ export default function HomeScreen() {
           </View>
 
           <View style={styles.bhajanCardRow}>
-            <Image source={{ uri: featuredPravachan.coverImage }} style={styles.bhajanImage} />
+            <Image source={resolveImageSource(featuredPravachan.id || featuredPravachan.coverImage, 'stotra')} style={styles.bhajanImage} />
             <View style={styles.bhajanInfo}>
               <Text style={[styles.bhajanTitle, { color: theme.textPrimary }]}>{featuredPravachan.title}</Text>
               <Text style={[styles.bhajanArtist, { color: theme.textMuted }]}>{featuredPravachan.artist}</Text>
@@ -378,7 +379,7 @@ export default function HomeScreen() {
         <View style={[styles.sectionCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionTitle, { color: theme.primary }]}>आज का भजन 🎵</Text>
           <View style={styles.bhajanCardRow}>
-            <Image source={{ uri: todayBhajan.coverImage }} style={styles.bhajanImage} />
+            <Image source={resolveImageSource(todayBhajan.id || todayBhajan.coverImage, 'stotra')} style={styles.bhajanImage} />
             <View style={styles.bhajanInfo}>
               <Text style={[styles.bhajanTitle, { color: theme.textPrimary }]}>{todayBhajan.title}</Text>
               <Text style={[styles.bhajanArtist, { color: theme.textMuted }]}>{todayBhajan.artist}</Text>

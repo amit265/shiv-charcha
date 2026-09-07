@@ -120,7 +120,7 @@ export default function ShivaStotraDetailScreen() {
               subtitle: 'सोमनाथ से घृष्णेश्वर तक द्वादश पावन धाम',
               type: 'jyotirlinga',
               routePath: '/sansar/jyotirlinga',
-              image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?q=80&w=400&auto=format&fit=crop',
+              image: '',
             },
             {
               id: 'stories',
@@ -128,7 +128,7 @@ export default function ShivaStotraDetailScreen() {
               subtitle: 'सती, पार्वती व गंगा अवतरण',
               type: 'story',
               routePath: '/sansar/stories',
-              image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=400&auto=format&fit=crop',
+              image: '',
             },
             {
               id: 'symbols',
@@ -136,7 +136,7 @@ export default function ShivaStotraDetailScreen() {
               subtitle: 'त्रिशूल, डमरू व रुद्राक्ष का रहस्य',
               type: 'symbol',
               routePath: '/sansar/symbols',
-              image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop',
+              image: '',
             },
           ]}
         />

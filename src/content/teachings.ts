@@ -25,7 +25,7 @@ export const teachingTopics: TeachingTopic[] = [
       'प्रतिदिन सुबह या शाम 5 मिनट निकालकर तीन सूत्रों का पालन करें।',
       'परिवार या मित्रों के साथ शिव चर्चा आयोजित करें।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-sutra-1-daya',
@@ -51,7 +51,7 @@ export const teachingTopics: TeachingTopic[] = [
       'प्रातःकाल सोकर उठते ही शिव गुरु से दया माँगें।',
       'किसी भी कठिन परिस्थिति में शिव गुरु का ध्यान कर दया माँगें।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-sutra-2-charcha',
@@ -80,7 +80,7 @@ export const teachingTopics: TeachingTopic[] = [
       'मित्रों व पड़ोसियों के साथ बैठकर शिव चर्चा गोष्ठी आयोजित करें।',
       'व्हाट्सएप या सोशल मीडिया पर आज का चर्चा विचार साझा करें।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-sutra-3-jap',
@@ -107,7 +107,7 @@ export const teachingTopics: TeachingTopic[] = [
       'प्रतिदिन सुबह शांत वातावरण में 108 जाप करें।',
       'शिव चर्चा ऐप के जाप फीचर का उपयोग कर मणके गिनें।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-harindranand-ji',
@@ -128,7 +128,7 @@ export const teachingTopics: TeachingTopic[] = [
       'तीन सूत्रों का पालन ही शिव शिष्यता का आधार है।',
       'साहब श्री का विचार था - गुरु शिव हैं, इंसान गुरु नहीं हो सकता।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-neelam-anand-ji',
@@ -149,7 +149,7 @@ export const teachingTopics: TeachingTopic[] = [
       'मातृवत करुणा के साथ शिव चर्चा का विस्तार करना चाहिए।',
       'हर शिव शिष्य परिवार का सदस्य है।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
   {
     id: 't-shiv-guru-intro',
@@ -169,6 +169,6 @@ export const teachingTopics: TeachingTopic[] = [
       'शिव को गुरु मानने के लिए किसी मध्यस्थ की आवश्यकता नहीं है।',
       'केवल मन के शुद्ध भाव से शिव को गुरु स्वीकार किया जा सकता है।',
     ],
-    imageUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    imageUrl: '',
   },
 ];

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { sacredDates } from '@/content/dates';
 import { getTodayPanchang, PanchangData } from '@/services/panchangService';
@@ -296,7 +297,7 @@ export default function DedicatedCalendarScreen() {
             onPress={() => router.push(`/date/${item.id}` as any)}
             activeOpacity={0.9}
           >
-            <Image source={{ uri: item.imageUrl }} style={styles.dateThumb} />
+            <Image source={resolveImageSource(item.id || item.imageUrl, 'hero')} style={styles.dateThumb} />
             <View style={styles.dateMeta}>
               <Text style={[styles.dateBadge, { color: theme.primary }]}>📅 {item.date}</Text>
               <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>

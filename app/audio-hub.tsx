@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput 
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
 import { pravachanLibrary, PravachanItem } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
@@ -128,7 +129,7 @@ export default function AudioHubScreen() {
                   { backgroundColor: theme.cardBg, borderColor: isThisPlaying ? theme.accent : theme.border },
                 ]}
               >
-                <Image source={{ uri: item.coverImage }} style={styles.coverImage} />
+                <Image source={resolveImageSource(item.id || item.coverImage, 'stotra')} style={styles.coverImage} />
 
                 <View style={styles.metaCol}>
                   <View style={styles.speakerRow}>
