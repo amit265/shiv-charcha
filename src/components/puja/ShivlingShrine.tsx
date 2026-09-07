@@ -384,23 +384,6 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
             </View>
           )}
 
-          {/* Single-Pass Devotional Flower & Belpatra Shower from Top Center */}
-          {(flowersCount > 0 || belpatraCount > 0) && (
-            <View style={styles.centerShowerContainer}>
-              <Animated.Text
-                style={[
-                  styles.centerShowerEmoji,
-                  {
-                    opacity: showerOpacity1,
-                    transform: [{ translateY: showerTranslateY1 }],
-                  },
-                ]}
-              >
-                {belpatraCount > flowersCount ? '🍃' : (flowersCount % 2 === 0 ? '🌸' : '🌺')}
-              </Animated.Text>
-            </View>
-          )}
-
           {/* Black Marble Shivling Linga Body */}
           <View style={styles.lingaTopContainer}>
             <View style={styles.lingaDome}>
@@ -429,6 +412,23 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
               )}
             </View>
           </View>
+
+          {/* Single-Pass Devotional Flower & Belpatra Shower (Falls IN FRONT of Shivling) */}
+          {(flowersCount > 0 || belpatraCount > 0) && (
+            <View style={styles.centerShowerContainer}>
+              <Animated.Text
+                style={[
+                  styles.centerShowerEmoji,
+                  {
+                    opacity: showerOpacity1,
+                    transform: [{ translateY: showerTranslateY1 }],
+                  },
+                ]}
+              >
+                {belpatraCount > flowersCount ? '🍃' : (flowersCount % 2 === 0 ? '🌸' : '🌺')}
+              </Animated.Text>
+            </View>
+          )}
 
           {/* Custom Garland PNG Draped on Linga with Smooth Spring Drop Animation */}
           {garlandPlaced && (
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
     top: -30,
     width: 60,
     height: 120,
-    zIndex: 14,
+    zIndex: 30,
     alignItems: 'center',
   },
   centerShowerEmoji: {
@@ -746,6 +746,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    zIndex: 25,
   },
   jaladhariLip: {
     width: 176,
@@ -766,9 +767,10 @@ const styles = StyleSheet.create({
   },
   restingItemsContainer: {
     position: 'absolute',
-    top: -8,
+    top: -6,
     width: '100%',
     height: 20,
+    zIndex: 35,
   },
   restingEmojiText: {
     position: 'absolute',
