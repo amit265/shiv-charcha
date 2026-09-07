@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
 
 interface SansarCategory {
@@ -132,7 +133,7 @@ export default function ShivSansarHomeScreen() {
               onPress={() => router.push(cat.route as any)}
               activeOpacity={0.88}
             >
-              <Image source={{ uri: cat.image }} style={styles.cardImage} />
+              <Image source={resolveImageSource(cat.id || cat.image, 'hero')} style={styles.cardImage} />
               <View style={styles.cardOverlay}>
                 <Text style={styles.cardIcon}>{cat.icon}</Text>
                 <Text style={styles.cardTitle}>{cat.title}</Text>

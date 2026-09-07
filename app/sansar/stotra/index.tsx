@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shivaStotras } from '@/content/sansar/stotras';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
 
@@ -31,7 +32,7 @@ export default function ShivaStotraListScreen() {
             onPress={() => router.push(`/sansar/stotra/${stotra.id}` as any)}
             activeOpacity={0.88}
           >
-            <Image source={{ uri: stotra.image }} style={styles.stotraCover} />
+            <Image source={resolveImageSource(stotra.id || stotra.image, 'stotra')} style={styles.stotraCover} />
 
             <View style={styles.stotraContent}>
               <View style={styles.badgeRow}>

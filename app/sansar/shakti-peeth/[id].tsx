@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { Header } from '@/components/common/Header';
 import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
@@ -30,7 +31,7 @@ export default function ShaktiPeethDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={{ uri: item.image }} style={styles.coverImage} />
+          <Image source={resolveImageSource(item.id || item.image, 'shakti-peeth')} style={styles.coverImage} />
           <View style={styles.coverOverlay}>
             <Text style={styles.bodyPartBadge}>🌺 पावन अंग: {item.associatedBodyPart}</Text>
             <Text style={styles.heroTitle}>{item.title}</Text>

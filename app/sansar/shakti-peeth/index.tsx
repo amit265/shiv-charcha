@@ -5,6 +5,7 @@ import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { useAudio } from '@/context/AudioContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
 
 export default function ShaktiPeethListScreen() {
@@ -32,7 +33,7 @@ export default function ShaktiPeethListScreen() {
               onPress={() => router.push(`/sansar/shakti-peeth/${item.id}` as any)}
               activeOpacity={0.88}
             >
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
+              <Image source={resolveImageSource(item.id || item.image, 'shakti-peeth')} style={styles.cardImage} />
 
               <View style={styles.cardContent}>
                 <View style={styles.badgeRow}>

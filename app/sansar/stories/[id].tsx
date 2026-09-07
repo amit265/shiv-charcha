@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { Header } from '@/components/common/Header';
 import { shivaStories } from '@/content/sansar/stories';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { RelatedContentSection } from '@/components/sansar/RelatedContentSection';
 import { safeShare } from '@/services/shareService';
@@ -32,7 +33,7 @@ export default function ShivaStoryDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={{ uri: story.coverImage }} style={styles.coverImage} />
+          <Image source={resolveImageSource(story.id || story.coverImage, 'story')} style={styles.coverImage} />
           <View style={styles.coverOverlay}>
             {story.tradition && (
               <Text style={[styles.traditionTag, { backgroundColor: theme.primary, color: theme.textWhite }]}>
@@ -118,7 +119,7 @@ export default function ShivaStoryDetailScreen() {
             {story.visualScenes[activeSceneIndex] && (
               <View style={styles.activeSceneCard}>
                 <Image
-                  source={{ uri: story.visualScenes[activeSceneIndex].image }}
+                  source={resolveImageSource(story.visualScenes[activeSceneIndex].image, 'story')}
                   style={styles.sceneImage}
                 />
                 <Text style={[styles.sceneTitle, { color: theme.textPrimary }]}>

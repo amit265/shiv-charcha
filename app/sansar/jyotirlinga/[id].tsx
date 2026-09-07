@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { Header } from '@/components/common/Header';
 import { jyotirlingas } from '@/content/sansar/jyotirlingas';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
@@ -31,7 +32,7 @@ export default function JyotirlingaDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Image & Title */}
         <View style={styles.coverWrapper}>
-          <Image source={{ uri: item.image }} style={styles.coverImage} />
+          <Image source={resolveImageSource(item.id || item.image, 'jyotirlinga')} style={styles.coverImage} />
           <View style={styles.coverOverlay}>
             <Text style={styles.locationBadge}>📍 {item.location}, {item.state}</Text>
             <Text style={styles.heroTitle}>{item.nameHindi}</Text>

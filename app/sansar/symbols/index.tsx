@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shivaSymbols } from '@/content/sansar/symbolsAndTemples';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
 
@@ -30,7 +31,7 @@ export default function ShivaSymbolsScreen() {
               key={item.id}
               style={[styles.symbolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             >
-              <Image source={{ uri: item.image }} style={styles.symbolImage} />
+              <Image source={resolveImageSource(item.id || item.image, 'symbol')} style={styles.symbolImage} />
 
               <View style={styles.cardContent}>
                 <Text style={[styles.symbolTitle, { color: theme.textPrimary }]}>{item.title}</Text>

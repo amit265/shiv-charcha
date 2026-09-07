@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shivaForms } from '@/content/sansar/familyAndForms';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
 
@@ -30,7 +31,7 @@ export default function ShivSwaroopScreen() {
               key={item.id}
               style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             >
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
+              <Image source={resolveImageSource(item.id || item.image, 'swaroop')} style={styles.cardImage} />
 
               <View style={styles.cardContent}>
                 <Text style={[styles.meaningBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>

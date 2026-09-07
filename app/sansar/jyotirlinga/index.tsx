@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { jyotirlingas } from '@/content/sansar/jyotirlingas';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
 
@@ -40,7 +41,7 @@ export default function JyotirlingaListScreen() {
               onPress={() => router.push(`/sansar/jyotirlinga/${item.id}` as any)}
               activeOpacity={0.88}
             >
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
+              <Image source={resolveImageSource(item.id || item.image, 'jyotirlinga')} style={styles.cardImage} />
 
               <View style={styles.cardContent}>
                 <View style={styles.numBadgeRow}>

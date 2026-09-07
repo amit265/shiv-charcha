@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { famousTemples } from '@/content/sansar/symbolsAndTemples';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
@@ -38,7 +39,7 @@ export default function FamousTemplesScreen() {
               key={item.id}
               style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             >
-              <Image source={{ uri: item.image }} style={styles.cardImage} />
+              <Image source={resolveImageSource(item.id || item.image, 'temple')} style={styles.cardImage} />
 
               <View style={styles.cardContent}>
                 <Text style={[styles.locationBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>

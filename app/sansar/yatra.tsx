@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { jyotirlingas } from '@/content/sansar/jyotirlingas';
 import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { famousTemples } from '@/content/sansar/symbolsAndTemples';
@@ -209,7 +210,7 @@ export default function ShivYatraMapScreen() {
         {selectedPin && (
           <View style={[styles.pinDetailCard, { backgroundColor: theme.cardBg, borderColor: theme.primary }]}>
             <View style={styles.cardHeaderRow}>
-              <Image source={{ uri: selectedPin.image }} style={styles.pinImage} />
+              <Image source={resolveImageSource(selectedPin.id || selectedPin.image, selectedPin.category)} style={styles.pinImage} />
               <View style={styles.pinTextCol}>
                 <Text style={[styles.pinCategoryTag, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>
                   {selectedPin.category === 'jyotirlinga' ? '🛕 ज्योतिर्लिंग' : selectedPin.category === 'shakti_peeth' ? '🌺 शक्ति पीठ' : '🛕 प्रसिद्ध मंदिर'}

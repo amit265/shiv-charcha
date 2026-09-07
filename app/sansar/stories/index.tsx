@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { shivaStories } from '@/content/sansar/stories';
+import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
 
@@ -31,7 +32,7 @@ export default function ShivaStoriesListScreen() {
             onPress={() => router.push(`/sansar/stories/${story.id}` as any)}
             activeOpacity={0.88}
           >
-            <Image source={{ uri: story.coverImage }} style={styles.storyCover} />
+            <Image source={resolveImageSource(story.id || story.coverImage, 'story')} style={styles.storyCover} />
 
             <View style={styles.storyContent}>
               <View style={styles.badgeRow}>
