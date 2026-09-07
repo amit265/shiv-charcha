@@ -18,7 +18,7 @@ import { colors, shadows } from '@/theme/colors';
 import { StorageService, defaultPreferences } from '@/services/storage';
 import { UserPreferences } from '@/types';
 import { safeShare } from '@/services/shareService';
-import { APP_CONFIG, APP_LINKS, CROSS_PROMO_LINKS } from '@/constants/links';
+import { APP_CONFIG, APP_LINKS, CROSS_PROMO_APPS } from '@/constants/links';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -198,62 +198,39 @@ export default function SettingsScreen() {
         {/* SECTION 4: OUR OTHER APPS (MAHAVYOMA STUDIO CROSS PROMOTION) */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>हमारे अन्य पावन ऐप (Our Devotional Apps) 📱</Text>
         <View style={styles.otherAppsContainer}>
-          <TouchableOpacity
-            style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('भक्ति माला', CROSS_PROMO_LINKS.bhaktiMala)}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.appPromoIcon}>🌺</Text>
-
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>भक्ति माला - आरती व स्तोत्र</Text>
-
-              <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
-                सर्व देवी-देवताओं के पावन मंत्र, चालीसा एवं दैनिक आरती संग्रह
-              </Text>
-
-            </View>
-
-            <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('गीता चर्चा', CROSS_PROMO_LINKS.gitaCharcha)}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.appPromoIcon}>📜</Text>
-
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>श्रीमद्भगवद्गीता चर्चा</Text>
-
-              <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
-                700 पवित्र श्लोक, सरल हिंदी अनुवाद व दैनिक जीवन में प्रयोग
-              </Text>
-
-            </View>
-
-            <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-            onPress={() => handleOpenOtherApp('हनुमान साधना', CROSS_PROMO_LINKS.hanumanSadhana)}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.appPromoIcon}>📿</Text>
-
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>हनुमान साधना व सुंदरकांड</Text>
-
-              <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
-                हनुमान चालीसा, बजरंग बाण, संकटमोचन एवं ऑडियो साधना
-              </Text>
-
-            </View>
-
-            <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें</Text>
-          </TouchableOpacity>
+          {CROSS_PROMO_APPS.map((app) => (
+            <TouchableOpacity
+              key={app.id}
+              style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+              onPress={() => handleOpenOtherApp(app.title, app.url)}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.appPromoIcon}>{app.icon}</Text>
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>{app.titleHindi}</Text>
+                  <Text
+                    style={{
+                      fontSize: 10,
+                      color: '#FFFFFF',
+                      fontWeight: 'bold',
+                      backgroundColor: app.badgeText === 'Live' ? '#2E7D32' : theme.accent,
+                      paddingHorizontal: 6,
+                      paddingVertical: 1,
+                      borderRadius: 6,
+                      marginLeft: 8,
+                    }}
+                  >
+                    {app.badgeText}
+                  </Text>
+                </View>
+                <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
+                  {app.descriptionHindi}
+                </Text>
+              </View>
+              <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         {/* SECTION 5: LEGAL LINKS & POLICIES */}

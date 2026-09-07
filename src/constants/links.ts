@@ -20,7 +20,8 @@ export const APP_LINKS = {
 
   // Google Play Store Links
   playStoreUrl: `https://play.google.com/store/apps/details?id=${APP_CONFIG.packageName}`,
-  playStoreSearchBase: 'https://play.google.com/store/search?q=',
+  playStoreSearchBase: 'https://play.google.com/store/search?q=Mahavyoma+Studio',
+  publisherUrl: 'https://play.google.com/store/apps/developer?id=Mahavyoma+Studio',
 
   // Legal & Policy Web Links
   privacyPolicyUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/privacy',
@@ -32,8 +33,32 @@ export const APP_LINKS = {
   assetLinksJsonUrl: 'https://mahavyomastudio.com/.well-known/assetlinks.json',
 } as const;
 
-export const CROSS_PROMO_LINKS = {
-  bhaktiMala: 'https://play.google.com/store/search?q=bhakti%20mala%20mahavyoma',
-  gitaCharcha: 'https://play.google.com/store/search?q=gita%20charcha%20mahavyoma',
-  hanumanSadhana: 'https://play.google.com/store/search?q=hanuman%20sadhana%20mahavyoma',
-} as const;
+export const CROSS_PROMO_APPS = [
+  {
+    id: 'hindi-calendar-2027',
+    title: 'Hindi Calendar 2027: Panchang',
+    titleHindi: 'हिंदी कैलेंडर 2027 - पंचांग',
+    descriptionHindi: 'ठाकुर प्रसाद पंचांग स्टाइल कैलेंडर, 20-शहर पंचांग एवं व्रत तिथियाँ',
+    url: 'https://play.google.com/store/apps/details?id=com.mahavyomastudio.hindicalendar',
+    icon: '📅',
+    badgeText: 'Live',
+  },
+  {
+    id: 'hanuman-chalisa',
+    title: 'Hanuman Chalisa: Audio & Path',
+    titleHindi: 'हनुमान चालीसा - ऑडियो व पाठ',
+    descriptionHindi: 'हनुमान चालीसा, बजरंग बाण, संकटमोचन एवं ऑडियो साधना',
+    url: 'https://mahavyomastudio.com',
+    icon: '📿',
+    badgeText: 'Soon',
+  },
+  {
+    id: 'shiva-bhakti',
+    title: 'Shiva Bhakti: Tandav & Aarti',
+    titleHindi: 'शिव भक्ति - तांडव व आरती',
+    descriptionHindi: 'शिव तांडव स्तोत्र, शिव चालीसा, महामृत्युंजय मंत्र व 108 जाप साधना',
+    url: 'https://mahavyomastudio.com',
+    icon: '🔱',
+    badgeText: 'Soon',
+  },
+] as const;
