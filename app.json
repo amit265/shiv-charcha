@@ -62,8 +62,7 @@
     ],
     "owner": "mindcraftlearning",
     "updates": {
-      "enabled": true,
-      "url": "https://u.expo.dev/b0e82df7-7948-47e2-90fd-5c428c8de72e"
+      "enabled": false
     },
     "runtimeVersion": {
       "policy": "appVersion"
