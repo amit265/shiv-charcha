@@ -19,8 +19,8 @@ export interface UpdateCheckResult {
   updateUrl: string;
 }
 
-// Fallback update URL / manifest endpoint (e.g. raw GitHub URL or static endpoint)
-const UPDATE_MANIFEST_URL = 'https://raw.githubusercontent.com/amit265/shiv-charcha/main/version.json';
+const PRIMARY_MANIFEST_URL = APP_LINKS.versionJsonUrl;
+const FALLBACK_MANIFEST_URL = 'https://raw.githubusercontent.com/amit265/shiv-charcha/main/version.json';
 
 function isVersionNewer(current: string, latest: string): boolean {
   const cParts = current.split('.').map(n => parseInt(n, 10) || 0);
@@ -44,12 +44,19 @@ export const UpdateService = {
     try {
       const currentVersion = this.getCurrentVersion();
 
-      // Fetch remote version manifest with cache bypass
-      const response = await fetch(UPDATE_MANIFEST_URL, {
+      // Fetch remote version manifest with cache bypass from mahavyomastudio.com first
+      let response = await fetch(PRIMARY_MANIFEST_URL, {
         headers: { 'Cache-Control': 'no-cache' },
-      });
+      }).catch(() => null);
 
-      if (!response.ok) return null;
+      if (!response || !response.ok) {
+        // Fallback to raw GitHub manifest
+        response = await fetch(FALLBACK_MANIFEST_URL, {
+          headers: { 'Cache-Control': 'no-cache' },
+        }).catch(() => null);
+      }
+
+      if (!response || !response.ok) return null;
 
       const manifest: UpdateManifest = await response.json();
 
