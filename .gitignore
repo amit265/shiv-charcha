@@ -2,13 +2,13 @@
 
 # dependencies
 node_modules/
-google-service-account.json
+
 # Expo
 .expo/
 dist/
 web-build/
 expo-env.d.ts
-
+google-service-account.json
 # Native
 .kotlin/
 *.orig.*
@@ -31,6 +31,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -41,3 +42,20 @@ example
 # generated native folders
 /ios
 /android
+
+# local builds and binaries
+*.apk
+*.aab
+*.ipa
+/builds/
+/build/
+/coverage/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
