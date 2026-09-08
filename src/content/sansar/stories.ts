@@ -22,7 +22,7 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 2,
         title: '🙏 शिव-सती विवाह',
-        image: '', // Missing dedicated Shiv-Sati marriage artwork (uses fallback_story.jpg)
+        image: 'sati_and_shiva_scene_2',
         description: 'कैलाश पर्वत पर भगवान शिव और माता सती का पावन विवाह संपन्न हुआ और समस्त देवगण आनंदित हुए।',
       },
       {
@@ -46,7 +46,7 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 6,
         title: '🌺 शक्ति पीठों की स्थापना',
-        image: '', // Missing dedicated Shiv carrying Sati body / 51 parts artwork (uses fallback_story.jpg)
+        image: 'sati_and_shiva_scene_6',
         description: 'शिवजी सती के पावन शरीर को लेकर तांडव करने लगे। श्रीहरि विष्णु के चक्र से सती के अंग 51 स्थानों पर गिरे, जो शक्ति पीठ बने।',
       },
     ],
@@ -173,7 +173,7 @@ export const shivaStories: ShivaStory[] = [
     id: 'markandeya-raksha',
     title: 'मार्कण्डेय रक्षा व कालांतक शिव कथा',
     subtitle: '16 वर्षीय बालक की यमराज से रक्षा व महामृत्युंजय प्राकट्य',
-    coverImage: '', // Missing dedicated Markandeya artwork (uses fallback_story.jpg)
+    coverImage: 'markandeya_raksha_cover',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 350,
     tradition: 'स्कंद पुराण एवं मार्कण्डेय पुराण',
@@ -184,13 +184,13 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 1,
         title: '📿 मार्कण्डेय की अचल शिवभक्ति',
-        image: '', // Missing dedicated Markandeya worship artwork (uses fallback_story.jpg)
+        image: 'markandeya_raksha_scene_1',
         description: 'अल्पायु बालक मार्कण्डेय ने शिवलिंग के समक्ष अखंड महामृत्युंजय मंत्र साधना की।',
       },
       {
         sceneNumber: 2,
         title: '🔱 कालांतक रूप में प्राकट्य',
-        image: '', // Missing dedicated Kalantaka vs Yamraj artwork (uses fallback_story.jpg)
+        image: 'markandeya_raksha_scene_2',
         description: 'जब यमराज ने कालपाश फेंका, तब शिवजी ने शिवलिंग से प्रकट होकर यमराज को पराजित किया और मार्कण्डेय को अमर बनाया।',
       },
     ],
@@ -203,7 +203,7 @@ export const shivaStories: ShivaStory[] = [
     id: 'tripurantaka-story',
     title: 'त्रिपुरांतक कथा: तीन असुर नगरों का भंजन',
     subtitle: 'एक ही बाण से तारकाक्ष, कमलाक्ष व विद्युन्माली के नगरों का विनाश',
-    coverImage: '', // Missing dedicated Tripuraantak chariot artwork (uses fallback_story.jpg)
+    coverImage: 'tripurantaka_story_cover',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 380,
     tradition: 'शिव पुराण (त्रिपुर संहार खंड)',
@@ -214,13 +214,13 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 1,
         title: '🏰 तीन उड़ने वाले त्रिपुरासुर नगर',
-        image: '', // Missing dedicated 3 flying cities artwork (uses fallback_story.jpg)
+        image: 'tripurantaka_story_scene_1',
         description: 'तीन असुर भाइयों ने आकाश में उड़ने वाले तीन अजेय नगरों का निर्माण करवाया।',
       },
       {
         sceneNumber: 2,
         title: '🏹 त्रिपुरांतक धनुर्धर शिव',
-        image: '', // Missing dedicated Tripuraantak archer artwork (uses fallback_story.jpg)
+        image: 'tripurantaka_story_scene_2',
         description: 'पृथ्वी रूपी रथ, सूर्य-चंद्रमा पहिए और विष्णु बाण से शिवजी ने एक ही बाण में तीनों नगर भस्म कर दिए।',
       },
     ],
@@ -233,7 +233,7 @@ export const shivaStories: ShivaStory[] = [
     id: 'bhasmasura-and-mohini',
     title: 'भस्मासुर कथा व मोहिनी रूप',
     subtitle: 'अहंकारी दैत्य का अंत और शिवजी के भस्म धारण का रहस्य',
-    coverImage: '', // Missing dedicated Bhasmasura artwork (uses fallback_story.jpg)
+    coverImage: 'bhasmasura_and_mohini_cover',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 310,
     tradition: 'श्रीमद्भागवत एवं विष्णु पुराण',
@@ -244,13 +244,13 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 1,
         title: '🔥 भस्मासुर का अमोध वरदान',
-        image: '', // Missing dedicated Bhasmasura boon artwork (uses fallback_story.jpg)
+        image: 'bhasmasura_and_mohini_scene_1',
         description: 'भोलेनाथ ने अपनी सहज दयालुता से वृकासुर को किसी के भी सिर पर हाथ रखकर भस्म करने का वर दिया।',
       },
       {
         sceneNumber: 2,
         title: '💃 मोहिनी रूप व असुर का अंत',
-        image: '', // Missing dedicated Mohini dance artwork (uses fallback_story.jpg)
+        image: 'bhasmasura_and_mohini_scene_2',
         description: 'विष्णुजी ने मोहिनी अवतार धारण कर नृत्य मुद्रा में भस्मासुर का हाथ उसके अपने ही सिर पर रखवाकर भस्म कर दिया।',
       },
     ],
@@ -263,7 +263,7 @@ export const shivaStories: ShivaStory[] = [
     id: 'kiratarjuniya-story',
     title: 'किरात और अर्जुन संग्राम',
     subtitle: 'महादेव द्वारा अर्जुन की परीक्षा व अमोग पाशुपतास्त्र दान',
-    coverImage: '', // Missing dedicated Kiratarjuniya artwork (uses fallback_story.jpg)
+    coverImage: 'kiratarjuniya_story_cover',
     audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
     audioDuration: 340,
     tradition: 'महाभारत (वनपर्व) व भारवि महाकाव्य',
@@ -274,13 +274,13 @@ export const shivaStories: ShivaStory[] = [
       {
         sceneNumber: 1,
         title: '🏹 इन्द्रकील पर्वत पर अर्जुन का तप',
-        image: '', // Missing dedicated Arjun penance artwork (uses fallback_story.jpg)
+        image: 'kiratarjuniya_story_scene_1',
         description: 'पाशुपतास्त्र प्राप्ति हेतु अर्जुन ने घोर धनुर्विद्या तपस्या की।',
       },
       {
         sceneNumber: 2,
         title: '🔱 किरात वेशधारी महादेव',
-        image: '', // Missing dedicated Kirat hunter vs Arjun battle artwork (uses fallback_story.jpg)
+        image: 'kiratarjuniya_story_scene_2',
         description: 'शिवजी ने किरात (शिकारी) रूप में आकर अर्जुन के साथ वराह बाण को लेकर युद्ध किया और पाशुपतास्त्र प्रदान किया।',
       },
     ],

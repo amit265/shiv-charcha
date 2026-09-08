@@ -29,7 +29,11 @@ export default function SacredDateDetailScreen() {
       <Header title="📅 पावन दिवस स्मरण" subtitle={dateItem.title} showBack />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Large Devotional Artwork */}
-        <Image source={resolveImageSource(dateItem.id || dateItem.imageUrl, 'hero')} style={styles.heroImage} />
+        <Image
+          source={resolveImageSource(dateItem.id || dateItem.imageUrl, 'hero')}
+          style={styles.heroImage}
+          resizeMode="contain"
+        />
 
         <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.dateTag, { color: theme.primary }]}>📅 {dateItem.date} पावन तिथि</Text>
@@ -106,7 +110,8 @@ const styles = StyleSheet.create({
   },
   heroImage: {
     width: '100%',
-    height: 220,
+    height: 200,
+    backgroundColor: '#0F172A',
     borderRadius: 20,
     marginBottom: 16,
   },

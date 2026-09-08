@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Share, Platform, Modal } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
@@ -17,6 +17,65 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showCompletionModal, setShowCompletionModal] = useState<boolean>(false);
 
+  const bellSoundRef = useRef<any>(null);
+  const shankhSoundRef = useRef<any>(null);
+
+  // Component-level sound effect initialization (spin-the-wheel pattern)
+  useEffect(() => {
+    let isMounted = true;
+    const loadSounds = async () => {
+      if (Platform.OS === 'web') return;
+      try {
+        const Audio = require('expo-av').Audio;
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+        }).catch(() => {});
+
+        const { sound: bellSound } = await Audio.Sound.createAsync(
+          require('../../../assets/sounds/bell.mp3')
+        );
+        if (isMounted) bellSoundRef.current = bellSound;
+        else await bellSound.unloadAsync().catch(() => {});
+
+        const { sound: shankhSound } = await Audio.Sound.createAsync(
+          require('../../../assets/sounds/shankh.mp3')
+        );
+        if (isMounted) shankhSoundRef.current = shankhSound;
+        else await shankhSound.unloadAsync().catch(() => {});
+      } catch (e) {
+        console.warn('JapCounter sound load warning:', e);
+      }
+    };
+
+    loadSounds();
+
+    return () => {
+      isMounted = false;
+      if (bellSoundRef.current) bellSoundRef.current.unloadAsync().catch(() => {});
+      if (shankhSoundRef.current) shankhSoundRef.current.unloadAsync().catch(() => {});
+    };
+  }, []);
+
+  const playBell = async () => {
+    if (bellSoundRef.current) {
+      try {
+        await bellSoundRef.current.replayAsync();
+      } catch (e) {
+        console.warn('Bell sound error:', e);
+      }
+    }
+  };
+
+  const playShankh = async () => {
+    if (shankhSoundRef.current) {
+      try {
+        await shankhSoundRef.current.replayAsync();
+      } catch (e) {
+        console.warn('Shankh sound error:', e);
+      }
+    }
+  };
+
   const handleTap = async () => {
     if (isCompleted) return;
 
@@ -29,9 +88,14 @@ export const JapCounter: React.FC<JapCounterProps> = ({ targetCount = 108, onCom
       }
     } catch (e) {}
 
+    if (nextCount % 12 === 0 && nextCount < targetCount) {
+      playBell();
+    }
+
     if (nextCount >= targetCount) {
       setIsCompleted(true);
       setShowCompletionModal(true);
+      playShankh();
       await StorageService.recordJapCompletion(targetCount);
       if (onComplete) onComplete();
     }

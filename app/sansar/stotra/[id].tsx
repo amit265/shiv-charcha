@@ -31,7 +31,11 @@ export default function ShivaStotraDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(stotra.id || stotra.image, 'stotra')} style={styles.coverImage} />
+          <Image
+            source={resolveImageSource(stotra.id || stotra.image, 'stotra')}
+            style={styles.coverImage}
+            resizeMode="contain"
+          />
           <View style={styles.coverOverlay}>
             <Text style={[styles.authorTag, { backgroundColor: theme.primary, color: theme.textWhite }]}>
               ✍️ रचयिता: {stotra.author}
@@ -154,7 +158,9 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   coverWrapper: {
-    height: 220,
+    width: '100%',
+    height: 180,
+    backgroundColor: '#0F172A',
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 16,

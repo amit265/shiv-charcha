@@ -33,7 +33,11 @@ export default function ShivaStoryDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(story.coverImage || story.id, 'story')} style={styles.coverImage} />
+          <Image
+            source={resolveImageSource(story.coverImage || story.id, 'story')}
+            style={styles.coverImage}
+            resizeMode="contain"
+          />
           <View style={styles.coverOverlay}>
             {story.tradition && (
               <Text style={[styles.traditionTag, { backgroundColor: theme.primary, color: theme.textWhite }]}>
@@ -121,6 +125,7 @@ export default function ShivaStoryDetailScreen() {
                 <Image
                   source={resolveImageSource(story.visualScenes[activeSceneIndex].image, 'story')}
                   style={styles.sceneImage}
+                  resizeMode="contain"
                 />
                 <Text style={[styles.sceneTitle, { color: theme.textPrimary }]}>
                   {story.visualScenes[activeSceneIndex].title}
@@ -167,10 +172,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   coverWrapper: {
-    height: 220,
+    width: '100%',
+    height: 180,
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 16,
+    backgroundColor: '#0F172A',
     ...shadows.medium,
   },
   coverImage: {
@@ -284,6 +291,7 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 12,
     marginBottom: 10,
+    backgroundColor: '#0F172A',
   },
   sceneTitle: {
     fontSize: 16,

@@ -24,8 +24,8 @@ export const APP_LINKS = {
   publisherUrl: 'https://play.google.com/store/apps/developer?id=Mahavyoma+Studio',
 
   // Legal & Policy Web Links
-  privacyPolicyUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/privacy',
-  termsOfServiceUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/terms',
+  privacyPolicyUrl: 'https://mahavyomastudio.com/legal/shiv-charcha-privacy',
+  termsOfServiceUrl: 'https://mahavyomastudio.com/legal/shiv-charcha-terms',
   supportPageUrl: 'https://mahavyomastudio.com/support',
 
   // Remote Manifest for In-App Updates

@@ -33,7 +33,11 @@ export default function ShaktiPeethListScreen() {
               onPress={() => router.push(`/sansar/shakti-peeth/${item.id}` as any)}
               activeOpacity={0.88}
             >
-              <Image source={resolveImageSource(item.image || item.id, 'shakti-peeth')} style={styles.cardImage} />
+              <Image
+                source={resolveImageSource(item.image || item.id, 'shakti-peeth')}
+                style={styles.cardImage}
+                resizeMode="contain"
+              />
 
               <View style={styles.cardContent}>
                 <View style={styles.badgeRow}>
@@ -122,6 +126,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 160,
+    backgroundColor: '#0F172A',
   },
   cardContent: {
     padding: 16,

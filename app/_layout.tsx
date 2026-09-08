@@ -134,11 +134,10 @@ export default function RootLayout() {
 
       // Custom smooth exit transition after 2.8 seconds
       const timeout = setTimeout(() => {
-        splashOpacity.value = withTiming(0, { duration: 600 }, (finished) => {
-          if (finished) {
-            runOnJS(setIsSplashVisible)(false);
-          }
-        });
+        splashOpacity.value = withTiming(0, { duration: 600 });
+        setTimeout(() => {
+          setIsSplashVisible(false);
+        }, 650);
       }, 2800);
 
       return () => clearTimeout(timeout);

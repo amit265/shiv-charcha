@@ -32,7 +32,11 @@ export default function ShivaStotraListScreen() {
             onPress={() => router.push(`/sansar/stotra/${stotra.id}` as any)}
             activeOpacity={0.88}
           >
-            <Image source={resolveImageSource(stotra.id || stotra.image, 'stotra')} style={styles.stotraCover} />
+            <Image
+              source={resolveImageSource(stotra.id || stotra.image, 'stotra')}
+              style={styles.stotraCover}
+              resizeMode="contain"
+            />
 
             <View style={styles.stotraContent}>
               <View style={styles.badgeRow}>
@@ -121,6 +125,7 @@ const styles = StyleSheet.create({
   stotraCover: {
     width: '100%',
     height: 160,
+    backgroundColor: '#0F172A',
   },
   stotraContent: {
     padding: 16,

@@ -998,8 +998,10 @@ const styles = StyleSheet.create({
   topicImage: {
     width: '100%',
     height: 150,
+    backgroundColor: '#0F172A',
     borderRadius: 12,
     marginBottom: 12,
+    resizeMode: 'contain',
   },
   topicTitle: {
     fontSize: 18,

@@ -7,12 +7,14 @@ export function useDeepLinkHandler() {
   const router = useRouter();
 
   useEffect(() => {
-    // 1. Cold start deep link handling
+    // 1. Cold start deep link handling (safely delayed until navigation container is mounted)
     Linking.getInitialURL().then((url) => {
       if (url) {
-        handleUrl(url);
+        setTimeout(() => {
+          handleUrl(url);
+        }, 800);
       }
-    });
+    }).catch(() => {});
 
     // 2. Foreground deep link listener
     const subscription = Linking.addEventListener('url', (event) => {

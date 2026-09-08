@@ -32,7 +32,11 @@ export default function JyotirlingaDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Image & Title */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(item.image || item.id, 'jyotirlinga')} style={styles.coverImage} />
+          <Image
+            source={resolveImageSource(item.image || item.id, 'jyotirlinga')}
+            style={styles.coverImage}
+            resizeMode="contain"
+          />
           <View style={styles.coverOverlay}>
             <Text style={styles.locationBadge}>📍 {item.location}, {item.state}</Text>
             <Text style={styles.heroTitle}>{item.nameHindi}</Text>
@@ -123,10 +127,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   coverWrapper: {
-    height: 220,
+    width: '100%',
+    height: 180,
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 16,
+    backgroundColor: '#0F172A',
     ...shadows.medium,
   },
   coverImage: {

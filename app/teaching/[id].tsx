@@ -30,7 +30,11 @@ export default function TeachingDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Topic Header Image */}
         {topic.imageUrl ? (
-          <Image source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')} style={styles.heroImage} />
+          <Image
+            source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')}
+            style={styles.heroImage}
+            resizeMode="contain"
+          />
         ) : null}
 
         <View style={[styles.contentCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
   heroImage: {
     width: '100%',
     height: 180,
+    backgroundColor: '#0F172A',
     borderRadius: 20,
     marginBottom: 16,
   },

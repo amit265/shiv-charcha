@@ -45,7 +45,11 @@ export default function GalleryScreen() {
               onPress={() => setSelectedWallpaper(item)}
               activeOpacity={0.9}
             >
-              <Image source={resolveImageSource(item.id || item.imageUrl, 'hero')} style={styles.image} />
+              <Image
+                source={resolveImageSource(item.id || item.imageUrl, 'hero')}
+                style={styles.image}
+                resizeMode="contain"
+              />
               <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
               <TouchableOpacity
                 style={[styles.setBtn, { backgroundColor: theme.primary }]}
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 180,
+    backgroundColor: '#0F172A',
     borderRadius: 12,
     marginBottom: 8,
   },

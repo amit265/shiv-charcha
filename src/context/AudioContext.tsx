@@ -1,7 +1,20 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import { AudioItem } from '../types';
 import { StorageService } from '../services/storage';
+
+// Dynamic safe loader for expo-av to prevent cold-start crashes on native startup
+let CachedAudioModule: any = null;
+const getAudioModule = () => {
+  if (!CachedAudioModule && Platform.OS !== 'web') {
+    try {
+      CachedAudioModule = require('expo-av').Audio;
+    } catch (e) {
+      console.warn('expo-av failed to load dynamically:', e);
+    }
+  }
+  return CachedAudioModule;
+};
 
 interface AudioContextType {
   currentTrack: AudioItem | null;
@@ -15,57 +28,136 @@ interface AudioContextType {
   togglePlayPause: () => Promise<void>;
   seekTo: (seconds: number) => Promise<void>;
   dismissMiniPlayer: () => void;
-  playSoundEffect: (audioUrl: string) => Promise<void>;
+  playSoundEffect: (soundType: string) => Promise<void>;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [htmlAudio, setHtmlAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTrack, setCurrentTrack] = useState<AudioItem | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [position, setPosition] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isMiniPlayerVisible, setIsMiniPlayerVisible] = useState<boolean>(false);
 
+  // Track sound ref for audio tracks
+  const trackSoundRef = useRef<any>(null);
+  const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Purely non-blocking cleanup on unmount
   useEffect(() => {
     return () => {
-      if (htmlAudio) {
-        htmlAudio.pause();
-      }
+      try {
+        if (trackSoundRef.current) {
+          trackSoundRef.current.unloadAsync().catch(() => {});
+        }
+      } catch (e) {}
     };
-  }, [htmlAudio]);
+  }, []);
+
+  const playSoundEffect = async (_soundType: string) => {
+    // Sound effects are handled directly within screen components (spin-the-wheel pattern)
+    if (Platform.OS === 'web') {
+      try {
+        if (typeof window !== 'undefined' && ('AudioContext' in window || 'webkitAudioContext' in window)) {
+          const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+          const ctx = new AudioCtx();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, ctx.currentTime);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
+        }
+      } catch (e) {}
+    }
+  };
 
   const playTrack = async (track: AudioItem) => {
     try {
-      if (htmlAudio) {
-        htmlAudio.pause();
-        setHtmlAudio(null);
+      // Unload previous track
+      if (trackSoundRef.current) {
+        await trackSoundRef.current.unloadAsync().catch(() => {});
+        trackSoundRef.current = null;
+      }
+      if (htmlAudioRef.current) {
+        htmlAudioRef.current.pause();
+        htmlAudioRef.current = null;
       }
 
       setCurrentTrack(track);
       setIsMiniPlayerVisible(true);
       StorageService.recordAudioPlayed();
 
-      if (typeof window !== 'undefined' && 'Audio' in window && track.audioUrl.startsWith('http')) {
-        const audio = new window.Audio(track.audioUrl);
-        audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(true));
+      if (Platform.OS === 'web') {
+        if (typeof window !== 'undefined' && 'Audio' in window && track.audioUrl.startsWith('http')) {
+          const audio = new window.Audio(track.audioUrl);
+          audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(true));
 
-        audio.ontimeupdate = () => {
-          setPosition(Math.floor(audio.currentTime));
-          setDuration(Math.floor(audio.duration || track.duration || 180));
-        };
+          audio.ontimeupdate = () => {
+            setPosition(Math.floor(audio.currentTime));
+            setDuration(Math.floor(audio.duration || track.duration || 180));
+          };
 
-        audio.onended = () => {
-          setIsPlaying(false);
+          audio.onended = () => {
+            setIsPlaying(false);
+            setPosition(0);
+          };
+
+          htmlAudioRef.current = audio;
+        } else {
+          setIsPlaying(true);
+          setDuration(track.duration || 180);
           setPosition(0);
-        };
-
-        setHtmlAudio(audio);
+        }
       } else {
-        setIsPlaying(true);
-        setDuration(track.duration || 180);
-        setPosition(0);
+        // Native Android / iOS track playback via expo-av
+        const AudioMod = getAudioModule();
+        if (AudioMod && track.audioUrl.startsWith('http')) {
+          try {
+            await AudioMod.setAudioModeAsync({
+              playsInSilentModeIOS: true,
+              staysActiveInBackground: true,
+            }).catch(() => {});
+
+            const { sound } = await AudioMod.Sound.createAsync(
+              { uri: track.audioUrl },
+              { shouldPlay: true }
+            );
+            trackSoundRef.current = sound;
+            setIsPlaying(true);
+
+            sound.setOnPlaybackStatusUpdate((status: any) => {
+              if (status.isLoaded) {
+                if (status.durationMillis) {
+                  setDuration(Math.floor(status.durationMillis / 1000));
+                }
+                if (status.positionMillis) {
+                  setPosition(Math.floor(status.positionMillis / 1000));
+                }
+                setIsPlaying(status.isPlaying);
+
+                if (status.didJustFinish) {
+                  setIsPlaying(false);
+                  setPosition(0);
+                }
+              }
+            });
+          } catch (err) {
+            console.warn('Native track stream error:', err);
+            setIsPlaying(true);
+            setDuration(track.duration || 180);
+            setPosition(0);
+          }
+        } else {
+          setIsPlaying(true);
+          setDuration(track.duration || 180);
+          setPosition(0);
+        }
       }
     } catch (e) {
       console.warn('Error loading audio track:', e);
@@ -76,16 +168,26 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const pauseTrack = async () => {
-    if (htmlAudio) {
-      htmlAudio.pause();
-    }
+    try {
+      if (trackSoundRef.current) {
+        await trackSoundRef.current.pauseAsync().catch(() => {});
+      }
+      if (htmlAudioRef.current) {
+        htmlAudioRef.current.pause();
+      }
+    } catch (e) {}
     setIsPlaying(false);
   };
 
   const resumeTrack = async () => {
-    if (htmlAudio) {
-      htmlAudio.play().catch(() => {});
-    }
+    try {
+      if (trackSoundRef.current) {
+        await trackSoundRef.current.playAsync().catch(() => {});
+      }
+      if (htmlAudioRef.current) {
+        htmlAudioRef.current.play().catch(() => {});
+      }
+    } catch (e) {}
     setIsPlaying(true);
   };
 
@@ -98,105 +200,20 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const seekTo = async (seconds: number) => {
-    if (htmlAudio) {
-      htmlAudio.currentTime = seconds;
-    }
+    try {
+      if (trackSoundRef.current) {
+        await trackSoundRef.current.setPositionAsync(seconds * 1000).catch(() => {});
+      }
+      if (htmlAudioRef.current) {
+        htmlAudioRef.current.currentTime = seconds;
+      }
+    } catch (e) {}
     setPosition(seconds);
   };
 
   const dismissMiniPlayer = () => {
-    if (htmlAudio) {
-      htmlAudio.pause();
-    }
-    setIsPlaying(false);
+    pauseTrack().catch(() => {});
     setIsMiniPlayerVisible(false);
-  };
-
-  const playSoundEffect = async (soundType: string) => {
-    try {
-      if (typeof window !== 'undefined' && ('AudioContext' in window || 'webkitAudioContext' in window)) {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        const ctx = new AudioCtx();
-        
-        if (soundType === 'bell') {
-          // Temple Bell: Fundamental + Harmonic overtone
-          const osc1 = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc1.type = 'sine';
-          osc1.frequency.setValueAtTime(880, ctx.currentTime); // A5
-          osc2.type = 'sine';
-          osc2.frequency.setValueAtTime(1760, ctx.currentTime); // A6 overtone
-          
-          gain.gain.setValueAtTime(0.6, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 2.8);
-          
-          osc1.connect(gain);
-          osc2.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc1.start();
-          osc2.start();
-          osc1.stop(ctx.currentTime + 2.8);
-          osc2.stop(ctx.currentTime + 2.8);
-        } else if (soundType === 'shankh') {
-          // Shankh Naad: Low triangle wave swelling up
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(280, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(420, ctx.currentTime + 1.5);
-          osc.frequency.exponentialRampToValueAtTime(360, ctx.currentTime + 3.2);
-          
-          gain.gain.setValueAtTime(0.05, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.6);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.5);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.start();
-          osc.stop(ctx.currentTime + 3.5);
-        } else if (soundType === 'water') {
-          // Water Stream: Modulated noise flow
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(440, ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(600, ctx.currentTime + 0.3);
-          osc.frequency.linearRampToValueAtTime(350, ctx.currentTime + 0.8);
-          
-          gain.gain.setValueAtTime(0.2, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.start();
-          osc.stop(ctx.currentTime + 1.0);
-        } else {
-          // Chime / Flower Drop
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(1046.5, ctx.currentTime); // C6
-          gain.gain.setValueAtTime(0.3, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          
-          osc.start();
-          osc.stop(ctx.currentTime + 1.2);
-        }
-      }
-    } catch (e) {
-      console.log('Sound effect play error:', e);
-    }
   };
 
   return (

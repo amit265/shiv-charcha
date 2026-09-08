@@ -11,6 +11,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -73,7 +74,11 @@ export default function SettingsScreen() {
 
   const handleOpenOtherApp = async (appName: string, url: string) => {
     try {
-      await Linking.openURL(url);
+      if (url.includes('play.google.com')) {
+        await Linking.openURL(url);
+      } else {
+        await WebBrowser.openBrowserAsync(url);
+      }
     } catch (e) {
       Alert.alert(appName, `एप डाउनलोड पेज पर जाने के लिए गूगल प्ले स्टोर पर "${appName}" खोजें।`);
     }
@@ -398,10 +403,10 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => Linking.openURL(APP_LINKS.privacyPolicyUrl)}
+                    onPress={() => WebBrowser.openBrowserAsync(APP_LINKS.privacyPolicyUrl)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
-                      🌐 अधिकारी वेबसाइट पर गोपनीयता नीति खोलें
+                      🌐 अधिकारिक वेबसाइट पर गोपनीयता नीति खोलें
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -427,7 +432,7 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => Linking.openURL(APP_LINKS.termsOfServiceUrl)}
+                    onPress={() => WebBrowser.openBrowserAsync(APP_LINKS.termsOfServiceUrl)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 आधिकारिक वेबसाइट पर सेवा शर्तें खोलें

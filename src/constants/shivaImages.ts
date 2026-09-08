@@ -1,12 +1,4 @@
 export const shivaBackgrounds = [
-  require('../../assets/images/shiva/shiva_1.jpg'),
-  require('../../assets/images/shiva/shiva_2.jpg'),
-  require('../../assets/images/shiva/shiva_3.jpg'),
-  require('../../assets/images/shiva/shiva_4.jpg'),
-  require('../../assets/images/shiva/shiva_5.jpg'),
-  require('../../assets/images/shiva/shiva_6.jpg'),
-  require('../../assets/images/shiva/shiva_7.jpg'),
-  require('../../assets/images/shiva/shiva_8.jpg'),
   require('../../assets/images/reel/reel_alpine_shrine_at_golden_dawn.jpg'),
   require('../../assets/images/reel/reel_ash_sprinkled_shiva_linga_ritual.jpg'),
   require('../../assets/images/reel/reel_cinematic_shiva_shrine_with_lotus_offerings.jpg'),

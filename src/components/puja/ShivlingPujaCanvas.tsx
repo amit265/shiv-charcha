@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert, ScrollView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
@@ -22,7 +22,7 @@ interface OfferingState {
 
 export const ShivlingPujaCanvas: React.FC = () => {
   const { theme } = useTheme();
-  const { playSoundEffect, playTrack, pauseTrack, isPlaying } = useAudio();
+  const { playTrack, pauseTrack, isPlaying } = useAudio();
 
   const [mode, setMode] = useState<PujaMode>('freeform');
   const [activeOffering, setActiveOffering] = useState<OfferingType>(null);
@@ -39,6 +39,83 @@ export const ShivlingPujaCanvas: React.FC = () => {
     garlandPlaced: false,
     dhoopActive: false,
   });
+
+  const bellSoundRef = useRef<any>(null);
+  const shankhSoundRef = useRef<any>(null);
+  const waterSoundRef = useRef<any>(null);
+
+  // Component-level sound effect initialization (spin-the-wheel pattern)
+  useEffect(() => {
+    let isMounted = true;
+    const loadSounds = async () => {
+      if (Platform.OS === 'web') return;
+      try {
+        const Audio = require('expo-av').Audio;
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+        }).catch(() => {});
+
+        const { sound: bellSound } = await Audio.Sound.createAsync(
+          require('../../../assets/sounds/bell.mp3')
+        );
+        if (isMounted) bellSoundRef.current = bellSound;
+        else await bellSound.unloadAsync().catch(() => {});
+
+        const { sound: shankhSound } = await Audio.Sound.createAsync(
+          require('../../../assets/sounds/shankh.mp3')
+        );
+        if (isMounted) shankhSoundRef.current = shankhSound;
+        else await shankhSound.unloadAsync().catch(() => {});
+
+        const { sound: waterSound } = await Audio.Sound.createAsync(
+          require('../../../assets/sounds/water.mp3')
+        );
+        if (isMounted) waterSoundRef.current = waterSound;
+        else await waterSound.unloadAsync().catch(() => {});
+      } catch (e) {
+        console.warn('ShivlingPujaCanvas sound load warning:', e);
+      }
+    };
+
+    loadSounds();
+
+    return () => {
+      isMounted = false;
+      if (bellSoundRef.current) bellSoundRef.current.unloadAsync().catch(() => {});
+      if (shankhSoundRef.current) shankhSoundRef.current.unloadAsync().catch(() => {});
+      if (waterSoundRef.current) waterSoundRef.current.unloadAsync().catch(() => {});
+    };
+  }, []);
+
+  const playBell = async () => {
+    if (bellSoundRef.current) {
+      try {
+        await bellSoundRef.current.replayAsync();
+      } catch (e) {
+        console.warn('Bell sound error:', e);
+      }
+    }
+  };
+
+  const playShankh = async () => {
+    if (shankhSoundRef.current) {
+      try {
+        await shankhSoundRef.current.replayAsync();
+      } catch (e) {
+        console.warn('Shankh sound error:', e);
+      }
+    }
+  };
+
+  const playWater = async () => {
+    if (waterSoundRef.current) {
+      try {
+        await waterSoundRef.current.replayAsync();
+      } catch (e) {
+        console.warn('Water sound error:', e);
+      }
+    }
+  };
 
   const totalOfferingsCount =
     offerings.flowers + offerings.belpatra + offerings.waterCount + offerings.milkCount;
@@ -57,37 +134,33 @@ export const ShivlingPujaCanvas: React.FC = () => {
 
     if (type === 'flower') {
       setOfferings((prev) => ({ ...prev, flowers: prev.flowers + 1 }));
-      playSoundEffect('chime');
     } else if (type === 'belpatra') {
       setOfferings((prev) => ({ ...prev, belpatra: prev.belpatra + 1 }));
-      playSoundEffect('chime');
     } else if (type === 'water') {
       setOfferings((prev) => ({ ...prev, waterCount: prev.waterCount + 1 }));
       setIsWaterFlowing(true);
-      playSoundEffect('water');
+      playWater();
       setTimeout(() => setIsWaterFlowing(false), 4500);
     } else if (type === 'milk') {
       setOfferings((prev) => ({ ...prev, milkCount: prev.milkCount + 1 }));
       setIsMilkFlowing(true);
-      playSoundEffect('water');
+      playWater();
       setTimeout(() => setIsMilkFlowing(false), 4500);
     } else if (type === 'diya') {
       setOfferings((prev) => ({ ...prev, diyaLit: !prev.diyaLit }));
-      playSoundEffect('chime');
     } else if (type === 'garland') {
       setOfferings((prev) => ({ ...prev, garlandPlaced: !prev.garlandPlaced }));
-      playSoundEffect('chime');
     } else if (type === 'bell') {
-      playSoundEffect('bell');
+      playBell();
     } else if (type === 'shankh') {
-      playSoundEffect('shankh');
+      playShankh();
     }
 
     // Sankalp Completion Check
     if (mode === 'sankalp') {
       const nextTotal = totalOfferingsCount + 1;
       if (nextTotal >= sankalpTarget) {
-        playSoundEffect('bell');
+        playBell();
         Alert.alert(
           '🔱 संकल्प पूर्ण हुआ!',
           `हर हर महादेव! आपका ${sankalpTarget} मन्त्र/पुष्प समर्पण का संकल्प सफलतापूर्वक पूर्ण हुआ। शिव गुरु का आशीर्वाद सदा आप पर बना रहे।`,
@@ -103,7 +176,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
       setMode('freeform');
     } else {
       setMode('aarti');
-      playSoundEffect('bell');
+      playBell();
       setOfferings((prev) => ({ ...prev, diyaLit: true }));
     }
   };

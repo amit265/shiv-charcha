@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -20,6 +21,9 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
@@ -52,7 +56,9 @@
           "imageWidth": 120
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      "expo-av",
+      "expo-audio"
     ],
     "owner": "mindcraftlearning",
     "updates": {

@@ -31,7 +31,11 @@ export default function ShivaFestivalsScreen() {
               key={item.id}
               style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             >
-              <Image source={resolveImageSource(item.id || item.image, 'festival')} style={styles.cardImage} />
+              <Image
+                source={resolveImageSource(item.id || item.image, 'festival')}
+                style={styles.cardImage}
+                resizeMode="contain"
+              />
 
               <View style={styles.cardContent}>
                 <Text style={[styles.tithiBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 160,
+    backgroundColor: '#0F172A',
   },
   cardContent: {
     padding: 16,

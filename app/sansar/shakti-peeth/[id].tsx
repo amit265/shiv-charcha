@@ -31,7 +31,11 @@ export default function ShaktiPeethDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cover Artwork */}
         <View style={styles.coverWrapper}>
-          <Image source={resolveImageSource(item.image || item.id, 'shakti-peeth')} style={styles.coverImage} />
+          <Image
+            source={resolveImageSource(item.image || item.id, 'shakti-peeth')}
+            style={styles.coverImage}
+            resizeMode="contain"
+          />
           <View style={styles.coverOverlay}>
             <Text style={styles.bodyPartBadge}>🌺 पावन अंग: {item.associatedBodyPart}</Text>
             <Text style={styles.heroTitle}>{item.title}</Text>
@@ -121,10 +125,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   coverWrapper: {
-    height: 220,
+    width: '100%',
+    height: 180,
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 16,
+    backgroundColor: '#0F172A',
     ...shadows.medium,
   },
   coverImage: {

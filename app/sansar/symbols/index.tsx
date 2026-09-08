@@ -31,7 +31,11 @@ export default function ShivaSymbolsScreen() {
               key={item.id}
               style={[styles.symbolCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
             >
-              <Image source={resolveImageSource(item.id || item.image, 'symbol')} style={styles.symbolImage} />
+              <Image
+                source={resolveImageSource(item.id || item.image, 'symbol')}
+                style={styles.symbolImage}
+                resizeMode="contain"
+              />
 
               <View style={styles.cardContent}>
                 <Text style={[styles.symbolTitle, { color: theme.textPrimary }]}>{item.title}</Text>
@@ -107,7 +111,8 @@ const styles = StyleSheet.create({
   },
   symbolImage: {
     width: '100%',
-    height: 170,
+    height: 160,
+    backgroundColor: '#0F172A',
   },
   cardContent: {
     padding: 16,

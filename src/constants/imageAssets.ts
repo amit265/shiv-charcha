@@ -44,7 +44,9 @@ export const JYOTIRLINGA_IMAGES: Record<string, ImageSourcePropType> = {
   vaidyanath: require('../../assets/images/jyotirlinga/jyotirlinga_vaidyanath.jpg'),
   nageshwar: require('../../assets/images/jyotirlinga/jyotirlinga_nageshwar.jpg'),
   rameshwaram: require('../../assets/images/jyotirlinga/jyotirlinga_rameshwaram.jpg'),
+  ramanathaswamy: require('../../assets/images/jyotirlinga/jyotirlinga_rameshwaram.jpg'),
   ghushneshwar: require('../../assets/images/jyotirlinga/jyotirlinga_ghushneshwar.jpg'),
+  grishneshwar: require('../../assets/images/jyotirlinga/jyotirlinga_ghushneshwar.jpg'),
 };
 
 // Shakti Peethas (20 bundled local images)
@@ -105,6 +107,122 @@ export const STORY_IMAGES: Record<string, ImageSourcePropType> = {
   story_shiva_receiving_the_heavenly_ganges: require('../../assets/images/story/story_shiva_receiving_the_heavenly_ganges.jpg'),
   story_shivas_himalayan_wedding_procession: require('../../assets/images/story/story_shivas_himalayan_wedding_procession.jpg'),
   story_shiva_summons_the_divine_warrior_army: require('../../assets/images/story/story_shiva_summons_the_divine_warrior_army.jpg'),
+
+  // Newly added story scenes & covers
+  sati_and_shiva_scene_2: require('../../assets/images/story/sati_and_shiva_scene_2.jpg'),
+  sati_and_shiva_scene_6: require('../../assets/images/story/sati_and_shiva_scene_6.jpg'),
+  markandeya_raksha_cover: require('../../assets/images/story/markandeya_raksha_cover.jpg'),
+  'markandeya-raksha': require('../../assets/images/story/markandeya_raksha_cover.jpg'),
+  markandeya_raksha_scene_1: require('../../assets/images/story/markandeya_raksha_scene_1.jpg'),
+  markandeya_raksha_scene_2: require('../../assets/images/story/markandeya_raksha_scene_2.jpg'),
+  tripurantaka_story_cover: require('../../assets/images/story/tripurantaka_story_cover.jpg'),
+  'tripurantaka-story': require('../../assets/images/story/tripurantaka_story_cover.jpg'),
+  tripurantaka_story_scene_1: require('../../assets/images/story/tripurantaka_story_scene_1.jpg'),
+  tripurantaka_story_scene_2: require('../../assets/images/story/tripurantaka_story_scene_2.jpg'),
+  bhasmasura_and_mohini_cover: require('../../assets/images/story/bhasmasura_and_mohini_cover.jpg'),
+  'bhasmasura-and-mohini': require('../../assets/images/story/bhasmasura_and_mohini_cover.jpg'),
+  bhasmasura_and_mohini_scene_1: require('../../assets/images/story/bhasmasura_and_mohini_scene_1.jpg'),
+  bhasmasura_and_mohini_scene_2: require('../../assets/images/story/bhasmasura_and_mohini_scene_2.jpg'),
+  kiratarjuniya_story_cover: require('../../assets/images/story/kiratarjuniya_story_cover.jpg'),
+  'kiratarjuniya-story': require('../../assets/images/story/kiratarjuniya_story_cover.jpg'),
+  kiratarjuniya_story_scene_1: require('../../assets/images/story/kiratarjuniya_story_scene_1.jpg'),
+  kiratarjuniya_story_scene_2: require('../../assets/images/story/kiratarjuniya_story_scene_2.jpg'),
+};
+
+export const FAMILY_IMAGES: Record<string, ImageSourcePropType> = {
+  'ganesha-son': require('../../assets/images/family/family_ganesha.jpg'),
+  ganesha_son: require('../../assets/images/family/family_ganesha.jpg'),
+  ganesha: require('../../assets/images/family/family_ganesha.jpg'),
+  family_ganesha: require('../../assets/images/family/family_ganesha.jpg'),
+  'kartikeya-son': require('../../assets/images/family/family_kartikeya.jpg'),
+  kartikeya_son: require('../../assets/images/family/family_kartikeya.jpg'),
+  kartikeya: require('../../assets/images/family/family_kartikeya.jpg'),
+  family_kartikeya: require('../../assets/images/family/family_kartikeya.jpg'),
+  'nandi-devotee': require('../../assets/images/family/family_nandi.jpg'),
+  nandi_devotee: require('../../assets/images/family/family_nandi.jpg'),
+  nandi: require('../../assets/images/family/family_nandi.jpg'),
+  family_nandi: require('../../assets/images/family/family_nandi.jpg'),
+  'parvati-mother': require('../../assets/images/family/family_parvati.jpg'),
+  parvati_mother: require('../../assets/images/family/family_parvati.jpg'),
+  parvati: require('../../assets/images/family/family_parvati.jpg'),
+  family_parvati: require('../../assets/images/family/family_parvati.jpg'),
+};
+
+export const SWAROOP_IMAGES: Record<string, ImageSourcePropType> = {
+  panchanana: require('../../assets/images/swaroop/swaroop_panchanana.jpg'),
+  swaroop_panchanana: require('../../assets/images/swaroop/swaroop_panchanana.jpg'),
+  pashupati: require('../../assets/images/swaroop/swaroop_pashupati.jpg'),
+  swaroop_pashupati: require('../../assets/images/swaroop/swaroop_pashupati.jpg'),
+  ardhanarishvara: require('../../assets/images/swaroop/swaroop_ardhanarishvara.jpg'),
+  swaroop_ardhanarishvara: require('../../assets/images/swaroop/swaroop_ardhanarishvara.jpg'),
+  mahadev: require('../../assets/images/swaroop/swaroop_mahadev.jpg'),
+  swaroop_mahadev: require('../../assets/images/swaroop/swaroop_mahadev.jpg'),
+  mahakal: require('../../assets/images/swaroop/swaroop_mahakal.jpg'),
+  swaroop_mahakal: require('../../assets/images/swaroop/swaroop_mahakal.jpg'),
+  kalabhairava: require('../../assets/images/swaroop/swaroop_kalabhairava.jpg'),
+  swaroop_kalabhairava: require('../../assets/images/swaroop/swaroop_kalabhairava.jpg'),
+  nataraja: require('../../assets/images/swaroop/swaroop_nataraja.jpg'),
+  swaroop_nataraja: require('../../assets/images/swaroop/swaroop_nataraja.jpg'),
+  neelkanth: require('../../assets/images/swaroop/swaroop_neelkanth.jpg'),
+  swaroop_neelkanth: require('../../assets/images/swaroop/swaroop_neelkanth.jpg'),
+  dakshinamurthy: require('../../assets/images/swaroop/swaroop_dakshinamurthy.jpg'),
+  swaroop_dakshinamurthy: require('../../assets/images/swaroop/swaroop_dakshinamurthy.jpg'),
+};
+
+export const FESTIVAL_IMAGES: Record<string, ImageSourcePropType> = {
+  'pradosh-vrat': require('../../assets/images/festivals/festival_pradosh_vrat.jpg'),
+  pradosh_vrat: require('../../assets/images/festivals/festival_pradosh_vrat.jpg'),
+  festival_pradosh_vrat: require('../../assets/images/festivals/festival_pradosh_vrat.jpg'),
+  mahashivratri: require('../../assets/images/festivals/festival_mahashivratri.jpg'),
+  festival_mahashivratri: require('../../assets/images/festivals/festival_mahashivratri.jpg'),
+  'shravan-maas': require('../../assets/images/festivals/festival_shravan_maas.jpg'),
+  shravan_maas: require('../../assets/images/festivals/festival_shravan_maas.jpg'),
+  festival_shravan_maas: require('../../assets/images/festivals/festival_shravan_maas.jpg'),
+};
+
+export const TEMPLE_IMAGES: Record<string, ImageSourcePropType> = {
+  tungnath: require('../../assets/images/temples/temple_tungnath.jpg'),
+  temple_tungnath: require('../../assets/images/temples/temple_tungnath.jpg'),
+  amarnath: require('../../assets/images/temples/temple_amarnath.jpg'),
+  temple_amarnath: require('../../assets/images/temples/temple_amarnath.jpg'),
+  pashupatinath: require('../../assets/images/temples/temple_pashupatinath.jpg'),
+  temple_pashupatinath: require('../../assets/images/temples/temple_pashupatinath.jpg'),
+};
+
+export const STOTRA_IMAGES: Record<string, ImageSourcePropType> = {
+  'shiva-panchakshara-stotram': require('../../assets/images/stotra/stotra_shiva_panchakshara.jpg'),
+  shiva_panchakshara: require('../../assets/images/stotra/stotra_shiva_panchakshara.jpg'),
+  stotra_shiva_panchakshara: require('../../assets/images/stotra/stotra_shiva_panchakshara.jpg'),
+  'shiva-tandava-stotram': require('../../assets/images/stotra/stotra_shiva_tandava.jpg'),
+  shiva_tandava: require('../../assets/images/stotra/stotra_shiva_tandava.jpg'),
+  stotra_shiva_tandava: require('../../assets/images/stotra/stotra_shiva_tandava.jpg'),
+  'shiva-mahimna-stotram': require('../../assets/images/stotra/stotra_shiva_mahimna.jpg'),
+  shiva_mahimna: require('../../assets/images/stotra/stotra_shiva_mahimna.jpg'),
+  stotra_shiva_mahimna: require('../../assets/images/stotra/stotra_shiva_mahimna.jpg'),
+  rudrashtakam: require('../../assets/images/stotra/stotra_rudrashtakam.jpg'),
+  stotra_rudrashtakam: require('../../assets/images/stotra/stotra_rudrashtakam.jpg'),
+  'mahamrityunjaya-mantra': require('../../assets/images/stotra/stotra_mahamrityunjaya.jpg'),
+  mahamrityunjaya: require('../../assets/images/stotra/stotra_mahamrityunjaya.jpg'),
+  stotra_mahamrityunjaya: require('../../assets/images/stotra/stotra_mahamrityunjaya.jpg'),
+  'daridrya-dahana-stotram': require('../../assets/images/stotra/stotra_daridrya_dahana.jpg'),
+  daridrya_dahana: require('../../assets/images/stotra/stotra_daridrya_dahana.jpg'),
+  stotra_daridrya_dahana: require('../../assets/images/stotra/stotra_daridrya_dahana.jpg'),
+  lingashtakam: require('../../assets/images/stotra/stotra_lingashtakam.jpg'),
+  stotra_lingashtakam: require('../../assets/images/stotra/stotra_lingashtakam.jpg'),
+};
+
+export const SYMBOL_IMAGES: Record<string, ImageSourcePropType> = {
+  damru: require('../../assets/images/symbols/symbol_damru.jpg'),
+  symbol_damru: require('../../assets/images/symbols/symbol_damru.jpg'),
+  rudraksha: require('../../assets/images/symbols/symbol_rudraksha.jpg'),
+  symbol_rudraksha: require('../../assets/images/symbols/symbol_rudraksha.jpg'),
+  bhasma: require('../../assets/images/symbols/symbol_bhasma_tripundra.jpg'),
+  tripundra: require('../../assets/images/symbols/symbol_bhasma_tripundra.jpg'),
+  symbol_bhasma_tripundra: require('../../assets/images/symbols/symbol_bhasma_tripundra.jpg'),
+  'third-eye': require('../../assets/images/symbols/symbol_trinetra.jpg'),
+  third_eye: require('../../assets/images/symbols/symbol_trinetra.jpg'),
+  trinetra: require('../../assets/images/symbols/symbol_trinetra.jpg'),
+  symbol_trinetra: require('../../assets/images/symbols/symbol_trinetra.jpg'),
 };
 
 // Sansaar categories and wallpapers
@@ -171,6 +289,12 @@ export const resolveImageSource = (
     // Check dictionaries by exact key
     if (SHAKTI_PEETH_IMAGES[key]) return SHAKTI_PEETH_IMAGES[key];
     if (JYOTIRLINGA_IMAGES[key]) return JYOTIRLINGA_IMAGES[key];
+    if (FAMILY_IMAGES[key]) return FAMILY_IMAGES[key];
+    if (SWAROOP_IMAGES[key]) return SWAROOP_IMAGES[key];
+    if (FESTIVAL_IMAGES[key]) return FESTIVAL_IMAGES[key];
+    if (TEMPLE_IMAGES[key]) return TEMPLE_IMAGES[key];
+    if (STOTRA_IMAGES[key]) return STOTRA_IMAGES[key];
+    if (SYMBOL_IMAGES[key]) return SYMBOL_IMAGES[key];
     if (STORY_IMAGES[key]) return STORY_IMAGES[key];
     if (SANSAAR_IMAGES[key]) return SANSAAR_IMAGES[key];
     if (FALLBACK_IMAGES[key]) return FALLBACK_IMAGES[key];
@@ -179,6 +303,12 @@ export const resolveImageSource = (
     const cleanKey = key.split('/').pop()?.replace(/\.(jpg|png|webp|jpeg)$/i, '') || key;
     if (SHAKTI_PEETH_IMAGES[cleanKey]) return SHAKTI_PEETH_IMAGES[cleanKey];
     if (JYOTIRLINGA_IMAGES[cleanKey]) return JYOTIRLINGA_IMAGES[cleanKey];
+    if (FAMILY_IMAGES[cleanKey]) return FAMILY_IMAGES[cleanKey];
+    if (SWAROOP_IMAGES[cleanKey]) return SWAROOP_IMAGES[cleanKey];
+    if (FESTIVAL_IMAGES[cleanKey]) return FESTIVAL_IMAGES[cleanKey];
+    if (TEMPLE_IMAGES[cleanKey]) return TEMPLE_IMAGES[cleanKey];
+    if (STOTRA_IMAGES[cleanKey]) return STOTRA_IMAGES[cleanKey];
+    if (SYMBOL_IMAGES[cleanKey]) return SYMBOL_IMAGES[cleanKey];
     if (STORY_IMAGES[cleanKey]) return STORY_IMAGES[cleanKey];
     if (SANSAAR_IMAGES[cleanKey]) return SANSAAR_IMAGES[cleanKey];
     if (FALLBACK_IMAGES[cleanKey]) return FALLBACK_IMAGES[cleanKey];
