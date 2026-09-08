@@ -9,7 +9,7 @@ export const dailyMessages: DailyMessage[] = [
     fullMessage: `शिव गुरु भाव से जब हम जुड़ते हैं, तो जीवन में परिवर्तन का अनुभव होने लगता है। शिव केवल एक देव नहीं, बल्कि सम्पूर्ण सृष्टि के आदि गुरु हैं। 
 
 साहब श्री हरिंद्रानंद जी ने बताया है कि जब हम शिव से दया माँगते हैं, तो हमारा अहंकार मिटने लगता है। अपने प्रतिदिन के जीवन में जब भी संशय या दुविधा हो, शिव गुरु को याद करें और कहें - "हे शिव! आप मेरे गुरु हैं, मुझ पर दया कर दीजिए।"`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/daily_msg_today_1.mp3',
     audioDuration: 145,
     author: 'साहब श्री हरिंद्रानंद जी के विचारों पर आधारित',
     imageUrl: '',
@@ -24,7 +24,7 @@ export const dailyMessages: DailyMessage[] = [
     fullMessage: `शिव चर्चा में दया माँगने का बहुत गहरा अर्थ है। जब हम कहते हैं "हे शिव! आप मेरे गुरु हैं, मुझ पर दया करें", तो हम अपने भीतर के अहंकार और संकोच को छोड़ देते हैं। 
 
 दया माँगने के लिए किसी विशेष कर्मकांड की आवश्यकता नहीं है। आप जहाँ हैं, जैसे हैं, मन ही मन शिव गुरु को अपना गुरु मानकर अपनी भावनाएँ उनसे साझा कर सकते हैं।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/daily_msg_today_2.mp3',
     audioDuration: 180,
     author: 'शिव चर्चा सूत्र',
     imageUrl: '',
@@ -39,7 +39,7 @@ export const dailyMessages: DailyMessage[] = [
     fullMessage: `शिव गुरु की चर्चा करने का अर्थ है कि हम अपने जीवन में शिव के प्रति जो अनुभव प्राप्त करते हैं, उसे प्रेमपूर्वक दूसरों के साथ साझा करें। 
 
 जब हम किसी अन्य व्यक्ति को शिव को गुरु बनाने की प्रेरणा देते हैं, तो हमारे अपने मन में भी शिव गुरु का स्थान और अधिक सुदृढ़ हो जाता है। चर्चा से मन निर्मल होता है और भक्ति बढ़ती है।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/daily_msg_today_3.mp3',
     audioDuration: 160,
     author: 'दीदी माँ नीलम आनंद जी के संस्मरण',
     imageUrl: '',

@@ -7,8 +7,8 @@ export const ringtonesData: RingtoneItem[] = [
     subtitle: 'पावन प्रातःकालीन घंटी ध्वनि',
     category: 'bell',
     duration: 12,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
-    downloadUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_divya_mandir_bell.mp3',
+    downloadUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_divya_mandir_bell.mp3',
   },
   {
     id: 'rt-shankh-sound',
@@ -16,8 +16,8 @@ export const ringtonesData: RingtoneItem[] = [
     subtitle: 'मंगलकारी शंखनाद',
     category: 'shankh',
     duration: 15,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
-    downloadUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_shankhnaad.mp3',
+    downloadUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_shankhnaad.mp3',
   },
   {
     id: 'rt-om-namah-shivaya',
@@ -25,7 +25,8 @@ export const ringtonesData: RingtoneItem[] = [
     subtitle: 'मधुर मंत्र ध्वनि',
     category: 'mantra',
     duration: 28,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
-    downloadUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_om_namah_shivaya.mp3',
+    downloadUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/ringtone_om_namah_shivaya.mp3',
   },
 ];
+

@@ -22,7 +22,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'नागेंद्रहाराय त्रिलोचनाय... ॐ नमः शिवाय महिमा',
     author: 'आदि शंकराचार्य',
     image: 'shiva-panchakshara-stotram',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_panchakshara_stotram.mp3',
     audioDuration: 240,
     summaryHindi:
       'जगद्गुरु आदि शंकराचार्य रचित यह 5 श्लोकों का परम पावन स्तवन \'ॐ नमः शिवाय\' मंत्र के पाँचों अक्षरों (न, म, शि, वा, य) की अलौकिक महिमा और शिव के मंगल स्वरूप का वर्णन करता है।',
@@ -57,7 +57,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'लंकापति रावण रचित अलौकिक शिव स्तुति',
     author: 'रावण (शिवभक्त)',
     image: 'shiva-tandava-stotram',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_tandava_stotram.mp3',
     audioDuration: 300,
     summaryHindi:
       'जब रावण ने कैलाश पर्वत को उठाने का प्रयास किया, तब शिवजी ने अपने अंगूठे से दबा दिया। पीड़ा में रावण ने अत्यंत ओजस्वी छंदों में यह स्तोत्र रचा, जिससे प्रसन्न होकर शिवजी ने उसे चंद्रहास खड्ग प्रदान किया।',
@@ -80,7 +80,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'गंधर्वराज पुष्पदंत रचित सर्वोत्तम शिव स्तुति',
     author: 'पुष्पदंत (गंधर्वराज)',
     image: 'shiva-mahimna-stotram',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_mahimna_stotram.mp3',
     audioDuration: 360,
     summaryHindi:
       'गंधर्वराज पुष्पदंत ने शिव के कोप से शक्तिहीन होने पर यह 32 श्लोकों की अति पावन स्तुति रची थी। मधुसूदन सरस्वती सहित सभी आचार्यों ने इसे सर्वश्रेष्ठ शिव स्तोत्र माना है।',
@@ -103,7 +103,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'गोस्वामी तुलसीदास रचित भक्तिप्रद अष्टक',
     author: 'गोस्वामी तुलसीदास (उत्तरकांड)',
     image: 'rudrashtakam',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/rudrashtakam.mp3',
     audioDuration: 240,
     summaryHindi:
       'गोस्वामी तुलसीदासजी द्वारा रचित आठ छन्दों का यह परम पावन स्तोत्र भगवान रुद्र की सर्वांगीण महिमा, निर्गुण व सगुण रूप की वंदना करता है।',
@@ -126,7 +126,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'ऋग्वेदोक्त संजीवनी महामंत्र',
     author: 'महर्षि मार्कण्डेय',
     image: 'mahamrityunjaya-mantra',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/mahamrityunjaya_mantra.mp3',
     audioDuration: 180,
     summaryHindi:
       'यजुर्वेद और ऋग्वेद का यह महामंत्र अकाल मृत्यु के भय को मिटाता है और साधक को मोक्ष प्रदान करता है। महर्षि मार्कंडेय ने इसी मंत्र से यमराज पर विजय पाई थी।',
@@ -145,7 +145,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'महर्षि वशिष्ठ रचित दरिद्रता व संकट नाशक स्तुति',
     author: 'महर्षि वशिष्ठ',
     image: 'daridrya-dahana-stotram',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/daridrya_dahana_stotram.mp3',
     audioDuration: 210,
     summaryHindi:
       'सप्तर्षि महर्षि वशिष्ठ जी द्वारा रचित यह 8 श्लोकों का स्तोत्र जीवन के भौतिक व आध्यात्मिक दारिद्र्य (गरीबी, ऋण, दुख) को अग्नि की भाँति भस्म कर अक्षय समृद्धि प्रदान करता है।',
@@ -164,7 +164,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'शिवलिंग की अष्टक स्तुति',
     author: 'आदि शंकराचार्य',
     image: 'lingashtakam',
-    audioUrl: 'https://assets.mixkit.co/active_storage/sfx/2874/2874-preview.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/lingashtakam.mp3',
     audioDuration: 210,
     summaryHindi:
       'जगद्गुरु आदि शंकराचार्य रचित यह आठ श्लोकों का स्तवन शिवलिंग की पवित्रता, महिमा और सर्वपापहारी स्वरूप की महिमा गाता है।',

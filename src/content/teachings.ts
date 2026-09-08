@@ -14,7 +14,7 @@ export const teachingTopics: TeachingTopic[] = [
 3. **तीसरा सूत्र (108 जाप):** प्रतिदिन कम से कम 108 बार 'नमः शिवाय' मंत्र का श्रद्धापूर्वक जाप करें।
 
 ये तीनों सूत्र जीवन में शांति, भक्ति और संतुलन लाते हैं।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_three_sutras.mp3',
     audioDuration: 280,
     keyTakeaways: [
       'पहला सूत्र: शिव गुरु से दया माँगना।',
@@ -40,7 +40,7 @@ export const teachingTopics: TeachingTopic[] = [
 *"हे शिव! आप मेरे गुरु हैं, मैं आपका/आपकी शिष्य/शिष्या हूँ। मुझ पर दया कर दीजिए।"*
 
 जब हम गुरु से दया माँगते हैं, तो हमारे भीतर का अभिमान समाप्त होता है और गुरु की कृपा का प्रवाह हमारे जीवन में आरंभ होता है। इसके लिए किसी विशेष अनुष्ठान या विधि की आवश्यकता नहीं होती, केवल सच्चा भाव चाहिए।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_sutra_1_daya.mp3',
     audioDuration: 180,
     keyTakeaways: [
       'दया माँगना मन के समर्पण की पहली सीढ़ी है।',
@@ -69,7 +69,7 @@ export const teachingTopics: TeachingTopic[] = [
 3. दूसरों को भी शिव को अपना गुरु बनाने के लिए प्रेरित करें।
 
 साहेब श्री हरिंद्रानंद जी कहते थे - "जहाँ दो या दो से अधिक लोग शिव की चर्चा करते हैं, वह स्थान तीर्थ बन जाता है।"`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_sutra_2_charcha.mp3',
     audioDuration: 240,
     keyTakeaways: [
       'शिव चर्चा से समाज में सात्विकता का विस्तार होता है।',
@@ -96,7 +96,7 @@ export const teachingTopics: TeachingTopic[] = [
 - यह गुरु के प्रति शिष्य की दैनिक कृतज्ञता और प्रणाम की अभिव्यक्ति है।
 
 आप ऐप के डिजिटल रुद्राक्ष काउंटर का उपयोग कर कभी भी 108 जाप पूरा कर सकते हैं।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_sutra_3_jap.mp3',
     audioDuration: 300,
     keyTakeaways: [
       '108 मणके जाप शिष्य का दैनिक नियम है।',
@@ -121,7 +121,7 @@ export const teachingTopics: TeachingTopic[] = [
 - *"शिव किसी सम्प्रदाय, वर्ग या जाति विशेष के नहीं हैं। शिव सर्वव्यापी हैं और वे हर प्राणी के गुरु बन सकते हैं।"*
 - उन्होंने बिना किसी कर्मकांड या धन-दक्षिणा के केवल तीन सरल सूत्रों द्वारा शिव को गुरु बनाने का मार्ग प्रशस्त किया।
 - आज देश और विदेश में करोड़ों लोग साहब श्री हरिंद्रानंद जी की प्रेरणा से शिव को गुरु मानकर अपने जीवन में शांति और आनंद का अनुभव कर रहे हैं।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_harindranand_ji.mp3',
     audioDuration: 220,
     keyTakeaways: [
       'शिव सबके हैं, कोई भी व्यक्ति उन्हें गुरु मान सकता है।',
@@ -142,7 +142,7 @@ export const teachingTopics: TeachingTopic[] = [
 - दीदी माँ कहती थीं: *"जब आप शिव से दया माँगते हैं, तो माता पार्वति और महादेव स्वयं आपके रक्षक बन जाते हैं।"*
 - उन्होंने महिलाओं और ग्रामीण समाज में शिव चर्चा को पहुँचाने के लिए अपना पूरा जीवन अर्पित कर दिया।
 - उनकी सरल, मधुर और करुणाभरी वाणी आज भी लाखों शिष्यों को शिव गुरु के चरणों से जोड़ती है।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_neelam_anand_ji.mp3',
     audioDuration: 200,
     keyTakeaways: [
       'शिव गुरु पर अटूट विश्वास ही सबसे बड़ा साधन है।',
@@ -162,7 +162,7 @@ export const teachingTopics: TeachingTopic[] = [
 साहेब श्री हरिंद्रानंद जी ने आधुनिक युग में आम जनमानस तक यह विचार पहुँचाया कि शिव किसी विशेष वर्ग, जाति या सम्प्रदाय के नहीं हैं। शिव सबके हैं और कोई भी प्राणी उन्हें अपना गुरु स्वीकार कर सकता है।
 
 जब हम शिव को गुरु मानते हैं, तो हमें किसी भौतिक कर्मकांड की आवश्यकता नहीं होती। केवल भाव शुद्ध होना चाहिए। शिव गुरु हमारे मार्गदर्शन करते हैं और हमारे आंतरिक अज्ञान को दूर करते हैं।`,
-    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/teaching_t_shiv_guru_intro.mp3',
     audioDuration: 210,
     keyTakeaways: [
       'शिव सब जीवों के आदि गुरु हैं।',

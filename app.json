@@ -57,12 +57,14 @@
         }
       ],
       "expo-sharing",
-      "expo-av",
       "expo-audio"
     ],
     "owner": "mindcraftlearning",
     "updates": {
-      "enabled": false
+      "url": "https://u.expo.dev/b0e82df7-7948-47e2-90fd-5c428c8de72e",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     },
     "runtimeVersion": {
       "policy": "appVersion"

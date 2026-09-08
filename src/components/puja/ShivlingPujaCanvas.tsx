@@ -40,80 +40,67 @@ export const ShivlingPujaCanvas: React.FC = () => {
     dhoopActive: false,
   });
 
-  const bellSoundRef = useRef<any>(null);
-  const shankhSoundRef = useRef<any>(null);
-  const waterSoundRef = useRef<any>(null);
+  const bellPlayerRef = useRef<any>(null);
+  const shankhPlayerRef = useRef<any>(null);
+  const waterPlayerRef = useRef<any>(null);
+  const damruPlayerRef = useRef<any>(null);
 
-  // Component-level sound effect initialization (spin-the-wheel pattern)
+  // Component-level sound effect initialization using expo-audio
   useEffect(() => {
-    let isMounted = true;
-    const loadSounds = async () => {
-      if (Platform.OS === 'web') return;
-      try {
-        const Audio = require('expo-av').Audio;
-        await Audio.setAudioModeAsync({
-          playsInSilentModeIOS: true,
-        }).catch(() => {});
-
-        const { sound: bellSound } = await Audio.Sound.createAsync(
-          require('../../../assets/sounds/bell.mp3')
-        );
-        if (isMounted) bellSoundRef.current = bellSound;
-        else await bellSound.unloadAsync().catch(() => {});
-
-        const { sound: shankhSound } = await Audio.Sound.createAsync(
-          require('../../../assets/sounds/shankh.mp3')
-        );
-        if (isMounted) shankhSoundRef.current = shankhSound;
-        else await shankhSound.unloadAsync().catch(() => {});
-
-        const { sound: waterSound } = await Audio.Sound.createAsync(
-          require('../../../assets/sounds/water.mp3')
-        );
-        if (isMounted) waterSoundRef.current = waterSound;
-        else await waterSound.unloadAsync().catch(() => {});
-      } catch (e) {
-        console.warn('ShivlingPujaCanvas sound load warning:', e);
-      }
-    };
-
-    loadSounds();
+    if (Platform.OS === 'web') return;
+    try {
+      const { createAudioPlayer } = require('expo-audio');
+      bellPlayerRef.current = createAudioPlayer(require('../../../assets/sounds/bell.mp3'));
+      shankhPlayerRef.current = createAudioPlayer(require('../../../assets/sounds/shankh.mp3'));
+      waterPlayerRef.current = createAudioPlayer(require('../../../assets/sounds/water.mp3'));
+      damruPlayerRef.current = createAudioPlayer(require('../../../assets/sounds/damru.mp3'));
+    } catch (e) {
+      console.warn('ShivlingPujaCanvas sound load warning:', e);
+    }
 
     return () => {
-      isMounted = false;
-      if (bellSoundRef.current) bellSoundRef.current.unloadAsync().catch(() => {});
-      if (shankhSoundRef.current) shankhSoundRef.current.unloadAsync().catch(() => {});
-      if (waterSoundRef.current) waterSoundRef.current.unloadAsync().catch(() => {});
+      try {
+        if (bellPlayerRef.current && bellPlayerRef.current.remove) bellPlayerRef.current.remove();
+        if (shankhPlayerRef.current && shankhPlayerRef.current.remove) shankhPlayerRef.current.remove();
+        if (waterPlayerRef.current && waterPlayerRef.current.remove) waterPlayerRef.current.remove();
+        if (damruPlayerRef.current && damruPlayerRef.current.remove) damruPlayerRef.current.remove();
+      } catch (e) {}
     };
   }, []);
 
   const playBell = async () => {
-    if (bellSoundRef.current) {
+    if (bellPlayerRef.current) {
       try {
-        await bellSoundRef.current.replayAsync();
-      } catch (e) {
-        console.warn('Bell sound error:', e);
-      }
+        if (bellPlayerRef.current.seekTo) bellPlayerRef.current.seekTo(0);
+        bellPlayerRef.current.play();
+      } catch (e) {}
     }
   };
 
   const playShankh = async () => {
-    if (shankhSoundRef.current) {
+    if (shankhPlayerRef.current) {
       try {
-        await shankhSoundRef.current.replayAsync();
-      } catch (e) {
-        console.warn('Shankh sound error:', e);
-      }
+        if (shankhPlayerRef.current.seekTo) shankhPlayerRef.current.seekTo(0);
+        shankhPlayerRef.current.play();
+      } catch (e) {}
     }
   };
 
   const playWater = async () => {
-    if (waterSoundRef.current) {
+    if (waterPlayerRef.current) {
       try {
-        await waterSoundRef.current.replayAsync();
-      } catch (e) {
-        console.warn('Water sound error:', e);
-      }
+        if (waterPlayerRef.current.seekTo) waterPlayerRef.current.seekTo(0);
+        waterPlayerRef.current.play();
+      } catch (e) {}
+    }
+  };
+
+  const playDamru = async () => {
+    if (damruPlayerRef.current) {
+      try {
+        if (damruPlayerRef.current.seekTo) damruPlayerRef.current.seekTo(0);
+        damruPlayerRef.current.play();
+      } catch (e) {}
     }
   };
 
@@ -154,6 +141,8 @@ export const ShivlingPujaCanvas: React.FC = () => {
       playBell();
     } else if (type === 'shankh') {
       playShankh();
+    } else if (type === 'damru') {
+      playDamru();
     }
 
     // Sankalp Completion Check
@@ -191,7 +180,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
         title: 'ॐ नमः शिवाय (शिव धुन)',
         category: 'mantra',
         artist: 'शिव चर्चा भक्ति धारा',
-        audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=om-namah-shivaya-114422.mp3',
+        audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/108_om_namah_shivaya_chant.mp3',
         coverImage: '',
         duration: 300,
       });
@@ -310,7 +299,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
             <Text style={styles.topLeftResetText}>↺ रीसेट</Text>
           </TouchableOpacity>
 
-          {/* Top-Center Temple Sound Instruments: Ghanti & Shankh */}
+          {/* Top-Center Temple Sound Instruments: Ghanti, Shankh & Damru */}
           <View style={styles.topCenterInstrumentsRow}>
             <TouchableOpacity
               style={styles.topInstrumentPill}
@@ -328,6 +317,15 @@ export const ShivlingPujaCanvas: React.FC = () => {
             >
               <Text style={styles.topInstrumentIcon}>🐚</Text>
               <Text style={styles.topInstrumentLabel}>शंख</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.topInstrumentPill}
+              onPress={() => handleOffering('damru')}
+              activeOpacity={0.75}
+            >
+              <Text style={styles.topInstrumentIcon}>🪘</Text>
+              <Text style={styles.topInstrumentLabel}>डमरू</Text>
             </TouchableOpacity>
           </View>
 

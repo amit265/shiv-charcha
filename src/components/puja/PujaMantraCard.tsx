@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { shadows } from '../../theme/colors';
 
-export type OfferingType = 'flower' | 'belpatra' | 'water' | 'milk' | 'diya' | 'garland' | 'bell' | 'shankh' | null;
+export type OfferingType = 'flower' | 'belpatra' | 'water' | 'milk' | 'diya' | 'garland' | 'bell' | 'shankh' | 'damru' | null;
 
 interface MantraInfo {
   title: string;
@@ -60,6 +60,12 @@ export const MANTRAS: Record<NonNullable<OfferingType>, MantraInfo> = {
     icon: '🐚',
     sanskrit: 'त्वं पुरा सागरोत्पन्नो विष्णुना विधृतः करे।\nनिर्मितः सर्वदेवैश्च पाञ्चजन्य नमोऽस्तु ते॥',
     hindi: 'समस्त देवों द्वारा वंदित, क्षीरसागर से उत्पन्न यह पवित्र शंख ध्वनि वातावरण में शिव भक्ति भर रही है।',
+  },
+  damru: {
+    title: 'डमरू नाद मन्त्र',
+    icon: '🪘',
+    sanskrit: 'डड्डड्डड्डामरं नादं डमरुशब्देन नादितम्।\nसृष्टिसंहारकारिणं नमामि डमरूधरम्॥',
+    hindi: 'सृष्टि एवं संहार के प्रतीक, नादब्रह्म उत्पन्न करने वाले भगवान शिव का पावन डमरू नाद।',
   },
 };
 

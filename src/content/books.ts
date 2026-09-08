@@ -27,7 +27,7 @@ export const booksLibrary: Book[] = [
         fullText: `शिव की गुरुता सनातन है। सृष्टि के आरंभ से ही शिव जगतगुरु के रूप में पूजे गए हैं। 
 
 साहेब श्री हरिंद्रानंद जी ने अपने अनुभवों से स्पष्ट किया कि शिव को गुरु बनाने में कोई बाधा नहीं है। जिस प्रकार एक बालक अपने माता-पिता पर आश्रित होता है, उसी प्रकार शिष्य शिव गुरु के चरणों में समर्पित रहता है।`,
-        audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3',
+        audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/book_aao_chalen_ch1.mp3',
         audioDuration: 320,
       },
       {
@@ -42,7 +42,7 @@ export const booksLibrary: Book[] = [
         ],
         dailyLifeConnection: 'दिन में कम से कम एक व्यक्ति से शिव गुरु के बारे में बात करें और रोज सुबह 108 जाप पूरा करें।',
         fullText: `प्रथम सूत्र दया माँगना शिष्य की विनम्रता का प्रतीक है। द्वितीय सूत्र चर्चा करना परोपकार और ज्ञान के प्रसार का मार्ग है। तृतीत सूत्र 108 जाप शिष्य को आंतरिक ऊर्जा से भर देता है।`,
-        audioUrl: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a8d07f.mp3',
+        audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/book_aao_chalen_ch2.mp3',
         audioDuration: 410,
       },
     ],
@@ -70,7 +70,7 @@ export const booksLibrary: Book[] = [
         ],
         dailyLifeConnection: 'सुख और दुख दोनों में शिव गुरु का धन्यवाद करना सीखें।',
         fullText: `दीदी माँ हमेशा कहती थीं कि शिव गुरु इतने कृपालु हैं कि यदि शिष्य एक कदम उनकी ओर बढ़ता है, तो वे सौ कदम शिष्य की ओर आते हैं।`,
-        audioUrl: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3',
+        audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/book_amrit_wani_ch1.mp3',
         audioDuration: 290,
       },
     ],
