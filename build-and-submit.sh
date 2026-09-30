@@ -94,6 +94,8 @@ echo ""
 # ── Step 4: Local Build ───────────────────────────────────
 echo "🔨 [4/5] Running EAS Local Build (profile: $BUILD_PROFILE)..."
 echo "------------------------------------------------"
+export GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=1g"
+export NODE_OPTIONS="--max-old-space-size=4096"
 eas build --platform android --profile "$BUILD_PROFILE" --local
 echo "✅ Local build complete."
 echo ""
