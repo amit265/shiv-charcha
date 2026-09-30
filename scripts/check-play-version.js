@@ -76,8 +76,9 @@ function getEASVersionCode(profile = "production") {
 
     throw new Error("Could not parse versionCode from EAS output:\n" + raw);
   } catch (e) {
-    console.error("❌ Failed to get EAS version:", e.message);
-    process.exit(1);
+    console.log(`⚠️  Could not fetch EAS remote version (this is normal for first-time builds).`);
+    console.log(`   Falling back to local app.json versionCode...`);
+    return APP_JSON.expo.android.versionCode || 1;
   }
 }
 
