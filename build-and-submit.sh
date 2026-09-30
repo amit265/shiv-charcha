@@ -15,7 +15,7 @@
 set -e  # Exit immediately on any error
 
 BUILD_PROFILE="${1:-production}"
-SUBMIT_PROFILE="internal"
+SUBMIT_PROFILE="production"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Read current version from app.json
