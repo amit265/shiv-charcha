@@ -32,7 +32,7 @@ const APP_JSON = JSON.parse(
   fs.readFileSync(path.join(ROOT, "app.json"), "utf8"),
 );
 const KEY = JSON.parse(
-  fs.readFileSync(path.join(ROOT, "google-services-key.json"), "utf8"),
+  fs.readFileSync(path.join(ROOT, "google-service-account.json"), "utf8"),
 );
 
 const PACKAGE_NAME = APP_JSON.expo.android.package;

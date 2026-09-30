@@ -29,7 +29,7 @@ const { execSync } = require("child_process");
 // ── Paths ─────────────────────────────────────────────────
 const ROOT = path.resolve(__dirname, "..");
 const APP_JSON = JSON.parse(fs.readFileSync(path.join(ROOT, "app.json"), "utf8"));
-const KEY_PATH = path.join(ROOT, "google-services-key.json");
+const KEY_PATH = path.join(ROOT, "google-service-account.json");
 
 const PACKAGE_NAME = APP_JSON.expo.android.package;
 const LOCAL_VERSION = APP_JSON.expo.version;
