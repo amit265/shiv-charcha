@@ -50,13 +50,13 @@
   "submit": {
     "internal": {
       "android": {
-        "serviceAccountKeyPath": "./google-services-key.json",
+        "serviceAccountKeyPath": "./google-service-account.json",
         "track": "internal"
       }
     },
     "production": {
       "android": {
-        "serviceAccountKeyPath": "./google-services-key.json",
+        "serviceAccountKeyPath": "./google-service-account.json",
         "track": "production"
       }
     }

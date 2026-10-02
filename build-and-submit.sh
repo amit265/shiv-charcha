@@ -2,10 +2,10 @@
 
 # ============================================================
 # build-and-submit.sh
-# Expo: Set Version → Git Commit All → Version Check → Prebuild → Local Build → Submit
+# Expo: Set Version → Version Check → Git Commit All → Prebuild → Local Build → Submit
 #
-# Always submits to Play Store INTERNAL TESTING track.
-# To promote to Production, run: node scripts/promote-to-production.js
+# Supports submitting to Play Store INTERNAL TESTING track or PRODUCTION track.
+# To promote from Internal to Production later, run: node scripts/promote-to-production.js
 #
 # Usage: npm run release
 #        bash build-and-submit.sh [build-profile]
@@ -15,7 +15,6 @@
 set -e  # Exit immediately on any error
 
 BUILD_PROFILE="${1:-production}"
-SUBMIT_PROFILE="production"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Read current version from app.json
@@ -23,12 +22,29 @@ CURRENT_VERSION=$(node -e "console.log(require('./app.json').expo.version)")
 
 echo ""
 echo "╔══════════════════════════════════════════════╗"
-echo "║    🚀 MindCraft Learning — Build & Submit   ║"
+echo "║    🚀 Mahavyoma Studio — Build & Submit     ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 echo "  Build profile  : $BUILD_PROFILE"
-echo "  Submit track   : Internal Testing"
 echo "  Current version: $CURRENT_VERSION"
+echo ""
+
+echo "Where would you like to submit this build?"
+echo "  1) Internal Testing (Recommended)"
+echo "  2) Production (Direct Release)"
+echo -n "Select option [1/2]: "
+read SUBMIT_CHOICE
+
+if [ "$SUBMIT_CHOICE" == "2" ]; then
+  SUBMIT_PROFILE="production"
+  SUBMIT_TRACK="Production"
+else
+  SUBMIT_PROFILE="internal"
+  SUBMIT_TRACK="Internal Testing"
+fi
+
+echo ""
+echo "  ↳ Target set to: $SUBMIT_TRACK"
 echo ""
 
 # ── Step 0: Set Version ───────────────────────────────────
@@ -61,8 +77,14 @@ else
 fi
 echo ""
 
-# ── Step 1: Commit EVERYTHING to Git before build ─────────
-echo "📝 [1/5] Committing all working tree changes to Git..."
+# ── Step 1: Play Store Version Pre-flight Check ───────────
+echo "🔍 [1/5] Checking version against Play Store..."
+echo "------------------------------------------------"
+node "$PROJECT_DIR/scripts/check-play-version.js"
+echo ""
+
+# ── Step 2: Commit EVERYTHING to Git before build ─────────
+echo "📝 [2/5] Committing all working tree changes to Git..."
 echo "------------------------------------------------"
 FINAL_VERSION=$(node -e "console.log(require('./app.json').expo.version)")
 
@@ -76,12 +98,6 @@ else
   git push origin main
   echo "  ✅ All changes committed and pushed to main."
 fi
-echo ""
-
-# ── Step 2: Play Store Version Pre-flight Check ───────────
-echo "🔍 [2/5] Checking version against Play Store..."
-echo "------------------------------------------------"
-node "$PROJECT_DIR/scripts/check-play-version.js"
 echo ""
 
 # ── Step 3: Prebuild ──────────────────────────────────────
@@ -101,7 +117,7 @@ echo "✅ Local build complete."
 echo ""
 
 # ── Step 5: Find latest .aab & Submit ────────────────────
-echo "📤 [5/5] Locating .aab and submitting to Internal Testing..."
+echo "📤 [5/5] Locating .aab and submitting to $SUBMIT_TRACK..."
 echo "------------------------------------------------"
 
 LATEST_AAB=$(find "$PROJECT_DIR" -maxdepth 1 -name "*.aab" -printf "%T@ %p\n" 2>/dev/null | sort -n | tail -1 | awk '{print $2}')
@@ -129,15 +145,22 @@ try {
 
 echo ""
 echo "╔══════════════════════════════════════════════╗"
-echo "║   ✅  Submitted to Internal Testing!        ║"
+echo "║   ✅  Submitted to $SUBMIT_TRACK!            ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 echo "  Version : $FINAL_VERSION"
 echo "  Build   : $VERSION_CODE"
 echo "  Bundle  : $(basename "$LATEST_AAB")"
 echo ""
-echo "  Next steps:"
-echo "  • Test on internal track devices"
-echo "  • Then promote to Production:"
-echo "    npm run release:promote"
+
+if [ "$SUBMIT_PROFILE" == "internal" ]; then
+  echo "  Next steps:"
+  echo "  • Test on internal track devices"
+  echo "  • Then promote to Production:"
+  echo "    npm run release:promote"
+else
+  echo "  Next steps:"
+  echo "  • Monitor release on Google Play Console"
+  echo "  • Wait for Google's review process (if applicable)"
+fi
 echo ""
