@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { featureFlags } from '@/utils/featureFlags';
+import { AdManager } from '@/services/analytics/AdManager';
 
 const CACHE_KEY = 'mahavyoma_remote_config';
 const API_URL = 'https://mahavyomastudio.com/api/app-config';
 
 export const fallbackConfig = {
-  version: "1.0.0",
+  version: "1.0.1",
   legal: {
     privacyBaseUrl: "https://mahavyomastudio.com/legal",
     termsBaseUrl: "https://mahavyomastudio.com/legal",
@@ -27,7 +29,7 @@ export const fallbackConfig = {
   },
   announcement: {
     show: false,
-    message: "Welcome to Mahavyoma Studio!",
+    message: "Welcome to Shiv Charcha!",
     url: "https://mahavyomastudio.com",
   },
   crossPromoApps: [
@@ -37,7 +39,7 @@ export const fallbackConfig = {
       tagline: "Authentic Hindu Calendar & Panchang",
       icon: "https://mahavyomastudio.com/apps/hindi-calendar-2027/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.hindicalendar",
-      iosUrl: "https://mahavyomastudio.com/apps/hindi-calendar-2027"
+      iosUrl: "https://mahavyomastudio.com/apps/hindi-calendar-2027",
     },
     {
       id: "shiv-charcha",
@@ -45,7 +47,7 @@ export const fallbackConfig = {
       tagline: "Shiv Bhajan, Katha & Sadhana",
       icon: "https://mahavyomastudio.com/apps/shiv-charcha/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.shivcharcha",
-      iosUrl: "https://mahavyomastudio.com/apps/shiv-charcha"
+      iosUrl: "https://mahavyomastudio.com/apps/shiv-charcha",
     },
     {
       id: "vrat-sathi",
@@ -53,7 +55,7 @@ export const fallbackConfig = {
       tagline: "Your Fasting & Vrat Companion",
       icon: "https://mahavyomastudio.com/apps/vrat-sathi/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.vratsathi",
-      iosUrl: "https://mahavyomastudio.com/apps/vrat-sathi"
+      iosUrl: "https://mahavyomastudio.com/apps/vrat-sathi",
     },
     {
       id: "shakti-peetha",
@@ -61,7 +63,7 @@ export const fallbackConfig = {
       tagline: "51 Shakti Peethas Guide",
       icon: "https://mahavyomastudio.com/apps/shakti-peetha/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.shaktipeetha",
-      iosUrl: "https://mahavyomastudio.com/apps/shakti-peetha"
+      iosUrl: "https://mahavyomastudio.com/apps/shakti-peetha",
     },
     {
       id: "jyotirlinga",
@@ -69,7 +71,7 @@ export const fallbackConfig = {
       tagline: "12 Jyotirlinga Yatra Guide",
       icon: "https://mahavyomastudio.com/apps/jyotirlinga/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.jyotirlinga",
-      iosUrl: "https://mahavyomastudio.com/apps/jyotirlinga"
+      iosUrl: "https://mahavyomastudio.com/apps/jyotirlinga",
     },
     {
       id: "bihar-explorer",
@@ -77,8 +79,8 @@ export const fallbackConfig = {
       tagline: "Discover Bihar Tourism & History",
       icon: "https://mahavyomastudio.com/apps/bihar-explorer/icon.png",
       androidUrl: "https://play.google.com/store/apps/details?id=com.mahavyomastudio.biharexplorer",
-      iosUrl: "https://mahavyomastudio.com/apps/bihar-explorer"
-    }
+      iosUrl: "https://mahavyomastudio.com/apps/bihar-explorer",
+    },
   ],
   features: {
     festivalModal: true,
@@ -87,8 +89,8 @@ export const fallbackConfig = {
     adFreeDurationMinutes: 15,
   },
   versions: {
-    "hindi-calendar-2027": { latest: "1.0.0", forceUpdate: false },
-    "shiv-charcha": { latest: "1.0.0", forceUpdate: false },
+    "hindi-calendar-2027": { latest: "1.0.3", forceUpdate: false },
+    "shiv-charcha": { latest: "1.0.1", forceUpdate: false },
     "vrat-sathi": { latest: "1.0.0", forceUpdate: false },
     "shakti-peetha-explorer": { latest: "1.0.0", forceUpdate: false },
     "jyotirlinga-explorer": { latest: "1.0.0", forceUpdate: false },
@@ -96,6 +98,28 @@ export const fallbackConfig = {
   },
   maintenanceMode: false,
 };
+
+function updateFeatureFlags(fetchedConfig: typeof fallbackConfig) {
+  const config = fetchedConfig || fallbackConfig;
+
+  featureFlags.ads.enabled = !(config.ads?.globalKillSwitch ?? false);
+  featureFlags.ads.bannerEnabled = config.ads?.banner?.enabled ?? true;
+  featureFlags.ads.interstitialEnabled = config.ads?.interstitial?.enabled ?? true;
+  featureFlags.ads.rewardedEnabled = config.ads?.rewarded?.enabled ?? true;
+
+  featureFlags.festivalModal = config.features?.festivalModal ?? true;
+  featureFlags.crossPromotion = config.features?.crossPromotion ?? true;
+  featureFlags.reminders = config.features?.reminders ?? true;
+
+  const adFreeMins = config.features?.adFreeDurationMinutes;
+  if (adFreeMins && adFreeMins > 0) {
+    try {
+      AdManager.setAdFreeDuration(adFreeMins);
+    } catch (_e) {
+      // safe fallback
+    }
+  }
+}
 
 export function useMahavyomaConfig() {
   const [config, setConfig] = useState(fallbackConfig);
@@ -105,22 +129,34 @@ export function useMahavyomaConfig() {
     let isMounted = true;
 
     const loadConfig = async () => {
+      updateFeatureFlags(fallbackConfig);
       try {
         const cached = await AsyncStorage.getItem(CACHE_KEY);
         if (cached && isMounted) {
-          setConfig(JSON.parse(cached));
+          const parsed = JSON.parse(cached);
+          setConfig(parsed);
+          updateFeatureFlags(parsed);
         }
 
-        const response = await fetch(API_URL);
-        if (response.ok) {
-          const freshConfig = await response.json();
-          if (isMounted) {
-            setConfig(freshConfig);
-            await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(freshConfig));
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+
+        try {
+          const response = await fetch(API_URL, { signal: controller.signal });
+          clearTimeout(timeout);
+          if (response.ok) {
+            const freshConfig = await response.json();
+            if (isMounted) {
+              setConfig(freshConfig);
+              updateFeatureFlags(freshConfig);
+              await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(freshConfig));
+            }
           }
+        } finally {
+          clearTimeout(timeout);
         }
       } catch (error) {
-        console.log("Failed to fetch remote config. Using fallback/cache.", error);
+        updateFeatureFlags(fallbackConfig);
       } finally {
         if (isMounted) setLoading(false);
       }
