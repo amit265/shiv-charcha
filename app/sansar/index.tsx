@@ -22,7 +22,7 @@ export default function ShivSansarHomeScreen() {
   const categories: SansarCategory[] = [
     {
       id: 'stories',
-      title: '📖 शिव कथाएँ',
+      title: 'शिव कथाएँ',
       subtitle: 'सती, पार्वती, नीलकंठ व गंगा अवतरण की पावन गाथाएँ',
       icon: '📖',
       route: '/sansar/stories',
@@ -30,7 +30,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'jyotirlinga',
-      title: '🛕 12 ज्योतिर्लिंग',
+      title: '12 ज्योतिर्लिंग',
       subtitle: 'सोमनाथ से घृष्णेश्वर तक द्वादश पावन धाम दर्शन व ऑडियो',
       icon: '🛕',
       route: '/sansar/jyotirlinga',
@@ -38,7 +38,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'shakti-peeth',
-      title: '🌺 शक्ति पीठ',
+      title: 'शक्ति पीठ',
       subtitle: 'सती के पावन अंगों से सिद्ध 51 शक्ति पीठ दर्शन व इतिहास',
       icon: '🌺',
       route: '/sansar/shakti-peeth',
@@ -46,7 +46,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'family',
-      title: '👨‍👩‍👧 शिव परिवार',
+      title: 'शिव परिवार',
       subtitle: 'पार्वती, गणेश, कार्तिकेय व नंदी की अलौकिक महिमा',
       icon: '👨‍👩‍👧',
       route: '/sansar/family',
@@ -54,7 +54,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'swaroop',
-      title: '🔱 शिव के स्वरूप',
+      title: 'शिव के स्वरूप',
       subtitle: 'महादेव, नीलकंठ, नटराज, अर्धनारीश्वर व महाकाल रूप',
       icon: '🔱',
       route: '/sansar/swaroop',
