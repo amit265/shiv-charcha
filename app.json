@@ -74,6 +74,7 @@
       ],
       "expo-sharing",
       "expo-audio",
+      "./plugins/withRemoveForegroundService.js",
       [
         "expo-build-properties",
         {
