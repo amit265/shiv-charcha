@@ -254,6 +254,12 @@ export const AdManager = {
     return remaining > 0 ? Math.ceil(remaining / 60000) : 0;
   },
 
+  async getAdFreeRemainingSeconds(): Promise<number> {
+    const adFreeUntil = await getNumber(AD_FREE_UNTIL_KEY);
+    const remaining = adFreeUntil - Date.now();
+    return remaining > 0 ? Math.floor(remaining / 1000) : 0;
+  },
+
   async showAppOpenAd(): Promise<boolean> {
     if (Platform.OS === 'web' || !featureFlags.ads.enabled || !appOpenAdInstance) {
       return false;

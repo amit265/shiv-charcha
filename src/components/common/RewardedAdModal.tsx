@@ -24,17 +24,27 @@ type Props = {
   onRewardGranted: () => void;
 };
 
+type ModalStep = 'consent' | 'loading' | 'playing' | 'success';
+
 export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) {
   const { theme } = useTheme();
+  const [step, setStep] = useState<ModalStep>('consent');
   const [secondsLeft, setSecondsLeft] = useState(AD_DURATION_SECONDS);
-  const [completed, setCompleted] = useState(false);
   const [progressAnim] = useState(() => new Animated.Value(0));
-  const [isLoadingRealAd, setIsLoadingRealAd] = useState(true);
-  const [useSimulatedAd, setUseSimulatedAd] = useState(false);
 
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) {
+      setStep('consent');
+      setSecondsLeft(AD_DURATION_SECONDS);
+    }
+  }, [visible]);
 
+  const handleAcceptConsent = () => {
+    setStep('loading');
+    startAdLoading();
+  };
+
+  const startAdLoading = () => {
     let isMounted = true;
     let fallbackTimeout: ReturnType<typeof setTimeout>;
     let rewardedAd: any = null;
@@ -42,70 +52,50 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
     let unsubEarned: (() => void) | null = null;
     let unsubClosed: (() => void) | null = null;
 
-    const initTimer = setTimeout(() => {
-      if (!isMounted) return;
+    try {
+      rewardedAd = RewardedAd.createForAdRequest(adUnitId, {
+        requestNonPersonalizedAdsOnly: true,
+      });
 
-      try {
-        rewardedAd = RewardedAd.createForAdRequest(adUnitId, {
-          requestNonPersonalizedAdsOnly: true,
+      unsubLoaded = rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
+        if (!isMounted) return;
+        clearTimeout(fallbackTimeout);
+        try {
+          rewardedAd.show();
+        } catch {
+          setStep('playing');
+        }
+      });
+
+      unsubEarned = rewardedAd.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
+        if (!isMounted) return;
+        void AdManager.grantAdFree().then(() => {
+          setStep('success');
         });
+      });
 
-        unsubLoaded = rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-          if (!isMounted) return;
-          clearTimeout(fallbackTimeout);
-          setIsLoadingRealAd(false);
-          try {
-            rewardedAd.show();
-          } catch {
-            setUseSimulatedAd(true);
-          }
-        });
+      unsubClosed = rewardedAd.addAdEventListener('closed', () => {
+        if (!isMounted) return;
+        AdManager.setAdRecentlyClosed();
+        if (step !== 'success') {
+          onDismiss();
+        }
+      });
 
-        unsubEarned = rewardedAd.addAdEventListener(
-          RewardedAdEventType.EARNED_REWARD,
-          () => {
-            if (!isMounted) return;
-            void AdManager.grantAdFree().then(() => {
-              onRewardGranted();
-            });
-          }
-        );
+      fallbackTimeout = setTimeout(() => {
+        if (isMounted) {
+          setStep('playing');
+        }
+      }, 8000);
 
-        unsubClosed = rewardedAd.addAdEventListener(
-          'closed',
-          () => {
-            if (!isMounted) return;
-            AdManager.setAdRecentlyClosed();
-            onDismiss();
-          }
-        );
-
-        fallbackTimeout = setTimeout(() => {
-          if (isMounted) {
-            setIsLoadingRealAd(false);
-            setUseSimulatedAd(true);
-          }
-        }, 10000);
-
-        rewardedAd.load();
-      } catch {
-        setIsLoadingRealAd(false);
-        setUseSimulatedAd(true);
-      }
-    }, 0);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(initTimer);
-      clearTimeout(fallbackTimeout);
-      if (unsubLoaded) unsubLoaded();
-      if (unsubEarned) unsubEarned();
-      if (unsubClosed) unsubClosed();
-    };
-  }, [visible, onDismiss, onRewardGranted]);
+      rewardedAd.load();
+    } catch {
+      setStep('playing');
+    }
+  };
 
   useEffect(() => {
-    if (!visible || !useSimulatedAd) return;
+    if (!visible || step !== 'playing') return;
 
     progressAnim.setValue(0);
     const animation = Animated.timing(progressAnim, {
@@ -120,7 +110,9 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
       setSecondsLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          setCompleted(true);
+          void AdManager.grantAdFree().then(() => {
+            setStep('success');
+          });
           return 0;
         }
         return prev - 1;
@@ -131,7 +123,7 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
       clearInterval(timer);
       animation.stop();
     };
-  }, [visible, useSimulatedAd, progressAnim]);
+  }, [visible, step, progressAnim]);
 
   async function handleClaimReward() {
     await AdManager.grantAdFree();
@@ -150,23 +142,69 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onDismiss}>
       <View style={styles.overlay}>
         <View style={[styles.card, { backgroundColor: theme.cardBg }]}>
-          {isLoadingRealAd ? (
+          {step === 'consent' ? (
+            /* STEP 1: USER CONSENT PROMPT */
+            <View style={styles.consentContainer}>
+              <View style={[styles.header, { backgroundColor: theme.primary }]}>
+                <Text style={styles.headerTitle}>🎁 15 मिनट विज्ञापन-मुक्त अनुभव</Text>
+                <Text style={styles.headerSubtitle}>Ad-Free Devotional Mode</Text>
+              </View>
+
+              <View style={styles.consentBody}>
+                <Text style={{ fontSize: 44, marginBottom: 12 }}>🔱</Text>
+                <Text style={[styles.consentQuestion, { color: theme.textPrimary }]}>
+                  क्या आप 15 मिनट के लिए सम्पूर्ण ऐप को विज्ञापन-मुक्त बनाना चाहते हैं?
+                </Text>
+
+                <View style={[styles.consentNoteBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                  <Text style={[styles.consentNoteText, { color: theme.primary }]}>
+                    🌸 1 छोटा प्रायोजित वीडियो विज्ञापन देखने के पश्चात् 15 मिनट तक कोई भी Banner या Native विज्ञापन नहीं दिखेगा।
+                  </Text>
+                </View>
+
+                <View style={styles.consentActions}>
+                  <Pressable
+                    style={[styles.acceptBtn, { backgroundColor: theme.primary }]}
+                    onPress={handleAcceptConsent}
+                  >
+                    <Text style={styles.acceptBtnText}>▶️ हाँ, वीडियो देखें (Watch Ad)</Text>
+                  </Pressable>
+
+                  <Pressable
+                    style={[styles.cancelBtn, { borderColor: theme.border }]}
+                    onPress={onDismiss}
+                  >
+                    <Text style={[styles.cancelBtnText, { color: theme.textSecondary }]}>रद्द करें (Cancel)</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          ) : step === 'loading' ? (
+            /* STEP 2: AD LOADING */
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={theme.primary} />
               <Text style={[styles.loadingText, { color: theme.textPrimary }]}>विज्ञापन लोड हो रहा है...</Text>
-              <Text style={[styles.loadingSubtext, { color: theme.textSecondary }]}>Please wait a moment...</Text>
+              <Text style={[styles.loadingSubtext, { color: theme.textSecondary }]}>Loading rewarded devotional video...</Text>
             </View>
-          ) : completed ? (
+          ) : step === 'success' ? (
+            /* STEP 3: SUCCESS & TIMER REWARD CONFIRMATION */
             <View style={styles.completionContainer}>
               <Text style={{ fontSize: 60 }}>🎉</Text>
-              <Text style={[styles.successTitle, { color: theme.primary }]}>बहुत बढ़िया!</Text>
-              <Text style={[styles.successSubtitle, { color: theme.textPrimary }]}>आपने 15 मिनट के लिए विज्ञापन हटा दिए!</Text>
-              <Text style={[styles.successNote, { color: theme.textSecondary }]}>Ads removed for 15 minutes</Text>
+              <Text style={[styles.successTitle, { color: theme.primary }]}>बहुत बढ़िया! (Ad-Free Active)</Text>
+              <Text style={[styles.successSubtitle, { color: theme.textPrimary }]}>
+                आपने 15 मिनट के लिए 100% विज्ञापन-मुक्त साधना अनलॉक कर ली है!
+              </Text>
+              <View style={[styles.timerBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                <Text style={[styles.timerBadgeText, { color: theme.primary }]}>
+                  ⏱️ 15:00 मिनट शेष (Live Countdown Active)
+                </Text>
+              </View>
               <Pressable style={[styles.claimButton, { backgroundColor: theme.primary }]} onPress={handleClaimReward}>
-                <Text style={styles.claimButtonText}>✓ Ad-Free Mode सक्रिय करें</Text>
+                <Text style={styles.claimButtonText}>✓ साधना जारी रखें (Continue)</Text>
               </Pressable>
             </View>
           ) : (
+            /* STEP 4: VIDEO PLAYING (SIMULATED / BACKUP) */
             <>
               <View style={[styles.header, { backgroundColor: theme.primary }]}>
                 <Text style={styles.headerTitle}>🎬 Devotional Ad Video</Text>
@@ -175,7 +213,7 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
 
               <View style={[styles.videoPlaceholder, { backgroundColor: theme.surfaceElevated }]}>
                 <Text style={{ fontSize: 48 }}>🎬</Text>
-                <Text style={[styles.videoLabel, { color: theme.textPrimary }]}>विज्ञापन चल रहा है...</Text>
+                <Text style={[styles.videoLabel, { color: theme.textPrimary }]}>प्रायोजित वीडियो चल रहा है...</Text>
                 <Text style={[styles.videoSublabel, { color: theme.textSecondary }]}>Ad is playing</Text>
               </View>
 
@@ -201,10 +239,7 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
                     : `${SKIP_LOCK_SECONDS - (AD_DURATION_SECONDS - secondsLeft)} सेकंड में छोड़ने का विकल्प`}
                 </Text>
                 <Pressable
-                  style={[
-                    styles.skipButton,
-                    { borderColor: theme.border },
-                  ]}
+                  style={[styles.skipButton, { borderColor: theme.border }]}
                   onPress={canSkip ? onDismiss : undefined}
                 >
                   <Text style={[styles.skipText, { color: theme.primary }]}>
@@ -345,12 +380,20 @@ const styles = StyleSheet.create({
     marginTop: 6,
     textAlign: 'center',
   },
-  successNote: {
-    fontSize: 12,
-    marginTop: 4,
+  timerBadge: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  timerBadgeText: {
+    fontSize: 13,
+    fontWeight: 'bold',
   },
   claimButton: {
-    marginTop: 18,
+    marginTop: 14,
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 14,
@@ -361,5 +404,58 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  consentContainer: {
+    width: '100%',
+  },
+  consentBody: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  consentQuestion: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 14,
+  },
+  consentNoteBox: {
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    marginBottom: 20,
+    width: '100%',
+  },
+  consentNoteText: {
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  consentActions: {
+    width: '100%',
+    gap: 10,
+  },
+  acceptBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  acceptBtnText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  cancelBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  cancelBtnText: {
+    fontWeight: '600',
+    fontSize: 14,
   },
 });

@@ -33,18 +33,41 @@ export default function SettingsScreen() {
   const { config } = useRemoteConfig();
   const { isAdFree, refreshAdState } = useAdState();
   const [showRewardedModal, setShowRewardedModal] = useState(false);
-  const [remainingAdFreeMins, setRemainingAdFreeMins] = useState(0);
+  const [remainingSecs, setRemainingSecs] = useState(0);
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'copyright' | 'disclaimer' | null>(null);
 
   useEffect(() => {
     loadPreferences();
     checkAdFreeTime();
-  }, []);
+  }, [isAdFree]);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isAdFree) {
+      interval = setInterval(async () => {
+        const secs = await AdManager.getAdFreeRemainingSeconds();
+        setRemainingSecs(secs);
+        if (secs <= 0) {
+          await refreshAdState();
+        }
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isAdFree, refreshAdState]);
 
   const checkAdFreeTime = async () => {
-    const mins = await AdManager.getAdFreeRemainingMinutes();
-    setRemainingAdFreeMins(mins);
+    const secs = await AdManager.getAdFreeRemainingSeconds();
+    setRemainingSecs(secs);
+  };
+
+  const formatTimer = (totalSecs: number) => {
+    if (totalSecs <= 0) return '00:00';
+    const m = Math.floor(totalSecs / 60);
+    const s = totalSecs % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
   const loadPreferences = async () => {
@@ -219,7 +242,7 @@ export default function SettingsScreen() {
         {/* SECTION 3.5: AD-FREE REWARDED EXPERIENCE */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>विज्ञापन-मुक्त अनुभव (Ad-Free Mode) 🎬</Text>
         <TouchableOpacity
-          style={[styles.settingCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+          style={[styles.settingCard, { backgroundColor: theme.cardBg, borderColor: isAdFree ? theme.accent : theme.borderGold }]}
           onPress={() => setShowRewardedModal(true)}
           activeOpacity={0.8}
         >
@@ -229,15 +252,15 @@ export default function SettingsScreen() {
             </View>
             <View style={styles.cardTextCol}>
               <Text style={[styles.itemTitle, { color: theme.textPrimary }]}>15 मिनट विज्ञापन-मुक्त साधना</Text>
-              <Text style={[styles.itemDesc, { color: theme.textSecondary }]}>
+              <Text style={[styles.itemDesc, { color: isAdFree ? theme.primary : theme.textSecondary, fontWeight: isAdFree ? 'bold' : 'normal' }]}>
                 {isAdFree
-                  ? `सक्रिय! शेष समय: ${remainingAdFreeMins} मिनट`
+                  ? `⏱️ 100% विज्ञापन-मुक्त: ${formatTimer(remainingSecs)} शेष`
                   : 'छोटा वीडियो देखें और 15 मिनट विज्ञापन हटाएँ'}
               </Text>
             </View>
-            <View style={[styles.actionBadge, { backgroundColor: theme.primary }]}>
+            <View style={[styles.actionBadge, { backgroundColor: isAdFree ? theme.accent : theme.primary }]}>
               <Text style={[styles.actionBadgeText, { color: theme.textWhite }]}>
-                {isAdFree ? 'सक्रिय ✓' : 'देखें ➔'}
+                {isAdFree ? `⏱️ ${formatTimer(remainingSecs)}` : 'देखें ➔'}
               </Text>
             </View>
           </View>

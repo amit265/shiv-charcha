@@ -13,6 +13,10 @@ export const AdManager = {
     return 0;
   },
 
+  async getAdFreeRemainingSeconds(): Promise<number> {
+    return 0;
+  },
+
   setAdFreeDuration(_mins: number) {},
 
   async grantAdFree() {
