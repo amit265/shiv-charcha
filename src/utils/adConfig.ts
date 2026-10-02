@@ -13,11 +13,11 @@ export type AdUnits = {
 
 export const PRODUCTION_AD_UNITS: AdUnits = {
   android: {
-    appOpen: 'ca-app-pub-7433519007687449/5354580599',
-    banner: 'ca-app-pub-7433519007687449/9749121177',
-    interstitial: 'ca-app-pub-7433519007687449/7028512503',
-    rewarded: 'ca-app-pub-7433519007687449/5715430831',
-    native: 'ca-app-pub-7433519007687449/5809876165',
+    appOpen: 'ca-app-pub-7433519007687449/7805110380',
+    banner: 'ca-app-pub-7433519007687449/1071257633',
+    interstitial: 'ca-app-pub-7433519007687449/9301101443',
+    rewarded: 'ca-app-pub-7433519007687449/8758175965',
+    native: 'ca-app-pub-7433519007687449/1115403942',
   },
   ios: {
     appOpen: 'ca-app-pub-3940256099942544/5662855259',
