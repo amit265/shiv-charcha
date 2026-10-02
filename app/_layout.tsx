@@ -24,6 +24,7 @@ import { useDeepLinkHandler } from '@/hooks/useDeepLinkHandler';
 import { RemoteConfigProvider } from '@/context/RemoteConfigContext';
 import { UpdateService, UpdateCheckResult } from '@/services/updateService';
 import { UpdateModal } from '@/components/common/UpdateModal';
+import { Analytics } from '@/services/analytics/analytics';
 
 // Prevent native splash screen from auto-hiding until initial mount is done
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -37,6 +38,7 @@ function RootNavigator() {
   useDeepLinkHandler();
 
   useEffect(() => {
+    Analytics.logScreen('App_Launch');
     checkForAppUpdates();
   }, []);
 

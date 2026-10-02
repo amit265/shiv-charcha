@@ -13,6 +13,7 @@ import { StorageService, getFirstSutraText, getDiscipleTitle, defaultPreferences
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
+import { Analytics } from '@/services/analytics/analytics';
 
 type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -40,6 +41,7 @@ export default function ShivCharchaScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      Analytics.logScreen('ShivCharchaTab');
       loadData();
     }, [])
   );

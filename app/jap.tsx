@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { JapCounter } from '@/components/jap/JapCounter';
+import { Analytics } from '@/services/analytics/analytics';
 
 export default function JapScreen() {
   const { theme } = useTheme();
+
+  useEffect(() => {
+    Analytics.logScreen('JapScreen');
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
