@@ -14,6 +14,7 @@
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
       "versionCode": 1,
+      "supportsTablet": true,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
@@ -64,6 +65,7 @@
       "@react-native-firebase/analytics",
       "@react-native-firebase/crashlytics",
       "expo-router",
+      "expo-system-ui",
       [
         "expo-splash-screen",
         {
@@ -79,7 +81,9 @@
         "expo-build-properties",
         {
           "android": {
-            "enableProguardInReleaseBuilds": true
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "extraProguardRules": "-repackageclasses ''\n-allowaccessmodification\n-optimizationpasses 5"
           }
         }
       ]
