@@ -22,17 +22,30 @@ import { safeShare } from '@/services/shareService';
 import { APP_CONFIG, APP_LINKS, CROSS_PROMO_APPS } from '@/constants/links';
 import { useRemoteConfig } from '@/context/RemoteConfigContext';
 import { CrossPromotionCard } from '@/components/common/CrossPromotionCard';
+import { useAdState } from '@/context/AdStateContext';
+import { RewardedAdModal } from '@/components/common/RewardedAdModal';
+import { SmartBanner } from '@/components/common/SmartBanner';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const { theme, themeId } = useTheme();
   const { config } = useRemoteConfig();
+  const { isAdFree, refreshAdState } = useAdState();
+  const [showRewardedModal, setShowRewardedModal] = useState(false);
+  const [remainingAdFreeMins, setRemainingAdFreeMins] = useState(0);
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'copyright' | 'disclaimer' | null>(null);
 
   useEffect(() => {
     loadPreferences();
+    checkAdFreeTime();
   }, []);
+
+  const checkAdFreeTime = async () => {
+    const mins = await AdManager.getAdFreeRemainingMinutes();
+    setRemainingAdFreeMins(mins);
+  };
 
   const loadPreferences = async () => {
     const p = await StorageService.getPreferences();
@@ -202,6 +215,33 @@ export default function SettingsScreen() {
             <Text style={{ color: theme.accent, fontWeight: 'bold' }}>रेट करें ➔</Text>
           </TouchableOpacity>
         </View>
+
+        {/* SECTION 3.5: AD-FREE REWARDED EXPERIENCE */}
+        <Text style={[styles.sectionTitle, { color: theme.primary }]}>विज्ञापन-मुक्त अनुभव (Ad-Free Mode) 🎬</Text>
+        <TouchableOpacity
+          style={[styles.settingCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+          onPress={() => setShowRewardedModal(true)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconCircle, { backgroundColor: theme.surfaceElevated }]}>
+              <Text style={{ fontSize: 22 }}>🎁</Text>
+            </View>
+            <View style={styles.cardTextCol}>
+              <Text style={[styles.itemTitle, { color: theme.textPrimary }]}>15 मिनट विज्ञापन-मुक्त साधना</Text>
+              <Text style={[styles.itemDesc, { color: theme.textSecondary }]}>
+                {isAdFree
+                  ? `सक्रिय! शेष समय: ${remainingAdFreeMins} मिनट`
+                  : 'छोटा वीडियो देखें और 15 मिनट विज्ञापन हटाएँ'}
+              </Text>
+            </View>
+            <View style={[styles.actionBadge, { backgroundColor: theme.primary }]}>
+              <Text style={[styles.actionBadgeText, { color: theme.textWhite }]}>
+                {isAdFree ? 'सक्रिय ✓' : 'देखें ➔'}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
 
         {/* SECTION 4: OUR OTHER APPS (MAHAVYOMA STUDIO DYNAMIC CROSS PROMOTION) */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>हमारे अन्य पावन ऐप (Mahavyoma Ecosystem) 📱</Text>
@@ -450,6 +490,20 @@ export default function SettingsScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Rewarded Ad-Free Modal */}
+      <RewardedAdModal
+        visible={showRewardedModal}
+        onDismiss={() => setShowRewardedModal(false)}
+        onRewardGranted={() => {
+          setShowRewardedModal(false);
+          refreshAdState();
+          checkAdFreeTime();
+        }}
+      />
+
+      {/* Sticky Bottom AdMob Banner */}
+      <SmartBanner />
     </View>
   );
 }

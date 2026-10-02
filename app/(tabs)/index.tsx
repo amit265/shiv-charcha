@@ -17,6 +17,7 @@ import { OnboardingModal } from '@/components/common/OnboardingModal';
 import { getTodayPanchang } from '@/services/panchangService';
 import { FormattedText } from '@/components/common/FormattedText';
 import { resolveImageSource } from '@/constants/imageAssets';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -451,6 +452,9 @@ export default function HomeScreen() {
         onClose={() => setShowOnboarding(false)}
         onComplete={handleOnboardingComplete}
       />
+
+      {/* Sticky Bottom AdMob Banner */}
+      <SmartBanner />
     </View>
   );
 }

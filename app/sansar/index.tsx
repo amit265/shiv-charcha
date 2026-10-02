@@ -62,7 +62,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'symbols',
-      title: '🕉️ शिव के प्रतीक',
+      title: 'शिव के प्रतीक',
       subtitle: 'त्रिशूल, डमरू, रुद्राक्ष, चंद्रमा, भस्म व त्रिनेत्र का अर्थ',
       icon: '🕉️',
       route: '/sansar/symbols',
@@ -70,7 +70,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'yatra',
-      title: '📍 शिव यात्रा (Interactive Map)',
+      title: 'शिव यात्रा (Interactive Map)',
       subtitle: 'भारत के नक्शे पर ज्योतिर्लिंग व तीर्थों की डिजिटल यात्रा',
       icon: '📍',
       route: '/sansar/yatra',
@@ -78,7 +78,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'temples',
-      title: '🛕 प्रसिद्ध शिव मंदिर',
+      title: 'प्रसिद्ध शिव मंदिर',
       subtitle: 'पशुपतिनाथ, तुंगनाथ, अमरनाथ व देश-विदेश के शिवालय',
       icon: '🛕',
       route: '/sansar/temples',
@@ -86,7 +86,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'festivals',
-      title: '📅 शिव पर्व एवं उत्सव',
+      title: 'शिव पर्व एवं उत्सव',
       subtitle: 'महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत की विधि',
       icon: '📅',
       route: '/sansar/festivals',
@@ -94,7 +94,7 @@ export default function ShivSansarHomeScreen() {
     },
     {
       id: 'stotra',
-      title: '📿 शिव स्तोत्र व मंत्र',
+      title: 'शिव स्तोत्र व मंत्र',
       subtitle: 'तांडव स्तोत्र, रुद्राष्टकम, महामृत्युंजय व लिंगाष्टकम पाठ',
       icon: '📿',
       route: '/sansar/stotra',

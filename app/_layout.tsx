@@ -25,6 +25,8 @@ import { RemoteConfigProvider } from '@/context/RemoteConfigContext';
 import { UpdateService, UpdateCheckResult } from '@/services/updateService';
 import { UpdateModal } from '@/components/common/UpdateModal';
 import { Analytics } from '@/services/analytics/analytics';
+import { AdStateProvider } from '@/context/AdStateContext';
+import { AdManager } from '@/services/analytics/AdManager';
 
 // Prevent native splash screen from auto-hiding until initial mount is done
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -39,6 +41,7 @@ function RootNavigator() {
 
   useEffect(() => {
     Analytics.logScreen('App_Launch');
+    AdManager.initialize();
     checkForAppUpdates();
   }, []);
 
@@ -171,37 +174,39 @@ export default function RootLayout() {
         <ThemeProvider>
           <AudioProvider>
             <RemoteConfigProvider>
-              <WebDeviceFrame>
-                <RootNavigator />
+              <AdStateProvider>
+                <WebDeviceFrame>
+                  <RootNavigator />
 
-              {/* Custom Animated Splash Screen Overlay */}
-              {isSplashVisible && (
-                <Animated.View style={[StyleSheet.absoluteFill, styles.splashContainer, animatedSplashStyle]}>
-                  <StatusBar style="light" animated />
-                  <View style={styles.splashContent}>
-                    {/* Rotating & Scaling App Icon */}
-                    <Animated.View style={[styles.splashIconWrapper, animatedLogoStyle]}>
-                      <Image
-                        source={require('../assets/images/splash-icon.png')}
-                        style={styles.splashIconImage}
-                        resizeMode="contain"
-                      />
-                    </Animated.View>
+                {/* Custom Animated Splash Screen Overlay */}
+                {isSplashVisible && (
+                  <Animated.View style={[StyleSheet.absoluteFill, styles.splashContainer, animatedSplashStyle]}>
+                    <StatusBar style="light" animated />
+                    <View style={styles.splashContent}>
+                      {/* Rotating & Scaling App Icon */}
+                      <Animated.View style={[styles.splashIconWrapper, animatedLogoStyle]}>
+                        <Image
+                          source={require('../assets/images/splash-icon.png')}
+                          style={styles.splashIconImage}
+                          resizeMode="contain"
+                        />
+                      </Animated.View>
 
-                    {/* Fading & Sliding Brand Text */}
-                    <Animated.View style={[styles.splashTextContainer, animatedTextStyle]}>
-                      <Text style={styles.splashTitle}>शिव चर्चा</Text>
-                      <Text style={styles.splashSubtitle}>हर हर महादेव</Text>
-                    </Animated.View>
-                  </View>
+                      {/* Fading & Sliding Brand Text */}
+                      <Animated.View style={[styles.splashTextContainer, animatedTextStyle]}>
+                        <Text style={styles.splashTitle}>शिव चर्चा</Text>
+                        <Text style={styles.splashSubtitle}>हर हर महादेव</Text>
+                      </Animated.View>
+                    </View>
 
-                  {/* Developer Branding */}
-                  <Text style={styles.splashDeveloperText}>
-                    MAHAVYOMA STUDIO
-                  </Text>
-                </Animated.View>
-              )}
-              </WebDeviceFrame>
+                    {/* Developer Branding */}
+                    <Text style={styles.splashDeveloperText}>
+                      MAHAVYOMA STUDIO
+                    </Text>
+                  </Animated.View>
+                )}
+                </WebDeviceFrame>
+              </AdStateProvider>
             </RemoteConfigProvider>
           </AudioProvider>
         </ThemeProvider>

@@ -14,6 +14,7 @@ import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { Analytics } from '@/services/analytics/analytics';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -735,6 +736,9 @@ export default function ShivCharchaScreen() {
           </View>
         )}
       </ScrollView>
+
+      {/* Sticky Bottom AdMob Banner */}
+      <SmartBanner />
     </View>
   );
 }
