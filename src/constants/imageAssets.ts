@@ -223,6 +223,15 @@ export const SYMBOL_IMAGES: Record<string, ImageSourcePropType> = {
   third_eye: require('../../assets/images/symbols/symbol_trinetra.jpg'),
   trinetra: require('../../assets/images/symbols/symbol_trinetra.jpg'),
   symbol_trinetra: require('../../assets/images/symbols/symbol_trinetra.jpg'),
+  shivling: require('../../assets/images/symbols/symbol_shivling.jpg'),
+  symbol_shivling: require('../../assets/images/symbols/symbol_shivling.jpg'),
+  trishula: require('../../assets/images/symbols/symbol_trishula.jpg'),
+  symbol_trishula: require('../../assets/images/symbols/symbol_trishula.jpg'),
+  naga: require('../../assets/images/symbols/symbol_naga.jpg'),
+  symbol_naga: require('../../assets/images/symbols/symbol_naga.jpg'),
+  'crescent-moon': require('../../assets/images/symbols/symbol_crescent_moon.jpg'),
+  crescent_moon: require('../../assets/images/symbols/symbol_crescent_moon.jpg'),
+  symbol_crescent_moon: require('../../assets/images/symbols/symbol_crescent_moon.jpg'),
 };
 
 // Sansaar categories and wallpapers

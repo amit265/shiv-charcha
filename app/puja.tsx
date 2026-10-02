@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { ShivlingPujaCanvas } from '@/components/puja/ShivlingPujaCanvas';
+import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 
 export default function PujaScreen() {
   const { theme } = useTheme();
@@ -13,6 +14,7 @@ export default function PujaScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <ShivlingPujaCanvas />
+        <ContextualCrossPromotion targetAppId="vrat-sathi" style={{ paddingHorizontal: 0 }} />
       </ScrollView>
     </View>
   );

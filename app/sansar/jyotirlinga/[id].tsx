@@ -10,6 +10,7 @@ import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 
 import { FormattedText } from '@/components/common/FormattedText';
+import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 
 export default function JyotirlingaDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -94,6 +95,9 @@ export default function JyotirlingaDetailScreen() {
             </View>
           )}
         </View>
+
+        {/* Cross Promotion Card for Jyotirlinga Explorer */}
+        <ContextualCrossPromotion targetAppId="jyotirlinga" style={{ paddingHorizontal: 0 }} />
 
         {/* MAP & SHARE ACTION BUTTONS */}
         <View style={styles.actionsRow}>

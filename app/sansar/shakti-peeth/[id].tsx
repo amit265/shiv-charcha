@@ -9,6 +9,7 @@ import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
+import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 
 export default function ShaktiPeethDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -92,6 +93,9 @@ export default function ShaktiPeethDetailScreen() {
             </View>
           )}
         </View>
+
+        {/* Cross Promotion Card for Shakti Peetha Explorer */}
+        <ContextualCrossPromotion targetAppId="shakti-peetha" style={{ paddingHorizontal: 0 }} />
 
         {/* ACTION BUTTONS */}
         <View style={styles.actionsRow}>

@@ -12,6 +12,7 @@ import { safeShare } from '@/services/shareService';
 import { StorageService, getFirstSutraText, getDiscipleTitle, defaultPreferences } from '@/services/storage';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
+import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 
 type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
 
@@ -426,6 +427,9 @@ export default function ShivCharchaScreen() {
             )}
           </View>
         </View>
+
+        {/* Cross Promotion Banner */}
+        <ContextualCrossPromotion targetAppId="vrat-sathi" style={{ paddingHorizontal: 0 }} />
 
         {/* PHASE 2: CORE PILLARS OF SHIV CHARCHA */}
         <View style={styles.pillarsContainer}>

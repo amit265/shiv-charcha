@@ -7,6 +7,7 @@ import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { sacredDates } from '@/content/dates';
 import { getTodayPanchang, PanchangData } from '@/services/panchangService';
+import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 
 const HINDI_MONTHS = [
   'जनवरी',
@@ -286,6 +287,9 @@ export default function DedicatedCalendarScreen() {
             </View>
           );
         })()}
+
+        {/* Cross promotion card to Hindi Calendar */}
+        <ContextualCrossPromotion targetAppId="hindi-calendar-2027" style={{ paddingHorizontal: 0 }} />
 
         {/* Highlighted Sacred Dates List */}
         <Text style={[styles.listSectionTitle, { color: theme.primary }]}>महत्वपूर्ण शिव चर्चा तिथियाँ 🌺</Text>
