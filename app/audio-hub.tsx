@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput 
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { SmartBanner } from '@/components/common/SmartBanner';
 import { useTheme } from '@/context/ThemeContext';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
@@ -172,6 +173,8 @@ export default function AudioHubScreen() {
           })}
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

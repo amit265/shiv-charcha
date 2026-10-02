@@ -452,9 +452,6 @@ export default function HomeScreen() {
         onClose={() => setShowOnboarding(false)}
         onComplete={handleOnboardingComplete}
       />
-
-      {/* Sticky Bottom AdMob Banner */}
-      <SmartBanner />
     </View>
   );
 }

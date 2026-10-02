@@ -736,9 +736,6 @@ export default function ShivCharchaScreen() {
           </View>
         )}
       </ScrollView>
-
-      {/* Sticky Bottom AdMob Banner */}
-      <SmartBanner />
     </View>
   );
 }

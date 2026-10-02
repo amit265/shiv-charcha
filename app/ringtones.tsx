@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Header } from '@/components/common/Header';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { SmartBanner } from '@/components/common/SmartBanner';
 import { useTheme } from '@/context/ThemeContext';
 import { ringtonesData } from '@/content/ringtones';
 import { shadows } from '@/theme/colors';
@@ -82,6 +83,8 @@ export default function RingtonesScreen() {
         </React.Fragment>
         ))}
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }
