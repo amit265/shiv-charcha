@@ -87,7 +87,11 @@
           "android": {
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": true,
-            "extraProguardRules": "-repackageclasses ''\n-allowaccessmodification\n-optimizationpasses 5"
+            "extraProguardRules": "-repackageclasses ''\n-allowaccessmodification\n-optimizationpasses 5",
+            "gradleArgs": [
+              "-Dorg.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m",
+              "-Dorg.gradle.parallel=true"
+            ]
           }
         }
       ]

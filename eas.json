@@ -6,6 +6,10 @@
   "build": {
     "development": {
       "distribution": "internal",
+      "env": {
+        "GRADLE_OPTS": "-Xmx4g -XX:MaxMetaspaceSize=1g",
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
       "android": {
         "buildType": "apk"
       },
@@ -16,6 +20,10 @@
     },
     "preview": {
       "distribution": "internal",
+      "env": {
+        "GRADLE_OPTS": "-Xmx4g -XX:MaxMetaspaceSize=1g",
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
       "android": {
         "buildType": "apk"
       }
@@ -24,6 +32,10 @@
       "autoIncrement": true,
       "distribution": "store",
       "channel": "production",
+      "env": {
+        "GRADLE_OPTS": "-Xmx4g -XX:MaxMetaspaceSize=1g",
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
       "android": {
         "buildType": "app-bundle"
       },
