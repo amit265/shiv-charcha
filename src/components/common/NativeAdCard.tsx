@@ -8,11 +8,19 @@ import { getGoogleAdUnitId } from '@/services/analytics/AdManager';
 type NativeAdCardProps = {
   index?: number;
   forceShow?: boolean;
+  onAdLoaded?: () => void;
+  onAdFailedToLoad?: () => void;
 };
 
-export const NativeAdCard = React.memo(function NativeAdCard({ index, forceShow = false }: NativeAdCardProps) {
+export const NativeAdCard = React.memo(function NativeAdCard({
+  index,
+  forceShow = false,
+  onAdLoaded,
+  onAdFailedToLoad,
+}: NativeAdCardProps) {
   const { isAdFree } = useAdState();
   const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const adUnitId = getGoogleAdUnitId('native');
 
@@ -24,7 +32,7 @@ export const NativeAdCard = React.memo(function NativeAdCard({ index, forceShow 
     return (index - 2) % frequency !== 0;
   })();
 
-  if (Platform.OS === 'web' || isAdFree || !featureFlags.ads.enabled || shouldSkipAd) {
+  if (Platform.OS === 'web' || isAdFree || !featureFlags.ads.enabled || shouldSkipAd || failed) {
     return null;
   }
 
@@ -32,7 +40,7 @@ export const NativeAdCard = React.memo(function NativeAdCard({ index, forceShow 
   const { BannerAd, BannerAdSize } = require('react-native-google-mobile-ads');
 
   return (
-    <View style={[styles.container, !loaded && { display: 'none' }]}>
+    <View style={loaded ? styles.container : styles.hiddenContainer}>
       <View style={[styles.adWrapper, loaded && { backgroundColor: colors.maroonDark, borderColor: colors.goldPrimary }]}>
         <BannerAd
           unitId={adUnitId}
@@ -40,8 +48,16 @@ export const NativeAdCard = React.memo(function NativeAdCard({ index, forceShow 
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
-          onAdLoaded={() => setLoaded(true)}
-          onAdFailedToLoad={() => setLoaded(false)}
+          onAdLoaded={() => {
+            setLoaded(true);
+            setFailed(false);
+            onAdLoaded?.();
+          }}
+          onAdFailedToLoad={() => {
+            setLoaded(false);
+            setFailed(true);
+            onAdFailedToLoad?.();
+          }}
         />
       </View>
     </View>
@@ -55,10 +71,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  hiddenContainer: {
+    height: 0,
+    width: 0,
+    opacity: 0,
+    overflow: 'hidden',
+    marginVertical: 0,
+    padding: 0,
+  },
   adWrapper: {
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: 'transparent',
-  }
+  },
 });

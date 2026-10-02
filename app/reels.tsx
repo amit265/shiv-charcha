@@ -229,6 +229,7 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
 };
 const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const insets = useSafeAreaInsets();
+  const [adLoaded, setAdLoaded] = useState<boolean | null>(null);
   const topInsetPadding = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44) + 8;
   const bottomInsetPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 16 : 0) + 12;
 
@@ -245,12 +246,31 @@ const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) 
           </View>
         </View>
 
-        <View style={styles.quoteCardCenter}>
-          <Text style={{ fontSize: 13, color: colors.goldLight, marginBottom: 12, fontWeight: 'bold' }}>
-            🌸 प्रायोजित संदेश
-          </Text>
-          <NativeAdCard forceShow />
-        </View>
+        {adLoaded !== false ? (
+          <View style={adLoaded ? styles.quoteCardCenter : styles.hiddenAdContainer}>
+            {adLoaded && (
+              <Text style={{ fontSize: 13, color: colors.goldLight, marginBottom: 12, fontWeight: 'bold' }}>
+                🌸 प्रायोजित संदेश
+              </Text>
+            )}
+            <NativeAdCard
+              forceShow
+              onAdLoaded={() => setAdLoaded(true)}
+              onAdFailedToLoad={() => setAdLoaded(false)}
+            />
+          </View>
+        ) : (
+          <View style={styles.quoteCardCenter}>
+            <View style={styles.omWatermark}>
+              <Text style={styles.omText}>🕉️</Text>
+            </View>
+            <Text style={styles.quoteBodyText}>
+              "हर हर महादेव • ॐ नमः शिवाय"
+            </Text>
+            <View style={styles.authorDivider} />
+            <Text style={styles.authorText}>शिव महिमा 🔱</Text>
+          </View>
+        )}
       </View>
       <View style={[styles.bottomHint, { paddingBottom: bottomInsetPadding }]}>
         <Text style={styles.hintText}>ऊपर स्क्रॉल करें 👆</Text>
@@ -397,6 +417,12 @@ const styles = StyleSheet.create({
     borderWidth: 1.8,
     borderColor: colors.goldPrimary,
     ...shadows.gold,
+  },
+  hiddenAdContainer: {
+    height: 0,
+    width: 0,
+    opacity: 0,
+    overflow: 'hidden',
   },
   omWatermark: {
     width: 48,

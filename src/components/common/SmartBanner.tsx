@@ -9,24 +9,32 @@ export function SmartBanner() {
   const { isAdFree } = useAdState();
   const insets = useSafeAreaInsets();
   const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  if (Platform.OS === 'web' || !featureFlags.ads.enabled || isAdFree) {
+  if (Platform.OS === 'web' || !featureFlags.ads.enabled || isAdFree || failed) {
     return null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { BannerAd, BannerAdSize } = require('react-native-google-mobile-ads');
   const adUnitId = getGoogleAdUnitId('banner');
 
   return (
-    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }, !loaded && { display: 'none' }]}>
+    <View style={loaded ? [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }] : styles.hiddenContainer}>
       <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           requestNonPersonalizedAdsOnly: true,
         }}
-        onAdLoaded={() => setLoaded(true)}
-        onAdFailedToLoad={() => setLoaded(false)}
+        onAdLoaded={() => {
+          setLoaded(true);
+          setFailed(false);
+        }}
+        onAdFailedToLoad={() => {
+          setLoaded(false);
+          setFailed(true);
+        }}
       />
     </View>
   );
@@ -38,5 +46,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+  },
+  hiddenContainer: {
+    height: 0,
+    width: 0,
+    opacity: 0,
+    overflow: 'hidden',
+    paddingBottom: 0,
   },
 });
