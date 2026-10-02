@@ -11,6 +11,7 @@ import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 export default function ShivaStoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -85,6 +86,9 @@ export default function ShivaStoryDetailScreen() {
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>💡 कहानी का सरल सार</Text>
           <FormattedText text={story.shortSummaryHindi} style={[styles.summaryText, { color: theme.textPrimary }]} />
         </View>
+
+        {/* Inline Native Ad */}
+        <NativeAdCard forceShow />
 
         {/* SECTION: VISUAL STORY MODE (दृश्य कथा) */}
         {story.visualScenes && story.visualScenes.length > 0 && (

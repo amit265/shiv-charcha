@@ -10,6 +10,8 @@ import { RelatedContentSection } from '@/components/sansar/RelatedContentSection
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivaStotraDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -87,6 +89,9 @@ export default function ShivaStotraDetailScreen() {
           <FormattedText text={stotra.benefits} style={[styles.summaryText, { color: theme.textPrimary }]} />
         </View>
 
+        {/* Inline Native Ad */}
+        <NativeAdCard forceShow />
+
         {/* SECTION: संस्कृत श्लोक एवं हिंदी अनुवाद */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>📜 श्लोक एवं हिंदी अनुवाद</Text>
@@ -145,6 +150,8 @@ export default function ShivaStotraDetailScreen() {
           ]}
         />
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

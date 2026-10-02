@@ -22,6 +22,7 @@ import { shivaBackgrounds } from '@/constants/shivaImages';
 import { colors, shadows } from '@/theme/colors';
 import { safeShare } from '@/services/shareService';
 import { useAudio } from '@/context/AudioContext';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -226,6 +227,37 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
     </View>
   );
 };
+const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const insets = useSafeAreaInsets();
+  const topInsetPadding = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44) + 8;
+  const bottomInsetPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 16 : 0) + 12;
+
+  return (
+    <View style={styles.reelItemContainer}>
+      <View style={styles.bgImage}>
+        <View style={styles.darkGradientOverlay} />
+        <View style={[styles.topHeader, { paddingTop: topInsetPadding }]}>
+          <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.8}>
+            <Text style={styles.closeIcon}>✕</Text>
+          </TouchableOpacity>
+          <View style={styles.categoryBadge}>
+            <Text style={styles.categoryText}>📢 प्रायोजित भक्ति संदेश</Text>
+          </View>
+        </View>
+
+        <View style={styles.quoteCardCenter}>
+          <Text style={{ fontSize: 13, color: colors.goldLight, marginBottom: 12, fontWeight: 'bold' }}>
+            🌸 प्रायोजित संदेश
+          </Text>
+          <NativeAdCard forceShow />
+        </View>
+      </View>
+      <View style={[styles.bottomHint, { paddingBottom: bottomInsetPadding }]}>
+        <Text style={styles.hintText}>ऊपर स्क्रॉल करें 👆</Text>
+      </View>
+    </View>
+  );
+};
 
 export default function ReelsScreen() {
   const router = useRouter();
@@ -238,15 +270,29 @@ export default function ReelsScreen() {
     }
   };
 
+  const mixedData = React.useMemo(() => {
+    const items: Array<{ id: string; type: 'quote' | 'ad'; quote?: ShivQuote; quoteIndex?: number }> = [];
+    quotesList.forEach((quote, idx) => {
+      items.push({ id: quote.id, type: 'quote', quote, quoteIndex: idx });
+      if ((idx + 1) % 5 === 0) {
+        items.push({ id: `ad-${idx}`, type: 'ad' });
+      }
+    });
+    return items;
+  }, []);
+
   return (
     <View style={styles.screenContainer}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       <FlatList
-        data={quotesList}
+        data={mixedData}
         keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => (
-          <SingleReelItem quote={item} index={index} onClose={handleClose} />
-        )}
+        renderItem={({ item, index }) => {
+          if (item.type === 'ad') {
+            return <FullScreenNativeAdReel onClose={handleClose} />;
+          }
+          return <SingleReelItem quote={item.quote!} index={item.quoteIndex!} onClose={handleClose} />;
+        }}
         pagingEnabled
         showsVerticalScrollIndicator={false}
         decelerationRate="fast"

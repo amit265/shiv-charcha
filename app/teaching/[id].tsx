@@ -11,6 +11,7 @@ import { safeShare } from '@/services/shareService';
 
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -68,6 +69,9 @@ export default function TeachingDetailScreen() {
             <Text style={[styles.summaryTitle, { color: theme.primary }]}>सरल सार:</Text>
             <FormattedText text={topic.summary} style={[styles.summaryText, { color: theme.textPrimary }]} />
           </View>
+
+          {/* Inline Native Ad */}
+          <NativeAdCard forceShow />
 
           {/* Key Takeaways */}
           <Text style={[styles.sectionHeading, { color: theme.primary }]}>🎯 मुख्य बिंदु:</Text>

@@ -11,6 +11,7 @@ import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { SmartBanner } from '@/components/common/SmartBanner';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 export default function ShaktiPeethDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -80,6 +81,9 @@ export default function ShaktiPeethDetailScreen() {
           <Text style={[styles.sectionHeader, { color: theme.primary }]}>💡 संक्षिप्त सार एवं मान्यता</Text>
           <FormattedText text={item.summaryHindi} style={[styles.bodyText, { color: theme.textPrimary }]} />
         </View>
+
+        {/* Inline Native Ad */}
+        <NativeAdCard forceShow />
 
         {/* SECTION: विस्तृत इतिहास */}
         <View style={[styles.sectionBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>

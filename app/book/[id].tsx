@@ -9,6 +9,7 @@ import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -76,6 +77,9 @@ export default function BookDetailScreen() {
               <Text style={[styles.easyHeader, { color: theme.primary }]}>💡 आसान भाषा में समझें:</Text>
               <FormattedText text={chapter.summaryHindi} style={[styles.easyContent, { color: theme.textPrimary }]} />
             </View>
+
+            {/* Inline Native Ad */}
+            <NativeAdCard forceShow />
 
             {/* Key Lessons */}
             <Text style={[styles.sectionHeading, { color: theme.primary }]}>🎯 मुख्य सीख:</Text>
