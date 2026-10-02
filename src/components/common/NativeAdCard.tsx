@@ -33,7 +33,7 @@ export const NativeAdCard = React.memo(function NativeAdCard({ index, forceShow 
 
   return (
     <View style={[styles.container, !loaded && { display: 'none' }]}>
-      <View style={[styles.adWrapper, loaded && { backgroundColor: colors.cardBackground || '#1A0A0C', borderColor: colors.goldPrimary || '#FFD700' }]}>
+      <View style={[styles.adWrapper, loaded && { backgroundColor: colors.maroonDark, borderColor: colors.goldPrimary }]}>
         <BannerAd
           unitId={adUnitId}
           size={BannerAdSize.MEDIUM_RECTANGLE}
