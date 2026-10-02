@@ -7,6 +7,7 @@ import { shivaFamilyMembers } from '@/content/sansar/familyAndForms';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivFamilyScreen() {
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function ShivFamilyScreen() {
           ))}
         </View>
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

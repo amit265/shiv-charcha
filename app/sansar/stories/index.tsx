@@ -7,6 +7,7 @@ import { shivaStories } from '@/content/sansar/stories';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivaStoriesListScreen() {
   const router = useRouter();
@@ -88,6 +89,8 @@ export default function ShivaStoriesListScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

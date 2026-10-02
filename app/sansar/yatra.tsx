@@ -9,6 +9,7 @@ import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { famousTemples } from '@/content/sansar/symbolsAndTemples';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 interface MapPin {
   id: string;
@@ -258,6 +259,7 @@ export default function ShivYatraMapScreen() {
           </View>
         )}
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

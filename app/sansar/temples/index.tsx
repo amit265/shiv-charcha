@@ -8,6 +8,7 @@ import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function FamousTemplesScreen() {
   const router = useRouter();
@@ -96,6 +97,7 @@ export default function FamousTemplesScreen() {
           ))}
         </View>
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

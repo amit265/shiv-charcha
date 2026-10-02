@@ -7,6 +7,7 @@ import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { useAudio } from '@/context/AudioContext';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShaktiPeethListScreen() {
   const router = useRouter();
@@ -91,6 +92,8 @@ export default function ShaktiPeethListScreen() {
           ))}
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

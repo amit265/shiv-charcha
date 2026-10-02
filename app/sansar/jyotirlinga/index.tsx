@@ -7,6 +7,7 @@ import { jyotirlingas } from '@/content/sansar/jyotirlingas';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function JyotirlingaListScreen() {
   const router = useRouter();
@@ -93,6 +94,8 @@ export default function JyotirlingaListScreen() {
           ))}
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

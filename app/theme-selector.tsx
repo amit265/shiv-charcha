@@ -5,6 +5,7 @@ import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { THEMES, ThemeId } from '@/theme/themes';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ThemeSelectorScreen() {
   const router = useRouter();
@@ -141,6 +142,7 @@ export default function ThemeSelectorScreen() {
           );
         })}
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

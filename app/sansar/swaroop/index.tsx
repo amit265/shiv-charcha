@@ -7,6 +7,7 @@ import { shivaForms } from '@/content/sansar/familyAndForms';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivSwaroopScreen() {
   const router = useRouter();
@@ -74,6 +75,7 @@ export default function ShivSwaroopScreen() {
           ))}
         </View>
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

@@ -7,6 +7,7 @@ import { shivaSymbols } from '@/content/sansar/symbolsAndTemples';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivaSymbolsScreen() {
   const router = useRouter();
@@ -77,6 +78,7 @@ export default function ShivaSymbolsScreen() {
           ))}
         </View>
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }

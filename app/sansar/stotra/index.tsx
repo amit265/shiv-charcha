@@ -7,6 +7,7 @@ import { shivaStotras } from '@/content/sansar/stotras';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { shadows } from '@/theme/colors';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivaStotraListScreen() {
   const router = useRouter();
@@ -92,6 +93,7 @@ export default function ShivaStotraListScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <SmartBanner />
     </View>
   );
 }
