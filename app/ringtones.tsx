@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Header } from '@/components/common/Header';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { useTheme } from '@/context/ThemeContext';
 import { ringtonesData } from '@/content/ringtones';
 import { shadows } from '@/theme/colors';
@@ -37,8 +38,10 @@ export default function RingtonesScreen() {
           मंदिर घंटी, शंखनाद व ॐ नमः शिवाय मंत्र रिंगटोन सुनें और डाउनलोड करें।
         </Text>
 
-        {ringtonesData.map((item) => (
-          <View key={item.id} style={[styles.rowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+        {ringtonesData.map((item, index) => (
+          <React.Fragment key={item.id}>
+            <NativeAdCard index={index} />
+            <View style={[styles.rowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
             <View style={[styles.iconCircle, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
               <Text style={styles.iconText}>
                 {item.category === 'bell' ? '🔔' : item.category === 'shankh' ? '🐚' : '📿'}
@@ -76,6 +79,7 @@ export default function RingtonesScreen() {
               <Text style={[styles.downloadText, { color: theme.textGold }]}>📥</Text>
             </TouchableOpacity>
           </View>
+        </React.Fragment>
         ))}
       </ScrollView>
     </View>

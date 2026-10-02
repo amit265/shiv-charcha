@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { useTheme } from '@/context/ThemeContext';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { shadows } from '@/theme/colors';
@@ -119,52 +120,54 @@ export default function AudioHubScreen() {
 
         {/* Audio Tracks List */}
         <View style={styles.listContainer}>
-          {filteredAudios.map((item) => {
+          {filteredAudios.map((item, index) => {
             const isThisPlaying = currentTrack?.id === item.id && isPlaying;
             return (
-              <View
-                key={item.id}
-                style={[
-                  styles.audioCard,
-                  { backgroundColor: theme.cardBg, borderColor: isThisPlaying ? theme.accent : theme.border },
-                ]}
-              >
-                <Image source={resolveImageSource(item.id || item.coverImage, 'stotra')} style={styles.coverImage} />
+              <React.Fragment key={item.id}>
+                <NativeAdCard index={index} />
+                <View
+                  style={[
+                    styles.audioCard,
+                    { backgroundColor: theme.cardBg, borderColor: isThisPlaying ? theme.accent : theme.border },
+                  ]}
+                >
+                  <Image source={resolveImageSource(item.id || item.coverImage, 'stotra')} style={styles.coverImage} />
 
-                <View style={styles.metaCol}>
-                  <View style={styles.speakerRow}>
-                    <Text style={[styles.speakerBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>
-                      {item.speaker === 'sahab_shri' ? '🎙️ साहब श्री' : item.speaker === 'didi_maa' ? '🌸 दीदी माँ' : '🎵 भजन'}
-                    </Text>
-                    <Text style={[styles.durationText, { color: theme.textMuted }]}>
-                      {Math.floor(item.duration / 60)} मि
-                    </Text>
+                  <View style={styles.metaCol}>
+                    <View style={styles.speakerRow}>
+                      <Text style={[styles.speakerBadge, { backgroundColor: theme.surfaceElevated, color: theme.primary }]}>
+                        {item.speaker === 'sahab_shri' ? '🎙️ साहब श्री' : item.speaker === 'didi_maa' ? '🌸 दीदी माँ' : '🎵 भजन'}
+                      </Text>
+                      <Text style={[styles.durationText, { color: theme.textMuted }]}>
+                        {Math.floor(item.duration / 60)} मि
+                      </Text>
+                    </View>
+
+                    <Text style={[styles.trackTitle, { color: theme.textPrimary }]}>{item.title}</Text>
+                    <Text style={[styles.trackSub, { color: theme.textSecondary }]}>{item.subtitle}</Text>
                   </View>
 
-                  <Text style={[styles.trackTitle, { color: theme.textPrimary }]}>{item.title}</Text>
-                  <Text style={[styles.trackSub, { color: theme.textSecondary }]}>{item.subtitle}</Text>
-                </View>
+                  <View style={styles.actionRow}>
+                    <TouchableOpacity
+                      style={[styles.playBtn, { backgroundColor: isThisPlaying ? theme.accent : theme.primary }]}
+                      onPress={() => playTrack(item)}
+                      activeOpacity={0.85}
+                    >
+                      <Text style={[styles.playBtnText, { color: isThisPlaying ? theme.primaryDark : theme.textWhite }]}>
+                        {isThisPlaying ? '⏸️' : '▶️'}
+                      </Text>
+                    </TouchableOpacity>
 
-                <View style={styles.actionRow}>
-                  <TouchableOpacity
-                    style={[styles.playBtn, { backgroundColor: isThisPlaying ? theme.accent : theme.primary }]}
-                    onPress={() => playTrack(item)}
-                    activeOpacity={0.85}
-                  >
-                    <Text style={[styles.playBtnText, { color: isThisPlaying ? theme.primaryDark : theme.textWhite }]}>
-                      {isThisPlaying ? '⏸️' : '▶️'}
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.shareBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
-                    onPress={() => handleShareAudio(item)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={{ fontSize: 13 }}>📲</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.shareBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+                      onPress={() => handleShareAudio(item)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={{ fontSize: 13 }}>📲</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
+              </React.Fragment>
             );
           })}
         </View>
