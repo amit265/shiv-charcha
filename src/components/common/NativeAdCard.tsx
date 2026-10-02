@@ -22,7 +22,7 @@ export const NativeAdCard = React.memo(function NativeAdCard({
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
 
-  const adUnitId = getGoogleAdUnitId('native');
+  const adUnitId = getGoogleAdUnitId('banner');
 
   const shouldSkipAd = !forceShow && index !== undefined && (() => {
     const frequency = featureFlags.ads.nativeFrequency || 4; 

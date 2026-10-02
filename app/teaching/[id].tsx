@@ -12,12 +12,17 @@ import { safeShare } from '@/services/shareService';
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
   const topic = teachingTopics.find(t => t.id === id) || teachingTopics[0];
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const handleShare = async () => {
     await safeShare({

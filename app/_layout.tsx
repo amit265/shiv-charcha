@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, AppState } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -43,6 +43,16 @@ function RootNavigator() {
     Analytics.logScreen('App_Launch');
     AdManager.initialize();
     checkForAppUpdates();
+
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void AdManager.showAppOpenAd();
+      }
+    });
+
+    return () => {
+      sub.remove();
+    };
   }, []);
 
   const checkForAppUpdates = async () => {
@@ -143,6 +153,7 @@ export default function RootLayout() {
         splashOpacity.value = withTiming(0, { duration: 600 });
         setTimeout(() => {
           setIsSplashVisible(false);
+          void AdManager.showAppOpenAd();
         }, 650);
       }, 2800);
 

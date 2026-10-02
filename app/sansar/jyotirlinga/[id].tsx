@@ -13,12 +13,17 @@ import { FormattedText } from '@/components/common/FormattedText';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function JyotirlingaDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const item = jyotirlingas.find((j) => j.id === id) || jyotirlingas[0];
 

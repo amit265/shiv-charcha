@@ -12,12 +12,17 @@ import { FormattedText } from '@/components/common/FormattedText';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function ShaktiPeethDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const item = shaktiPeethas.find((s) => s.id === id) || shaktiPeethas[0];
 

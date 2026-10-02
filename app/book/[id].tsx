@@ -10,6 +10,7 @@ import { useAudio } from '@/context/AudioContext';
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -17,6 +18,10 @@ export default function BookDetailScreen() {
   const { playTrack } = useAudio();
   const book = booksLibrary.find(b => b.id === id) || booksLibrary[0];
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const chapter = book.chapters[activeChapterIndex] || book.chapters[0];
 

@@ -12,6 +12,7 @@ import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function ShivaStoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,6 +20,10 @@ export default function ShivaStoryDetailScreen() {
   const { theme } = useTheme();
   const { playTrack } = useAudio();
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const story = shivaStories.find((s) => s.id === id) || shivaStories[0];
 

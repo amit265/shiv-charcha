@@ -12,11 +12,16 @@ import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { SmartBanner } from '@/components/common/SmartBanner';
+import { AdManager } from '@/services/analytics/AdManager';
 
 export default function ShivaStotraDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
+
+  React.useEffect(() => {
+    void AdManager.registerClickAndShowAd();
+  }, []);
 
   const stotra = shivaStotras.find((s) => s.id === id) || shivaStotras[0];
 
