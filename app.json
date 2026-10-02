@@ -13,7 +13,6 @@
     },
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
-      "versionCode": 1,
       "supportsTablet": true,
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {

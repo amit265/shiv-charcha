@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Expo & Metro caches
+.expo/
+dist/
+web-build/
+.metro-health-check*
+
+# Git metadata
+.git/
+
+# Local build artifacts
+*.apk
+*.aab
+*.ipa
+/builds/
+/build/
+
+# Docs & IDE settings
+.vscode/
+.idea/
+.claude/
+docs/
+AGENTS.md
+CLAUDE.md
+
+# Logs & temp files
+*.log
+.DS_Store
