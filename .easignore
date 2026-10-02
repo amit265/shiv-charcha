@@ -16,6 +16,8 @@ web-build/
 *.ipa
 /builds/
 /build/
+/android/
+/ios/
 
 # Docs & IDE settings
 .vscode/
