@@ -166,8 +166,10 @@ export default function ShivCharchaScreen() {
             activeOpacity={0.8}
           >
             <View style={styles.trackerTitleCol}>
-              <Text style={[styles.trackerTitle, { color: theme.primary }]}>आज की शिव गुरु साधना 📿</Text>
-              <Text style={[styles.trackerSub, { color: theme.textSecondary }]}>
+              <Text style={[styles.trackerTitle, { color: theme.primary }]} adjustsFontSizeToFit minimumFontScale={0.85} numberOfLines={1}>
+                आज की शिव गुरु साधना 📿
+              </Text>
+              <Text style={[styles.trackerSub, { color: theme.textSecondary }]} adjustsFontSizeToFit minimumFontScale={0.85} numberOfLines={1}>
                 {isAllCompleted
                   ? isTrackerCollapsed
                     ? '🎉 साधना पूर्ण हुई • विवरण देखने हेतु टैप करें'

@@ -71,8 +71,24 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           <View style={styles.textColumn}>
-            <Text style={[styles.titleText, { color: theme.textGold }]} numberOfLines={1}>{title}</Text>
-            {subtitle ? <Text style={[styles.subtitleText, { color: theme.textWhite }]} numberOfLines={1}>{subtitle}</Text> : null}
+            <Text
+              style={[styles.titleText, { color: theme.textGold }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+            >
+              {title}
+            </Text>
+            {subtitle ? (
+              <Text
+                style={[styles.subtitleText, { color: theme.textWhite }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+              >
+                {subtitle}
+              </Text>
+            ) : null}
           </View>
         </View>
 
@@ -154,6 +170,7 @@ const styles = StyleSheet.create({
   },
   textColumn: {
     flex: 1,
+    flexShrink: 1,
     paddingRight: 6,
   },
   titleText: {

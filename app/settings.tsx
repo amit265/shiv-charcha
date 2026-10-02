@@ -20,10 +20,12 @@ import { StorageService, defaultPreferences } from '@/services/storage';
 import { UserPreferences } from '@/types';
 import { safeShare } from '@/services/shareService';
 import { APP_CONFIG, APP_LINKS, CROSS_PROMO_APPS } from '@/constants/links';
+import { useRemoteConfig } from '@/context/RemoteConfigContext';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const { theme, themeId } = useTheme();
+  const { config } = useRemoteConfig();
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'copyright' | 'disclaimer' | null>(null);
 
@@ -403,7 +405,7 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => WebBrowser.openBrowserAsync(APP_LINKS.privacyPolicyUrl)}
+                    onPress={() => WebBrowser.openBrowserAsync(`${config.legal.privacyBaseUrl}/shiv-charcha-privacy`)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 अधिकारिक वेबसाइट पर गोपनीयता नीति खोलें
@@ -432,7 +434,7 @@ export default function SettingsScreen() {
                       borderRadius: 10,
                       alignItems: 'center',
                     }}
-                    onPress={() => WebBrowser.openBrowserAsync(APP_LINKS.termsOfServiceUrl)}
+                    onPress={() => WebBrowser.openBrowserAsync(`${config.legal.termsBaseUrl}/shiv-charcha-terms`)}
                   >
                     <Text style={{ color: theme.textWhite, fontWeight: 'bold', fontSize: 14 }}>
                       🌐 आधिकारिक वेबसाइट पर सेवा शर्तें खोलें

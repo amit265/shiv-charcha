@@ -21,6 +21,7 @@ import { MiniPlayer } from '@/components/player/MiniPlayer';
 import { WebDeviceFrame } from '@/components/common/WebDeviceFrame';
 import { colors } from '@/theme/colors';
 import { useDeepLinkHandler } from '@/hooks/useDeepLinkHandler';
+import { RemoteConfigProvider } from '@/context/RemoteConfigContext';
 import { UpdateService, UpdateCheckResult } from '@/services/updateService';
 import { UpdateModal } from '@/components/common/UpdateModal';
 
@@ -167,8 +168,9 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemeProvider>
           <AudioProvider>
-            <WebDeviceFrame>
-              <RootNavigator />
+            <RemoteConfigProvider>
+              <WebDeviceFrame>
+                <RootNavigator />
 
               {/* Custom Animated Splash Screen Overlay */}
               {isSplashVisible && (
@@ -197,7 +199,8 @@ export default function RootLayout() {
                   </Text>
                 </Animated.View>
               )}
-            </WebDeviceFrame>
+              </WebDeviceFrame>
+            </RemoteConfigProvider>
           </AudioProvider>
         </ThemeProvider>
       </SafeAreaProvider>

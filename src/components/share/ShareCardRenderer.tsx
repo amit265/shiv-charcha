@@ -224,7 +224,12 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
             {/* Quote Body with Horizontal Padding */}
             <View style={styles.quoteBox}>
               <Text style={[styles.quoteMark, { color: template.accentColor || theme.textGold }]}>“</Text>
-              <Text style={[styles.quoteText, { color: '#FFFFFF', fontSize }]}>
+              <Text
+                style={[styles.quoteText, { color: '#FFFFFF', fontSize }]}
+                adjustsFontSizeToFit
+                minimumFontScale={0.65}
+                numberOfLines={isVertical ? 10 : 6}
+              >
                 {customMessage}
               </Text>
               <Text style={[styles.quoteMarkRight, { color: template.accentColor || theme.textGold }]}>”</Text>

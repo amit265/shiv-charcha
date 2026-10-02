@@ -141,7 +141,9 @@ export default function HomeScreen() {
             <View style={[styles.quickIconCircle, { backgroundColor: 'rgba(230, 81, 0, 0.12)' }]}>
               <Text style={styles.quickIcon}>📿</Text>
             </View>
-            <Text style={[styles.quickLabel, { color: theme.textPrimary }]}>108 जाप</Text>
+            <Text style={[styles.quickLabel, { color: theme.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+              108 जाप
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -152,7 +154,9 @@ export default function HomeScreen() {
             <View style={[styles.quickIconCircle, { backgroundColor: 'rgba(255, 179, 0, 0.12)' }]}>
               <Text style={styles.quickIcon}>🌸</Text>
             </View>
-            <Text style={[styles.quickLabel, { color: theme.textPrimary }]}>शिव पूजा</Text>
+            <Text style={[styles.quickLabel, { color: theme.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+              शिव पूजा
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -163,7 +167,9 @@ export default function HomeScreen() {
             <View style={[styles.quickIconCircle, { backgroundColor: 'rgba(183, 28, 28, 0.12)' }]}>
               <Text style={styles.quickIcon}>🗣️</Text>
             </View>
-            <Text style={[styles.quickLabel, { color: theme.textPrimary }]}>शिव चर्चा</Text>
+            <Text style={[styles.quickLabel, { color: theme.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+              शिव चर्चा
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -174,7 +180,9 @@ export default function HomeScreen() {
             <View style={[styles.quickIconCircle, { backgroundColor: 'rgba(230, 81, 0, 0.12)' }]}>
               <Text style={styles.quickIcon}>🎙️</Text>
             </View>
-            <Text style={[styles.quickLabel, { color: theme.textPrimary }]}>अमृत वाणी</Text>
+            <Text style={[styles.quickLabel, { color: theme.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+              अमृत वाणी
+            </Text>
           </TouchableOpacity>
         </View>
 

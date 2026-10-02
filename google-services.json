@@ -1,0 +1,124 @@
+{
+  "project_info": {
+    "project_number": "1410082253",
+    "project_id": "mahavyoma-studio",
+    "storage_bucket": "mahavyoma-studio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:0c48ac391200ef27401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.biharexplorer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:6caecde2b7da9ed9401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.hindicalendar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:49418e157c108b23401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.jyotirlinga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:8a8f9a5103119e7e401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.shaktipeetha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:076f374696436e33401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.shivcharcha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1410082253:android:c5e5b43556c930ab401084",
+        "android_client_info": {
+          "package_name": "com.mahavyomastudio.vratsathi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJKT0Js7tBd0HKqe6tdHiusbKjWV6dZrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

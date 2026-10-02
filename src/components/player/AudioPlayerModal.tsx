@@ -16,6 +16,7 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
   const { currentTrack, isPlaying, position, duration, togglePlayPause, seekTo } = useAudio();
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const [trackWidth, setTrackWidth] = React.useState<number>(300);
 
   if (!currentTrack) return null;
 
@@ -71,10 +72,14 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({ visible, onC
             <TouchableOpacity
               style={styles.sliderTrackBg}
               activeOpacity={1}
+              onLayout={(e) => {
+                const { width } = e.nativeEvent.layout;
+                if (width > 0) setTrackWidth(width);
+              }}
               onPress={(e) => {
                 const clickX = e.nativeEvent.locationX;
-                // Simple percentage calculate
-                const pct = clickX / 300;
+                const safeWidth = trackWidth > 0 ? trackWidth : 300;
+                const pct = Math.min(1, Math.max(0, clickX / safeWidth));
                 seekTo(Math.floor(pct * (duration || 180)));
               }}
             >

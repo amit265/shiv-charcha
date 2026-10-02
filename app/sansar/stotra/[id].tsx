@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   coverWrapper: {
     width: '100%',
-    height: 180,
+    minHeight: 180,
     backgroundColor: '#0F172A',
     borderRadius: 20,
     overflow: 'hidden',
@@ -167,14 +167,13 @@ const styles = StyleSheet.create({
     ...shadows.medium,
   },
   coverImage: {
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFill,
   },
   coverOverlay: {
-    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(15, 23, 42, 0.65)',
     padding: 16,
     justifyContent: 'flex-end',
+    minHeight: 180,
   },
   authorTag: {
     alignSelf: 'flex-start',

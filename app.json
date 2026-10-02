@@ -31,6 +31,11 @@
           "data": [
             {
               "scheme": "https",
+              "host": "destyastudio.com",
+              "pathPrefix": "/shiv-charcha"
+            },
+            {
+              "scheme": "https",
               "host": "mahavyomastudio.com",
               "pathPrefix": "/apps/shiv-charcha"
             }
