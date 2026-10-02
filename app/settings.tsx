@@ -202,42 +202,52 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* SECTION 4: OUR OTHER APPS (MAHAVYOMA STUDIO CROSS PROMOTION) */}
-        <Text style={[styles.sectionTitle, { color: theme.primary }]}>हमारे अन्य पावन ऐप (Our Devotional Apps) 📱</Text>
+        {/* SECTION 4: OUR OTHER APPS (MAHAVYOMA STUDIO DYNAMIC CROSS PROMOTION) */}
+        <Text style={[styles.sectionTitle, { color: theme.primary }]}>हमारे अन्य पावन ऐप (Mahavyoma Ecosystem) 📱</Text>
         <View style={styles.otherAppsContainer}>
-          {CROSS_PROMO_APPS.map((app) => (
-            <TouchableOpacity
-              key={app.id}
-              style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-              onPress={() => handleOpenOtherApp(app.title, app.url)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.appPromoIcon}>{app.icon}</Text>
-              <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>{app.titleHindi}</Text>
-                  <Text
-                    style={{
-                      fontSize: 10,
-                      color: '#FFFFFF',
-                      fontWeight: 'bold',
-                      backgroundColor: app.badgeText === 'Live' ? '#2E7D32' : theme.accent,
-                      paddingHorizontal: 6,
-                      paddingVertical: 1,
-                      borderRadius: 6,
-                      marginLeft: 8,
-                    }}
-                  >
-                    {app.badgeText}
+          {(config.crossPromoApps && config.crossPromoApps.length > 0
+            ? config.crossPromoApps.filter((a: any) => a.id !== 'shiv-charcha')
+            : CROSS_PROMO_APPS
+          ).map((app: any) => {
+            const titleStr = app.titleHindi || app.name || 'Mahavyoma App';
+            const subStr = app.descriptionHindi || app.tagline || 'पावन भक्ति एवं पंचांग ऐप';
+            const appUrl = app.androidUrl || app.url || 'https://mahavyomastudio.com';
+            const iconSymbol = app.icon && app.icon.length <= 4 ? app.icon : '🕉️';
+
+            return (
+              <TouchableOpacity
+                key={app.id}
+                style={[styles.appPromoCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+                onPress={() => handleOpenOtherApp(titleStr, appUrl)}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.appPromoIcon}>{iconSymbol}</Text>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={[styles.appPromoTitle, { color: theme.textPrimary }]}>{titleStr}</Text>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: '#FFFFFF',
+                        fontWeight: 'bold',
+                        backgroundColor: '#2E7D32',
+                        paddingHorizontal: 6,
+                        paddingVertical: 1,
+                        borderRadius: 6,
+                        marginLeft: 8,
+                      }}
+                    >
+                      {app.badgeText || 'Live'}
+                    </Text>
+                  </View>
+                  <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
+                    {subStr}
                   </Text>
                 </View>
-                <Text style={[styles.appPromoSub, { color: theme.textSecondary }]}>
-                  {app.descriptionHindi}
-                </Text>
-              </View>
-              <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें</Text>
-            </TouchableOpacity>
-          ))}
+                <Text style={[styles.appInstallBtn, { color: theme.primary, borderColor: theme.primary }]}>देखें ➔</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* SECTION 5: LEGAL LINKS & POLICIES */}

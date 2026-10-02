@@ -24,6 +24,13 @@
       "permissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "com.google.android.gms.permission.AD_ID"
+      ],
       "intentFilters": [
         {
           "action": "VIEW",
@@ -31,7 +38,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "destyastudio.com",
+              "host": "mahavyomastudio.com",
               "pathPrefix": "/shiv-charcha"
             },
             {
