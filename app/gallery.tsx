@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Platform } from 'react-native';
 import { Header } from '@/components/common/Header';
+import { SmartBanner } from '@/components/common/SmartBanner';
 import { useTheme } from '@/context/ThemeContext';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { wallpapersData } from '@/content/wallpapers';
@@ -62,6 +63,8 @@ export default function GalleryScreen() {
           ))}
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

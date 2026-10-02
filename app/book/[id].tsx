@@ -8,6 +8,7 @@ import { resolveImageSource } from '@/constants/imageAssets';
 import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { FormattedText } from '@/components/common/FormattedText';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -119,6 +120,8 @@ export default function BookDetailScreen() {
           </View>
         )}
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

@@ -8,6 +8,7 @@ import { colors, shadows } from '@/theme/colors';
 import { sacredDates } from '@/content/dates';
 import { getTodayPanchang, PanchangData } from '@/services/panchangService';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 const HINDI_MONTHS = [
   'जनवरी',
@@ -313,6 +314,8 @@ export default function DedicatedCalendarScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

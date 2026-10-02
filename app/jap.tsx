@@ -4,6 +4,7 @@ import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { JapCounter } from '@/components/jap/JapCounter';
 import { Analytics } from '@/services/analytics/analytics';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function JapScreen() {
   const { theme } = useTheme();
@@ -19,6 +20,8 @@ export default function JapScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <JapCounter />
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

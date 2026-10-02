@@ -9,6 +9,7 @@ import { colors, shadows } from '@/theme/colors';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 import { FormattedText } from '@/components/common/FormattedText';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function SacredDateDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -95,6 +96,8 @@ export default function SacredDateDetailScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

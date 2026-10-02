@@ -10,6 +10,7 @@ import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 
 import { FormattedText } from '@/components/common/FormattedText';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function TeachingDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -99,6 +100,8 @@ export default function TeachingDetailScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

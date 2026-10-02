@@ -4,6 +4,7 @@ import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
 import { ShivlingPujaCanvas } from '@/components/puja/ShivlingPujaCanvas';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function PujaScreen() {
   const { theme } = useTheme();
@@ -16,6 +17,8 @@ export default function PujaScreen() {
         <ShivlingPujaCanvas />
         <ContextualCrossPromotion targetAppId="vrat-sathi" style={{ paddingHorizontal: 0 }} />
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

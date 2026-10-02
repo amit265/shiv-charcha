@@ -10,6 +10,7 @@ import { RelatedContentSection } from '@/components/sansar/RelatedContentSection
 import { safeShare } from '@/services/shareService';
 import { shadows } from '@/theme/colors';
 import { FormattedText } from '@/components/common/FormattedText';
+import { SmartBanner } from '@/components/common/SmartBanner';
 
 export default function ShivaStoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -159,6 +160,8 @@ export default function ShivaStoryDetailScreen() {
         {/* RELATED CONTENT GRAPH */}
         <RelatedContentSection items={story.relatedContent} />
       </ScrollView>
+
+      <SmartBanner />
     </View>
   );
 }

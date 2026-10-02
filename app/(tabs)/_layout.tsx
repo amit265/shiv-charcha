@@ -4,7 +4,6 @@ import { Text, StyleSheet, Platform, View, TouchableOpacity } from 'react-native
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
-import { SmartBanner } from '@/components/common/SmartBanner';
 
 const TAB_ICONS: Record<string, string> = {
   index: '🏠',
@@ -26,17 +25,16 @@ function CustomFloatingTabBar({ state, descriptors, navigation }: CustomFloating
   const bottomInset = Math.max(insets.bottom, Platform.OS === 'android' ? 12 : 6);
 
   return (
-    <View style={[styles.tabBarWrapper, { bottom: bottomInset + 4 }]}>
-      <SmartBanner />
-      <View
-        style={[
-          styles.floatingContainer,
-          {
-            backgroundColor: theme.navigationBackground,
-            borderColor: theme.accent,
-          },
-        ]}
-      >
+    <View
+      style={[
+        styles.floatingContainer,
+        {
+          bottom: bottomInset + 8,
+          backgroundColor: theme.navigationBackground,
+          borderColor: theme.accent,
+        },
+      ]}
+    >
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
@@ -91,7 +89,6 @@ function CustomFloatingTabBar({ state, descriptors, navigation }: CustomFloating
           </TouchableOpacity>
         );
       })}
-      </View>
     </View>
   );
 }
@@ -114,17 +111,10 @@ export default function TabLayout() {
 }
 
 const styles = StyleSheet.create({
-  tabBarWrapper: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    zIndex: 999,
-  },
   floatingContainer: {
+    position: 'absolute',
     left: 12,
     right: 12,
-    marginTop: 6,
     borderRadius: 32,
     height: 64,
     flexDirection: 'row',
@@ -137,6 +127,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 10,
+    zIndex: 999,
   },
   tabItem: {
     flex: 1,
