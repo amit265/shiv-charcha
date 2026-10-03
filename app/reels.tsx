@@ -160,7 +160,9 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
             </TouchableOpacity>
 
             <View style={styles.categoryBadge}>
-              <Text style={styles.categoryText}>🌺 {quote.category}</Text>
+              <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail">
+                🌺 {quote.category}
+              </Text>
             </View>
 
             <View style={styles.counterBadge}>
@@ -175,7 +177,18 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
             </View>
 
             <Text style={styles.quoteSymbolOpen}>“</Text>
-            <Text style={styles.quoteBodyText}>{quote.quote}</Text>
+            <Text
+              style={[
+                styles.quoteBodyText,
+                quote.quote.length > 120
+                  ? { fontSize: 17, lineHeight: 25 }
+                  : quote.quote.length > 70
+                  ? { fontSize: 19, lineHeight: 28 }
+                  : { fontSize: 21, lineHeight: 31 },
+              ]}
+            >
+              {quote.quote}
+            </Text>
             <Text style={styles.quoteSymbolClose}>”</Text>
 
             <View style={styles.authorDivider} />
@@ -242,7 +255,9 @@ const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) 
             <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
           <View style={styles.categoryBadge}>
-            <Text style={styles.categoryText}>📢 प्रायोजित भक्ति संदेश</Text>
+            <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail">
+              📢 प्रायोजित संदेश
+            </Text>
           </View>
         </View>
 
@@ -385,16 +400,20 @@ const styles = StyleSheet.create({
   },
   categoryBadge: {
     backgroundColor: colors.maroonPrimary,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.goldPrimary,
+    maxWidth: '58%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryText: {
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: 'bold',
     color: colors.goldLight,
+    textAlign: 'center',
   },
   counterBadge: {
     backgroundColor: 'rgba(0, 0, 0, 0.45)',
