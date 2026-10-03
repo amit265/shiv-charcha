@@ -43,7 +43,23 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
 
   const handleAcceptConsent = () => {
     setStep('loading');
-    startAdLoading();
+
+    const shown = AdManager.showRewardedAd(
+      () => {
+        void AdManager.grantAdFree().then(() => {
+          setStep('success');
+        });
+      },
+      () => {
+        if (step !== 'success') {
+          onDismiss();
+        }
+      }
+    );
+
+    if (!shown) {
+      startAdLoading();
+    }
   };
 
   const startAdLoading = () => {

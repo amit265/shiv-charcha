@@ -53,6 +53,7 @@ export interface ShaktiPeeth {
   location: string;
   stateRegion: string;
   associatedBodyPart: string;
+  associatedBhairav?: string;
   image: string;
   audioUrl?: string;
   audioDuration?: number;
