@@ -17,6 +17,7 @@ interface ShivlingShrineProps {
   belpatraCount: number;
   isAartiActive: boolean;
   isDhoopActive: boolean;
+  isFullScreen?: boolean;
   children?: React.ReactNode;
 }
 
@@ -29,6 +30,7 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
   belpatraCount,
   isAartiActive,
   isDhoopActive,
+  isFullScreen = false,
   children,
 }) => {
   const { theme } = useTheme();
@@ -287,9 +289,27 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
   const totalRestingBelpatra = Math.min(belpatraCount, 7);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isFullScreen && styles.containerFullScreen]}>
       {/* Altar Stage Background */}
-      <View style={styles.stage}>
+      <View style={[styles.stage, isFullScreen && styles.stageFullScreen]}>
+        {/* Mandir Antique Gold Decorative Side Pillars */}
+        <View style={styles.leftPillar}>
+          <View style={styles.pillarCapital} />
+          <View style={styles.pillarShaft} />
+          <View style={styles.pillarBase} />
+        </View>
+
+        <View style={styles.rightPillar}>
+          <View style={styles.pillarCapital} />
+          <View style={styles.pillarShaft} />
+          <View style={styles.pillarBase} />
+        </View>
+
+        {/* Temple Top Archway Framing */}
+        <View style={styles.templeArch}>
+          <Text style={styles.archOmText}>🕉️</Text>
+        </View>
+
         {/* Background Divine Aura Glow */}
         <Animated.View
           style={[
@@ -554,11 +574,76 @@ const styles = StyleSheet.create({
     backgroundColor: '#160306',
     ...shadows.medium,
   },
+  containerFullScreen: {
+    borderRadius: 0,
+    borderWidth: 0,
+    flex: 1,
+  },
   stage: {
     height: 470,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+  },
+  stageFullScreen: {
+    height: '100%',
+    flex: 1,
+  },
+  leftPillar: {
+    position: 'absolute',
+    left: 4,
+    top: 30,
+    bottom: 30,
+    width: 14,
+    zIndex: 10,
+    alignItems: 'center',
+  },
+  rightPillar: {
+    position: 'absolute',
+    right: 4,
+    top: 30,
+    bottom: 30,
+    width: 14,
+    zIndex: 10,
+    alignItems: 'center',
+  },
+  pillarCapital: {
+    width: 18,
+    height: 12,
+    backgroundColor: '#D4AF37',
+    borderRadius: 3,
+  },
+  pillarShaft: {
+    flex: 1,
+    width: 8,
+    backgroundColor: 'rgba(212, 175, 55, 0.4)',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.6)',
+    marginVertical: 2,
+  },
+  pillarBase: {
+    width: 18,
+    height: 12,
+    backgroundColor: '#D4AF37',
+    borderRadius: 3,
+  },
+  templeArch: {
+    position: 'absolute',
+    top: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 2,
+    borderRadius: 16,
+    backgroundColor: 'rgba(30, 6, 12, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 215, 0, 0.4)',
+    zIndex: 12,
+  },
+  archOmText: {
+    fontSize: 16,
+    color: '#FFD700',
   },
   auraGlow: {
     position: 'absolute',
