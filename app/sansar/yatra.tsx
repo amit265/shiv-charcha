@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
-import { resolveImageSource } from '@/constants/imageAssets';
+import { resolveImageSource, INDIA_MAP_BG } from '@/constants/imageAssets';
 import { jyotirlingas } from '@/content/sansar/jyotirlingas';
 import { shaktiPeethas } from '@/content/sansar/shaktiPeethas';
 import { famousTemples } from '@/content/sansar/symbolsAndTemples';
@@ -47,8 +47,8 @@ export default function ShivYatraMapScreen() {
       state: item.state,
       lat: item.latitude,
       lng: item.longitude,
-      xPercent: Math.max(10, Math.min(90, ((item.longitude - 68) / (96 - 68)) * 100)),
-      yPercent: Math.max(10, Math.min(90, (1 - (item.latitude - 8) / (36 - 8)) * 100)),
+      xPercent: Math.max(12, Math.min(85, 12 + ((item.longitude - 68) / (96 - 68)) * 72)),
+      yPercent: Math.max(12, Math.min(85, 10 + (1 - (item.latitude - 8) / (36 - 8)) * 75)),
       image: item.image,
       summary: item.summaryHindi,
       routePath: `/sansar/jyotirlinga/${item.id}`,
@@ -63,8 +63,8 @@ export default function ShivYatraMapScreen() {
       state: item.stateRegion,
       lat: item.latitude,
       lng: item.longitude,
-      xPercent: Math.max(10, Math.min(90, ((item.longitude - 68) / (96 - 68)) * 100)),
-      yPercent: Math.max(10, Math.min(90, (1 - (item.latitude - 8) / (36 - 8)) * 100)),
+      xPercent: Math.max(12, Math.min(85, 12 + ((item.longitude - 68) / (96 - 68)) * 72)),
+      yPercent: Math.max(12, Math.min(85, 10 + (1 - (item.latitude - 8) / (36 - 8)) * 75)),
       image: item.image,
       summary: item.summaryHindi,
       routePath: `/sansar/shakti-peeth/${item.id}`,
@@ -79,8 +79,8 @@ export default function ShivYatraMapScreen() {
       state: item.region,
       lat: item.latitude,
       lng: item.longitude,
-      xPercent: Math.max(10, Math.min(90, ((item.longitude - 68) / (96 - 68)) * 100)),
-      yPercent: Math.max(10, Math.min(90, (1 - (item.latitude - 8) / (36 - 8)) * 100)),
+      xPercent: Math.max(12, Math.min(85, 12 + ((item.longitude - 68) / (96 - 68)) * 72)),
+      yPercent: Math.max(12, Math.min(85, 10 + (1 - (item.latitude - 8) / (36 - 8)) * 75)),
       image: item.image,
       summary: item.history,
       routePath: `/sansar/temples`,
@@ -175,7 +175,8 @@ export default function ShivYatraMapScreen() {
 
           {/* Interactive Map Surface */}
           <View style={styles.mapCanvas}>
-            {/* Background Grid Accent */}
+            {/* Background India Map Graphic Image */}
+            <Image source={INDIA_MAP_BG} style={styles.mapBackgroundImage} resizeMode="cover" />
             <View style={styles.mapGridPattern} />
 
             {/* Mapped Pins */}
@@ -326,9 +327,15 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  mapBackgroundImage: {
+    ...StyleSheet.absoluteFill,
+    width: '100%',
+    height: '100%',
+    opacity: 0.88,
+  },
   mapGridPattern: {
     ...StyleSheet.absoluteFill,
-    opacity: 0.15,
+    opacity: 0.1,
     backgroundColor: '#1E293B',
   },
   mapMarker: {

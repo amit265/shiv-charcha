@@ -28,7 +28,10 @@ export const FALLBACK_IMAGES: Record<string, ImageSourcePropType> = {
   book: require('../../assets/images/fallbacks/fallback_book.jpg'),
   teaching: require('../../assets/images/fallbacks/fallback_teaching.jpg'),
   reel: require('../../assets/images/fallbacks/fallback_reel_bg.jpg'),
+  india_map: require('../../assets/images/sansaar/india_map_bg.jpg'),
 };
+
+export const INDIA_MAP_BG: ImageSourcePropType = require('../../assets/images/sansaar/india_map_bg.jpg');
 
 // Jyotirlingas (12 bundled local images)
 export const JYOTIRLINGA_IMAGES: Record<string, ImageSourcePropType> = {
