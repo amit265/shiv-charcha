@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { shivaFamilyMembers } from '@/content/sansar/familyAndForms';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
+import { FormattedText } from '@/components/common/FormattedText';
 import { shadows } from '@/theme/colors';
 import { SmartBanner } from '@/components/common/SmartBanner';
 
@@ -45,7 +46,7 @@ export default function ShivFamilyScreen() {
 
                 <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
                 <Text style={[styles.cardSub, { color: theme.textSecondary }]}>{item.summaryHindi}</Text>
-                <Text style={[styles.detailedText, { color: theme.textPrimary }]}>{item.detailedText}</Text>
+                <FormattedText text={item.detailedText} style={[styles.detailedText, { color: theme.textPrimary }]} />
 
                 {item.symbols && item.symbols.length > 0 && (
                   <View style={styles.symbolsRow}>

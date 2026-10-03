@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { shivaFestivals } from '@/content/sansar/symbolsAndTemples';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
+import { FormattedText } from '@/components/common/FormattedText';
 import { shadows } from '@/theme/colors';
 import { SmartBanner } from '@/components/common/SmartBanner';
 
@@ -45,7 +46,7 @@ export default function ShivaFestivalsScreen() {
 
                 <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
                 <Text style={[styles.cardSub, { color: theme.secondary }]}>✨ {item.significance}</Text>
-                <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.detailedGuide}</Text>
+                <FormattedText text={item.detailedGuide} style={[styles.bodyText, { color: theme.textPrimary }]} />
 
                 <View style={styles.cardActions}>
                   {item.audioUrl && (

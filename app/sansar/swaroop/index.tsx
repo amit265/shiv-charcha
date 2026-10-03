@@ -6,6 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { shivaForms } from '@/content/sansar/familyAndForms';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
+import { FormattedText } from '@/components/common/FormattedText';
 import { shadows } from '@/theme/colors';
 import { SmartBanner } from '@/components/common/SmartBanner';
 
@@ -47,7 +48,7 @@ export default function ShivSwaroopScreen() {
                 <Text style={[styles.simpleText, { color: theme.textSecondary }]}>
                   💡 <Text style={{ fontWeight: 'bold' }}>सरल अर्थ:</Text> {item.simpleHindi}
                 </Text>
-                <Text style={[styles.detailedText, { color: theme.textPrimary }]}>{item.detailedText}</Text>
+                <FormattedText text={item.detailedText} style={[styles.detailedText, { color: theme.textPrimary }]} />
 
                 <View style={styles.cardActions}>
                   {item.audioUrl && (

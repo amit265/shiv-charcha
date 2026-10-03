@@ -7,6 +7,7 @@ import { famousTemples } from '@/content/sansar/symbolsAndTemples';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
+import { FormattedText } from '@/components/common/FormattedText';
 import { shadows } from '@/theme/colors';
 import { SmartBanner } from '@/components/common/SmartBanner';
 
@@ -53,7 +54,7 @@ export default function FamousTemplesScreen() {
 
                 <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
                 <Text style={[styles.cardSub, { color: theme.secondary }]}>✨ {item.significance}</Text>
-                <Text style={[styles.bodyText, { color: theme.textPrimary }]}>{item.history}</Text>
+                <FormattedText text={item.history} style={[styles.bodyText, { color: theme.textPrimary }]} />
 
                 <View style={styles.cardActions}>
                   {item.audioUrl && (
