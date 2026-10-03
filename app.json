@@ -3,7 +3,7 @@
     "name": "शिव चर्चा",
     "slug": "shiv-charcha",
     "version": "1.0.3",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "shivcharcha",
     "userInterfaceStyle": "light",
@@ -14,6 +14,11 @@
     "android": {
       "package": "com.mahavyomastudio.shivcharcha",
       "supportsTablet": true,
+      "resizeableActivity": true,
+      "statusBar": {
+        "barStyle": "light-content",
+        "translucent": true
+      },
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#4A0E17",
