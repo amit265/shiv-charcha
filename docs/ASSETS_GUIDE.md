@@ -72,6 +72,9 @@ All streaming tracks are fetched directly from the official studio audio server 
 | `mahamrityunjaya_mantra.mp3` | महामृत्युंजय मंत्र | `https://mahavyomastudio.com/apps/shiv-charcha/audio/mahamrityunjaya_mantra.mp3` | 🔗 Link Configured |
 | `daridrya_dahana_stotram.mp3` | दारिद्र्य दहन स्तोत्रम् | `https://mahavyomastudio.com/apps/shiv-charcha/audio/daridrya_dahana_stotram.mp3` | 🔗 Link Configured |
 | `lingashtakam.mp3` | श्री लिंगाष्टकम् | `https://mahavyomastudio.com/apps/shiv-charcha/audio/lingashtakam.mp3` | 🔗 Link Configured |
+| `shiv_chalisa.mp3` | श्री शिव चालीसा | `https://mahavyomastudio.com/apps/shiv-charcha/audio/shiv_chalisa.mp3` | 🔗 Link Configured |
+| `dwadasa_jyotirlinga_stotram.mp3` | द्वादश ज्योतिर्लिंग स्तोत्रम् | `https://mahavyomastudio.com/apps/shiv-charcha/audio/dwadasa_jyotirlinga_stotram.mp3` | 🔗 Link Configured |
+| `shiva_ashtottara_shatanama.mp3` | शिव अष्टोत्तर शतनामावली (108 नाम) | `https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_ashtottara_shatanama.mp3` | 🔗 Link Configured |
 
 ### C. Devotional Ringtones (`src/content/ringtones.ts`)
 | Filename | Title | Expected Remote URL | Status |
@@ -91,9 +94,11 @@ All streaming tracks are fetched directly from the official studio audio server 
 | `daily_msg_today_3.mp3` | दैनिक शिव संदेश 3 | `https://mahavyomastudio.com/apps/shiv-charcha/audio/daily_msg_today_3.mp3` | 🔗 Link Configured |
 
 ### E. Jyotirlingas, Shakti Peethas & Shiv Sansar (`src/content/sansar/`)
-- **Jyotirlingas**: `jyotirlinga_somnath.mp3`, `jyotirlinga_mallikarjuna.mp3`, `jyotirlinga_mahakaleshwar.mp3`, `jyotirlinga_omkareshwar.mp3`, `jyotirlinga_kedarnath.mp3`, `jyotirlinga_bhimashankar.mp3`, `jyotirlinga_kashi_vishwanath.mp3`, `jyotirlinga_trimbakeshwar.mp3`, `jyotirlinga_vaidyanath.mp3`, `jyotirlinga_nageshwar.mp3`, `jyotirlinga_rameshwaram.mp3`, `jyotirlinga_grishneshwar.mp3`
-- **Shakti Peethas**: `shaktipeeth_kamakhya.mp3`, `shaktipeeth_kalighat.mp3`, `shaktipeeth_tarapith.mp3`, `shaktipeeth_51_peethas.mp3`, etc.
-- **Family & Forms**: `sansar_shiva_head.mp3`, `sansar_parvati_mother.mp3`, `sansar_ganesha_son.mp3`, `sansar_kartikeya_son.mp3`, `sansar_nandi_devotee.mp3`, `sansar_mahadev.mp3`, `sansar_neelkanth.mp3`, `sansar_nataraja.mp3`, `sansar_ardhanarishvara.mp3`, `sansar_dakshinamurthy.mp3`, `sansar_kalabhairava.mp3`, `sansar_pashupati.mp3`, `sansar_panchanana.mp3`, `sansar_mahakal.mp3`
+- **Jyotirlingas (12)**: `jyotirlinga_somnath.mp3`, `jyotirlinga_mallikarjuna.mp3`, `jyotirlinga_mahakaleshwar.mp3`, `jyotirlinga_omkareshwar.mp3`, `jyotirlinga_kedarnath.mp3`, `jyotirlinga_bhimashankar.mp3`, `jyotirlinga_kashi_vishwanath.mp3`, `jyotirlinga_trimbakeshwar.mp3`, `jyotirlinga_vaidyanath.mp3`, `jyotirlinga_nageshwar.mp3`, `jyotirlinga_ramanathaswamy.mp3`, `jyotirlinga_grishneshwar.mp3`
+- **Shakti Peethas (15+)**: `shaktipeeth_kamakhya.mp3`, `shaktipeeth_kalighat.mp3`, `shaktipeeth_tarapith.mp3`, `shaktipeeth_hinglaj.mp3`, `shaktipeeth_jwalaji.mp3`, `shaktipeeth_ambaji.mp3`, `shaktipeeth_vishalakshi.mp3`, `shaktipeeth_chamundeshwari.mp3`, `shaktipeeth_kamakshi.mp3`, `shaktipeeth_naina_devi.mp3`, `shaktipeeth_sharda.mp3`, `shaktipeeth_chinnamasta.mp3`, `shaktipeeth_kankalitala.mp3`, `shaktipeeth_tripura_sundari.mp3`, `shaktipeeth_vindhyavasini.mp3`
+- **Kathas & Legends (13)**: `story_sati_and_shiva.mp3`, `story_shiva_and_parvati.mp3`, `story_samudra_manthan.mp3`, `story_ganga_avataran.mp3`, `story_markandeya_raksha.mp3`, `story_tripurantaka_story.mp3`, `story_bhasmasura_and_mohini.mp3`, `story_ganesha_janm.mp3`, `story_ravan_bhakti.mp3`, `story_lingaodbhava.mp3`, `story_nandi_katha.mp3`, `story_natraj_tandava.mp3`, `story_shiv_shishyata.mp3`
+- **Family & Avatars (14+)**: `sansar_shiva_head.mp3`, `sansar_parvati_mother.mp3`, `sansar_ganesha_son.mp3`, `sansar_kartikeya_son.mp3`, `sansar_nandi_devotee.mp3`, `sansar_ashokasundari.mp3`, `sansar_ayappa.mp3`, `sansar_veerabhadra.mp3`, `sansar_mahadev.mp3`, `sansar_neelkanth.mp3`, `sansar_nataraja.mp3`, `sansar_ardhanarishvara.mp3`, `sansar_dakshinamurthy.mp3`, `sansar_kalabhairava.mp3`, `sansar_pashupati.mp3`, `sansar_ekadasha_rudra.mp3`, `sansar_sharabha.mp3`, `sansar_pippalada.mp3`
+- **Symbols, Temples & Festivals**: `symbol_shivling.mp3`, `symbol_trishula.mp3`, `symbol_damru.mp3`, `symbol_rudraksha.mp3`, `symbol_third_eye.mp3`, `symbol_bilva_patra.mp3`, `symbol_tripundra.mp3`, `symbol_crescent_moon.mp3`, `symbol_pashupatinath.mp3`, `symbol_tungnath.mp3`, `symbol_amarnath.mp3`, `symbol_chidambaram.mp3`, `symbol_murudeshwar.mp3`, `symbol_lingaraj.mp3`, `symbol_mahashivratri.mp3`, `symbol_shravan_maas.mp3`, `symbol_pradosh_vrat.mp3`
 
 ---
 
