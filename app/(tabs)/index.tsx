@@ -28,6 +28,7 @@ export default function HomeScreen() {
   const [formattedName, setFormattedName] = useState<string>('शिव शिष्य');
   const [sutraStreak, setSutraStreak] = useState<number>(0);
   const [past7Days, setPast7Days] = useState<Array<{ date: string; dayName: string; completed: boolean }>>([]);
+  const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
 
   const todayMsg = dailyMessages[0];
   const todayBhajan = audioLibrary[0];
@@ -49,6 +50,20 @@ export default function HomeScreen() {
       }, 3200);
     }
     setFormattedName(getFormattedUserName(prefs));
+
+    const sutrasData = await StorageService.getDaily3Sutras();
+    setDailySutras({ sutra1: sutrasData.sutra1, sutra2: sutrasData.sutra2, sutra3: sutrasData.sutra3 });
+
+    const streakData = await StorageService.getSutraStreak();
+    setSutraStreak(streakData.streak);
+    setPast7Days(streakData.past7Days);
+  };
+
+  const toggleSutra = async (key: 'sutra1' | 'sutra2' | 'sutra3') => {
+    const updatedValue = !dailySutras[key];
+    const newSutras = { ...dailySutras, [key]: updatedValue };
+    setDailySutras(newSutras);
+    await StorageService.saveDaily3Sutras({ [key]: updatedValue });
 
     const streakData = await StorageService.getSutraStreak();
     setSutraStreak(streakData.streak);
@@ -132,7 +147,7 @@ export default function HomeScreen() {
           <Text style={[styles.greetingSub, { color: theme.textWhite }]}>{panchang.specialNote}</Text>
         </View>
 
-        {/* 1-TAP QUICK SADHNA RIBBON FOR ELDERLY & DAILY USERS */}
+        {/* 1-TAP QUICK SADHNA RIBBON FOR DAILY USERS & ELDERLY */}
         <View style={styles.quickRibbonContainer}>
           <TouchableOpacity
             style={[styles.quickRibbonCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
@@ -169,7 +184,7 @@ export default function HomeScreen() {
               <Text style={styles.quickIcon}>🗣️</Text>
             </View>
             <Text style={[styles.quickLabel, { color: theme.textPrimary }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
-              शिव चर्चा
+              3 सूत्र
             </Text>
           </TouchableOpacity>
 
@@ -187,22 +202,75 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* 7-DAY SADHNA LOTUS STREAK BAR */}
-        <TouchableOpacity
-          style={[styles.streakCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-          onPress={() => router.push('/charcha' as any)}
-          activeOpacity={0.9}
-        >
+        {/* LEVEL 1: INTERACTIVE 3-SUTRA DAILY PRACTICE CARD */}
+        <View style={[styles.streakCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
           <View style={styles.streakHeaderRow}>
             <View style={styles.streakLeftTitleGroup}>
-              <Text style={[styles.streakTitle, { color: theme.primary }]}>🪷 मेरी 7-दिवसीय शिव साधना</Text>
+              <Text style={[styles.streakTitle, { color: theme.primary }]}>🪷 आज की 3-सूत्र शिव साधना</Text>
               <Text style={[styles.streakSubtitle, { color: theme.textMuted }]}>
-                {sutraStreak > 0 ? `🔥 ${sutraStreak} दिन से निरंतर साधना जारी` : 'प्रतिदिन 3 सूत्र पूरे करें व कमल खिलाएँ'}
+                {sutraStreak > 0 ? `🔥 ${sutraStreak} दिन से निरंतर साधना जारी` : 'साहब श्री हरिंद्रानंद जी के 3 सूत्र अंकित करें'}
               </Text>
             </View>
-            <Text style={[styles.streakArrow, { color: theme.secondary }]}>3 सूत्र ➔</Text>
+            <TouchableOpacity onPress={() => router.push('/charcha' as any)} activeOpacity={0.8}>
+              <Text style={[styles.streakArrow, { color: theme.secondary }]}>विवरण ➔</Text>
+            </TouchableOpacity>
           </View>
 
+          {/* Interactive Checkable 3 Sutra Pills */}
+          <View style={styles.sutraPillsRow}>
+            <TouchableOpacity
+              style={[
+                styles.sutraPillItem,
+                {
+                  backgroundColor: dailySutras.sutra1 ? 'rgba(230, 81, 0, 0.15)' : theme.cardBg,
+                  borderColor: dailySutras.sutra1 ? theme.accent : theme.border,
+                },
+              ]}
+              onPress={() => toggleSutra('sutra1')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.sutraPillCheck, { color: dailySutras.sutra1 ? theme.primary : theme.textMuted }]}>
+                {dailySutras.sutra1 ? '✓' : '○'}
+              </Text>
+              <Text style={[styles.sutraPillText, { color: theme.textPrimary }]}>1. दया माँगी</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.sutraPillItem,
+                {
+                  backgroundColor: dailySutras.sutra2 ? 'rgba(230, 81, 0, 0.15)' : theme.cardBg,
+                  borderColor: dailySutras.sutra2 ? theme.accent : theme.border,
+                },
+              ]}
+              onPress={() => toggleSutra('sutra2')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.sutraPillCheck, { color: dailySutras.sutra2 ? theme.primary : theme.textMuted }]}>
+                {dailySutras.sutra2 ? '✓' : '○'}
+              </Text>
+              <Text style={[styles.sutraPillText, { color: theme.textPrimary }]}>2. चर्चा की</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.sutraPillItem,
+                {
+                  backgroundColor: dailySutras.sutra3 ? 'rgba(230, 81, 0, 0.15)' : theme.cardBg,
+                  borderColor: dailySutras.sutra3 ? theme.accent : theme.border,
+                },
+              ]}
+              onPress={() => toggleSutra('sutra3')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.sutraPillCheck, { color: dailySutras.sutra3 ? theme.primary : theme.textMuted }]}>
+                {dailySutras.sutra3 ? '✓' : '○'}
+              </Text>
+              <Text style={[styles.sutraPillText, { color: theme.textPrimary }]}>3. 108 जाप</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* 7-Day Lotus Bar */}
           <View style={styles.lotusStreakRow}>
             {past7Days.map((item, idx) => (
               <View key={idx} style={styles.lotusItem}>
@@ -213,7 +281,7 @@ export default function HomeScreen() {
               </View>
             ))}
           </View>
-        </TouchableOpacity>
+        </View>
 
         {/* PROMINENT SHIV SANSAR SPOTLIGHT CARD */}
         <TouchableOpacity
@@ -555,6 +623,31 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   streakArrow: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  sutraPillsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 6,
+    marginVertical: 10,
+  },
+  sutraPillItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  sutraPillCheck: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginRight: 4,
+  },
+  sutraPillText: {
     fontSize: 12,
     fontWeight: 'bold',
   },

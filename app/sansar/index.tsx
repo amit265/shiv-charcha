@@ -19,7 +19,7 @@ export default function ShivSansarHomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
 
-  const categories: SansarCategory[] = [
+  const tier1Categories: SansarCategory[] = [
     {
       id: 'stories',
       title: 'शिव कथाएँ',
@@ -31,15 +31,15 @@ export default function ShivSansarHomeScreen() {
     {
       id: 'jyotirlinga',
       title: '12 ज्योतिर्लिंग',
-      subtitle: 'सोमनाथ से घृष्णेश्वर तक द्वादश पावन धाम दर्शन व ऑडियो',
+      subtitle: 'सोमनाथ से घृष्णेश्वर तक द्वादश पावन धाम दर्शन',
       icon: '🛕',
       route: '/sansar/jyotirlinga',
       image: '',
     },
     {
       id: 'shakti-peeth',
-      title: 'शक्ति पीठ',
-      subtitle: 'सती के पावन अंगों से सिद्ध 51 शक्ति पीठ दर्शन व इतिहास',
+      title: '51 शक्ति पीठ',
+      subtitle: 'माता सती के पावन शक्ति पीठ दर्शन व इतिहास',
       icon: '🌺',
       route: '/sansar/shakti-peeth',
       image: '',
@@ -47,15 +47,18 @@ export default function ShivSansarHomeScreen() {
     {
       id: 'family',
       title: 'शिव परिवार',
-      subtitle: 'पार्वती, गणेश, कार्तिकेय व नंदी की अलौकिक महिमा',
+      subtitle: 'माता पार्वती, गणेश, कार्तिकेय व नंदी की महिमा',
       icon: '👨‍👩‍👧',
       route: '/sansar/family',
       image: '',
     },
+  ];
+
+  const tier2Categories: SansarCategory[] = [
     {
       id: 'swaroop',
       title: 'शिव के स्वरूप',
-      subtitle: 'महादेव, नीलकंठ, नटराज, अर्धनारीश्वर व महाकाल रूप',
+      subtitle: 'महादेव, नीलकंठ, नटराज व अर्धनारीश्वर रूप',
       icon: '🔱',
       route: '/sansar/swaroop',
       image: '',
@@ -63,15 +66,15 @@ export default function ShivSansarHomeScreen() {
     {
       id: 'symbols',
       title: 'शिव के प्रतीक',
-      subtitle: 'त्रिशूल, डमरू, रुद्राक्ष, चंद्रमा, भस्म व त्रिनेत्र का अर्थ',
+      subtitle: 'त्रिशूल, डमरू, रुद्राक्ष, भस्म व त्रिनेत्र का अर्थ',
       icon: '🕉️',
       route: '/sansar/symbols',
       image: '',
     },
     {
       id: 'yatra',
-      title: 'शिव यात्रा (Interactive Map)',
-      subtitle: 'भारत के नक्शे पर ज्योतिर्लिंग व तीर्थों की डिजिटल यात्रा',
+      title: 'शिव डिजिटल यात्रा',
+      subtitle: 'भारत के नक्शे पर ज्योतिर्लिंग व तीर्थों का मार्ग',
       icon: '📍',
       route: '/sansar/yatra',
       image: '',
@@ -79,28 +82,53 @@ export default function ShivSansarHomeScreen() {
     {
       id: 'temples',
       title: 'प्रसिद्ध शिव मंदिर',
-      subtitle: 'पशुपतिनाथ, तुंगनाथ, अमरनाथ व देश-विदेश के शिवालय',
+      subtitle: 'पशुपतिनाथ, तुंगनाथ, अमरनाथ व पावन शिवालय',
       icon: '🛕',
       route: '/sansar/temples',
       image: '',
     },
-    {
-      id: 'festivals',
-      title: 'शिव पर्व एवं उत्सव',
-      subtitle: 'महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत की विधि',
-      icon: '📅',
-      route: '/sansar/festivals',
-      image: '',
-    },
+  ];
+
+  const tier3Categories: SansarCategory[] = [
     {
       id: 'stotra',
       title: 'शिव स्तोत्र व मंत्र',
-      subtitle: 'तांडव स्तोत्र, रुद्राष्टकम, महामृत्युंजय व लिंगाष्टकम पाठ',
+      subtitle: 'तांडव स्तोत्र, रुद्राष्टकम व महामृत्युंजय पाठ',
       icon: '📿',
       route: '/sansar/stotra',
       image: '',
     },
+    {
+      id: 'festivals',
+      title: 'शिव पर्व व व्रत विधि',
+      subtitle: 'महाशिवरात्रि, सावन सोमवार व प्रदोष व्रत विधि',
+      icon: '📅',
+      route: '/sansar/festivals',
+      image: '',
+    },
   ];
+
+  const renderCategoryGrid = (items: SansarCategory[]) => (
+    <View style={styles.categoriesGrid}>
+      {items.map((cat) => (
+        <TouchableOpacity
+          key={cat.id}
+          style={[styles.categoryCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+          onPress={() => router.push(cat.route as any)}
+          activeOpacity={0.88}
+        >
+          <Image source={resolveImageSource(cat.id || cat.image, 'hero')} style={styles.cardImage} />
+          <View style={styles.cardOverlay}>
+            <Text style={styles.cardIcon}>{cat.icon}</Text>
+            <Text style={styles.cardTitle}>{cat.title}</Text>
+            <Text style={styles.cardSub} numberOfLines={2}>
+              {cat.subtitle}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -116,34 +144,27 @@ export default function ShivSansarHomeScreen() {
             शिव चर्चा से शिव संसार तक 🔱
           </Text>
           <Text style={[styles.heroSub, { color: theme.textWhite }]}>
-            भगवान शिव के दिव्य आख्यान, ज्योतिर्लिंग, शक्ति पीठ, तीर्थ यात्रा व पौराणिक प्रतीकों का सम्पूर्ण डिजिटल ज्ञानकोश।
+            भगवान शिव के दिव्य आख्यान, ज्योतिर्लिंग, शक्ति पीठ, तीर्थ यात्रा व पौराणिक प्रतीकों का सम्पूर्ण ज्ञानकोश।
           </Text>
         </View>
 
-        {/* Categories Grid */}
+        {/* TIER 1: KATHA & DHAM */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>
-          शिव संसार के पावन भाग
+          🌸 1. पावन कथाएँ, ज्योतिर्लिंग व धाम
         </Text>
+        {renderCategoryGrid(tier1Categories)}
 
-        <View style={styles.categoriesGrid}>
-          {categories.map((cat) => (
-            <TouchableOpacity
-              key={cat.id}
-              style={[styles.categoryCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-              onPress={() => router.push(cat.route as any)}
-              activeOpacity={0.88}
-            >
-              <Image source={resolveImageSource(cat.id || cat.image, 'hero')} style={styles.cardImage} />
-              <View style={styles.cardOverlay}>
-                <Text style={styles.cardIcon}>{cat.icon}</Text>
-                <Text style={styles.cardTitle}>{cat.title}</Text>
-                <Text style={styles.cardSub} numberOfLines={2}>
-                  {cat.subtitle}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+        {/* TIER 2: SWAROOP, SYMBOLS & TEMPLES */}
+        <Text style={[styles.sectionTitle, { color: theme.primary, marginTop: 22 }]}>
+          🔱 2. रूप, प्रतीक व तीर्थ दर्शन
+        </Text>
+        {renderCategoryGrid(tier2Categories)}
+
+        {/* TIER 3: MANTRAS & FESTIVALS */}
+        <Text style={[styles.sectionTitle, { color: theme.primary, marginTop: 22 }]}>
+          📿 3. नित्य पाठ, स्तोत्र व पर्व
+        </Text>
+        {renderCategoryGrid(tier3Categories)}
       </ScrollView>
     </View>
   );

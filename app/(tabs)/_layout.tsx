@@ -101,11 +101,11 @@ export default function TabLayout() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'मुख्य पृष्ठ' }} />
+      <Tabs.Screen name="index" options={{ title: 'होम' }} />
       <Tabs.Screen name="charcha" options={{ title: 'शिव चर्चा' }} />
       <Tabs.Screen name="sansar" options={{ title: 'शिव संसार' }} />
       <Tabs.Screen name="share" options={{ title: 'सुविचार' }} />
-      <Tabs.Screen name="profile" options={{ title: 'प्रोफाइल' }} />
+      <Tabs.Screen name="profile" options={{ title: 'मेरी साधना' }} />
     </Tabs>
   );
 }
