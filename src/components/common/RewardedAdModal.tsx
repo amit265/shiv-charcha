@@ -42,8 +42,6 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
   }, [visible]);
 
   const handleAcceptConsent = () => {
-    setStep('loading');
-
     const shown = AdManager.showRewardedAd(
       () => {
         void AdManager.grantAdFree().then(() => {
@@ -58,56 +56,6 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
     );
 
     if (!shown) {
-      startAdLoading();
-    }
-  };
-
-  const startAdLoading = () => {
-    let isMounted = true;
-    let fallbackTimeout: ReturnType<typeof setTimeout>;
-    let rewardedAd: any = null;
-    let unsubLoaded: (() => void) | null = null;
-    let unsubEarned: (() => void) | null = null;
-    let unsubClosed: (() => void) | null = null;
-
-    try {
-      rewardedAd = RewardedAd.createForAdRequest(adUnitId, {
-        requestNonPersonalizedAdsOnly: true,
-      });
-
-      unsubLoaded = rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        if (!isMounted) return;
-        clearTimeout(fallbackTimeout);
-        try {
-          rewardedAd.show();
-        } catch {
-          setStep('playing');
-        }
-      });
-
-      unsubEarned = rewardedAd.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
-        if (!isMounted) return;
-        void AdManager.grantAdFree().then(() => {
-          setStep('success');
-        });
-      });
-
-      unsubClosed = rewardedAd.addAdEventListener('closed', () => {
-        if (!isMounted) return;
-        AdManager.setAdRecentlyClosed();
-        if (step !== 'success') {
-          onDismiss();
-        }
-      });
-
-      fallbackTimeout = setTimeout(() => {
-        if (isMounted) {
-          setStep('playing');
-        }
-      }, 8000);
-
-      rewardedAd.load();
-    } catch {
       setStep('playing');
     }
   };

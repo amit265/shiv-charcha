@@ -19,6 +19,11 @@ export function AdStateProvider({ children }: React.PropsWithChildren) {
 
   useEffect(() => {
     if (Platform.OS === 'web') return;
+
+    if (!AdManager.isRewardedAdLoaded()) {
+      void AdManager.loadRewardedAd();
+    }
+
     AdManager.registerRewardedListeners(
       () => { setIsRewardedLoaded(true); },
       () => { setIsRewardedLoaded(false); }
@@ -29,6 +34,9 @@ export function AdStateProvider({ children }: React.PropsWithChildren) {
     if (featureFlags.ads.enabled && Platform.OS !== 'web') {
       const adFreeActive = await AdManager.isAdFreeActive();
       setIsAdFree(adFreeActive);
+      if (!AdManager.isRewardedAdLoaded()) {
+        void AdManager.loadRewardedAd();
+      }
       setIsRewardedLoaded(AdManager.isRewardedAdLoaded());
     }
   }, []);
@@ -43,6 +51,9 @@ export function AdStateProvider({ children }: React.PropsWithChildren) {
         const active = await AdManager.isAdFreeActive();
         if (isMounted) {
           setIsAdFree(active);
+        }
+        if (!AdManager.isRewardedAdLoaded()) {
+          void AdManager.loadRewardedAd();
         }
       }
     }

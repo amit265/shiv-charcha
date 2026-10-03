@@ -58,8 +58,11 @@ export default function SettingsScreen() {
     setTimeout(() => {
       loadPreferences();
       checkAdFreeTime();
+      if (Platform.OS !== 'web' && !isRewardedLoaded && !isAdFree) {
+        void AdManager.loadRewardedAd();
+      }
     }, 0);
-  }, [isAdFree]);
+  }, [isAdFree, isRewardedLoaded]);
 
   const toggleSound = async (val: boolean) => {
     await StorageService.savePreferences({ soundEnabled: val });
@@ -228,8 +231,13 @@ export default function SettingsScreen() {
         {/* SECTION 3.5: AD-FREE REWARDED EXPERIENCE */}
         <Text style={[styles.sectionTitle, { color: theme.primary }]}>विज्ञापन-मुक्त अनुभव (Ad-Free Mode) 🎬</Text>
         <TouchableOpacity
-          style={[styles.settingCard, { backgroundColor: theme.cardBg, borderColor: isAdFree ? theme.accent : theme.borderGold }]}
+          style={[
+            styles.settingCard,
+            { backgroundColor: theme.cardBg, borderColor: isAdFree ? theme.accent : theme.borderGold },
+            (!isRewardedLoaded && !isAdFree && Platform.OS !== 'web') && { opacity: 0.6 }
+          ]}
           onPress={() => setShowRewardedModal(true)}
+          disabled={!isRewardedLoaded && !isAdFree && Platform.OS !== 'web'}
           activeOpacity={0.8}
         >
           <View style={styles.cardRow}>

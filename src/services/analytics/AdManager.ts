@@ -375,6 +375,9 @@ export const AdManager = {
   registerRewardedListeners(onLoaded: () => void, onUnloaded: () => void) {
     onRewardedAdLoadedCallback = onLoaded;
     onRewardedAdClosedCallback = onUnloaded;
+    if (this.isRewardedAdLoaded() && onLoaded) {
+      onLoaded();
+    }
   },
 
   isRewardedAdLoaded() {
