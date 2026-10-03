@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   Alert,
   StatusBar,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import * as Haptics from 'expo-haptics';
@@ -22,6 +22,7 @@ import { shivaBackgrounds } from '@/constants/shivaImages';
 import { colors, shadows } from '@/theme/colors';
 import { safeShare } from '@/services/shareService';
 import { useAudio } from '@/context/AudioContext';
+import { audioLibrary } from '@/content/audioLibrary';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -34,7 +35,7 @@ interface ReelItemProps {
 
 const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
   const insets = useSafeAreaInsets();
-  const { playSoundEffect } = useAudio();
+  const { playSoundEffect, isPlaying, togglePlayPause } = useAudio();
   const viewShotRef = useRef<any>(null);
 
   const [bgIndex, setBgIndex] = useState<number>(index % shivaBackgrounds.length);
@@ -55,6 +56,11 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
     playSoundEffect('chime');
     setIsLiked((prev) => !prev);
     setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+  };
+
+  const handleToggleSound = () => {
+    triggerHaptic();
+    togglePlayPause();
   };
 
   const handleCycleBg = () => {
@@ -208,6 +214,14 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
           <Text style={styles.actionLabel}>{likes}</Text>
         </TouchableOpacity>
 
+        {/* Sound Mute / Unmute Button */}
+        <TouchableOpacity style={styles.actionBtn} onPress={handleToggleSound} activeOpacity={0.8}>
+          <View style={[styles.actionIconCircle, isPlaying && styles.actionIconCircleActive]}>
+            <Text style={styles.actionEmoji}>{isPlaying ? '🔊' : '🔇'}</Text>
+          </View>
+          <Text style={styles.actionLabel}>{isPlaying ? 'ध्वनि' : 'म्यूट'}</Text>
+        </TouchableOpacity>
+
         {/* Share Button */}
         <TouchableOpacity style={styles.actionBtn} onPress={handleShare} activeOpacity={0.8}>
           <View style={styles.actionIconCircle}>
@@ -242,9 +256,23 @@ const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
 };
 const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const insets = useSafeAreaInsets();
+  const { isPlaying, togglePlayPause } = useAudio();
   const [adLoaded, setAdLoaded] = useState<boolean | null>(null);
   const topInsetPadding = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44) + 8;
   const bottomInsetPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 16 : 0) + 12;
+
+  const triggerHaptic = () => {
+    try {
+      if (Platform.OS !== 'web') {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
+    } catch (e) {}
+  };
+
+  const handleToggleSound = () => {
+    triggerHaptic();
+    togglePlayPause();
+  };
 
   return (
     <View style={styles.reelItemContainer}>
@@ -287,6 +315,17 @@ const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) 
           </View>
         )}
       </View>
+
+      {/* Right Actions Bar for Ad Reel */}
+      <View style={[styles.rightActionsPanel, { bottom: bottomInsetPadding + 50 }]}>
+        <TouchableOpacity style={styles.actionBtn} onPress={handleToggleSound} activeOpacity={0.8}>
+          <View style={[styles.actionIconCircle, isPlaying && styles.actionIconCircleActive]}>
+            <Text style={styles.actionEmoji}>{isPlaying ? '🔊' : '🔇'}</Text>
+          </View>
+          <Text style={styles.actionLabel}>{isPlaying ? 'ध्वनि' : 'म्यूट'}</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={[styles.bottomHint, { paddingBottom: bottomInsetPadding }]}>
         <Text style={styles.hintText}>ऊपर स्क्रॉल करें 👆</Text>
       </View>
@@ -296,6 +335,20 @@ const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) 
 
 export default function ReelsScreen() {
   const router = useRouter();
+  const { playTrack, pauseTrack } = useAudio();
+
+  useFocusEffect(
+    useCallback(() => {
+      const reelTrack = audioLibrary.find((t) => t.id === 'a-mantra-108') || audioLibrary[0];
+      if (reelTrack) {
+        playTrack(reelTrack);
+      }
+
+      return () => {
+        pauseTrack();
+      };
+    }, [playTrack, pauseTrack])
+  );
 
   const handleClose = () => {
     if (router.canGoBack()) {
