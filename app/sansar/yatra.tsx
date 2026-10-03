@@ -124,7 +124,7 @@ export default function ShivYatraMapScreen() {
         </View>
 
         {/* Filter Buttons */}
-        <View style={styles.filterRow}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScrollView} contentContainerStyle={styles.filterRow}>
           <TouchableOpacity
             style={[
               styles.filterBtn,
@@ -169,7 +169,7 @@ export default function ShivYatraMapScreen() {
               🌺 शक्ति पीठ
             </Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
 
         {/* MAP CANVAS CONTAINER */}
         <View style={[styles.mapContainer, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
@@ -197,8 +197,10 @@ export default function ShivYatraMapScreen() {
                     {
                       left: `${pin.xPercent}%`,
                       top: `${pin.yPercent}%`,
-                      backgroundColor: isSelected ? theme.accentGlow : pin.category === 'jyotirlinga' ? '#FF6F00' : '#E11D48',
-                      transform: [{ scale: isSelected ? 1.3 : 1 }],
+                      backgroundColor: isSelected ? '#FFD700' : pin.category === 'jyotirlinga' ? '#D97706' : '#E11D48',
+                      borderColor: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)',
+                      borderWidth: isSelected ? 2 : 1,
+                      transform: [{ scale: isSelected ? 1.35 : 1 }],
                       zIndex: isSelected ? 99 : 10,
                     },
                   ]}
@@ -290,10 +292,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+  filterScrollView: {
+    marginBottom: 14,
+  },
   filterRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 14,
+    paddingRight: 10,
   },
   filterBtn: {
     paddingHorizontal: 12,
@@ -346,21 +351,21 @@ const styles = StyleSheet.create({
   },
   mapMarker: {
     position: 'absolute',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: -16,
-    marginTop: -16,
+    marginLeft: -11,
+    marginTop: -11,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 4,
   },
   markerEmoji: {
-    fontSize: 16,
+    fontSize: 11,
   },
   pinDetailCard: {
     borderRadius: 18,
