@@ -37,27 +37,6 @@ export default function SettingsScreen() {
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'copyright' | 'disclaimer' | null>(null);
 
-  useEffect(() => {
-    loadPreferences();
-    checkAdFreeTime();
-  }, [isAdFree]);
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (isAdFree) {
-      interval = setInterval(async () => {
-        const secs = await AdManager.getAdFreeRemainingSeconds();
-        setRemainingSecs(secs);
-        if (secs <= 0) {
-          await refreshAdState();
-        }
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isAdFree, refreshAdState]);
-
   const checkAdFreeTime = async () => {
     const secs = await AdManager.getAdFreeRemainingSeconds();
     setRemainingSecs(secs);
@@ -74,6 +53,13 @@ export default function SettingsScreen() {
     const p = await StorageService.getPreferences();
     setPrefs(p);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      loadPreferences();
+      checkAdFreeTime();
+    }, 0);
+  }, [isAdFree]);
 
   const toggleSound = async (val: boolean) => {
     await StorageService.savePreferences({ soundEnabled: val });

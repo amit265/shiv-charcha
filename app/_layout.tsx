@@ -39,10 +39,20 @@ function RootNavigator() {
   // Deep link handler hook for cold start & foreground URL handling
   useDeepLinkHandler();
 
+  const checkForAppUpdates = async () => {
+    const result = await UpdateService.checkForUpdates();
+    if (result && result.hasUpdate) {
+      setUpdateInfo(result);
+      setShowUpdateModal(true);
+    }
+  };
+
   useEffect(() => {
     Analytics.logScreen('App_Launch');
     AdManager.initialize();
-    checkForAppUpdates();
+    setTimeout(() => {
+      checkForAppUpdates();
+    }, 0);
 
     const sub = AppState.addEventListener('change', (state) => {
       if (state === 'active') {
@@ -54,14 +64,6 @@ function RootNavigator() {
       sub.remove();
     };
   }, []);
-
-  const checkForAppUpdates = async () => {
-    const result = await UpdateService.checkForUpdates();
-    if (result && result.hasUpdate) {
-      setUpdateInfo(result);
-      setShowUpdateModal(true);
-    }
-  };
 
   return (
     <>
@@ -131,7 +133,10 @@ export default function RootLayout() {
   const splashOpacity = useSharedValue(1);
 
   useEffect(() => {
-    setIsAppReady(true);
+    const timer = setTimeout(() => {
+      setIsAppReady(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {

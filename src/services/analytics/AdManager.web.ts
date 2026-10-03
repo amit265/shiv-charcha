@@ -55,11 +55,7 @@ export const getGoogleAdUnitId = (): string => {
 };
 
 export function useRewardedAdLoader() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    setIsLoaded(false);
-  }, []);
+  const [isLoaded] = useState(false);
 
   return { isLoaded, loadAd: () => {} };
 }

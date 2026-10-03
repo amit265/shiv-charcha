@@ -451,7 +451,7 @@ export default function GalleryScreen() {
                 <Text style={styles.guideStepNumText}>1</Text>
               </View>
               <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
-                <Text style={{ fontWeight: 'bold' }}>"⬇️ गैलरी में सहेजें"</Text> बटन दबाकर चित्र को अपने फोन की फोटो गैलरी में सहेजें।
+                <Text style={{ fontWeight: 'bold' }}>{'"'}⬇️ गैलरी में सहेजें{'"'}</Text> बटन दबाकर चित्र को अपने फोन की फोटो गैलरी में सहेजें।
               </Text>
             </View>
 
@@ -469,7 +469,7 @@ export default function GalleryScreen() {
                 <Text style={styles.guideStepNumText}>3</Text>
               </View>
               <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
-                सहेजे गए चित्र को चुनें और <Text style={{ fontWeight: 'bold' }}>"होम स्क्रीन" या "लॉक स्क्रीन"</Text> के रूप में सेट करें।
+                सहेजे गए चित्र को चुनें और <Text style={{ fontWeight: 'bold' }}>{'"'}होम स्क्रीन{'"'} या {'"'}लॉक स्क्रीन{'"'}</Text> के रूप में सेट करें।
               </Text>
             </View>
 

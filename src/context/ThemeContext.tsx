@@ -17,10 +17,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [themeId, setThemeIdState] = useState<ThemeId>('divya_sukoon');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    loadSavedTheme();
-  }, []);
-
   const loadSavedTheme = async () => {
     try {
       const prefs = await StorageService.getPreferences();
@@ -33,6 +29,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setIsLoaded(true);
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      loadSavedTheme();
+    }, 0);
+  }, []);
 
   const setThemeId = async (id: ThemeId) => {
     setThemeIdState(id);

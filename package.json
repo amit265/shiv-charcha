@@ -7,6 +7,8 @@
     "@react-native-firebase/analytics": "^26.3.2",
     "@react-native-firebase/app": "^26.3.2",
     "@react-native-firebase/crashlytics": "^26.3.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
     "expo": "~57.0.26",
     "expo-audio": "~57.0.5",
     "expo-build-properties": "~57.0.22",

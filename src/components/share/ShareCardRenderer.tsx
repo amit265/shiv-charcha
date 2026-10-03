@@ -48,11 +48,13 @@ export const ShareCardRenderer: React.FC<ShareCardRendererProps> = ({
 
   useEffect(() => {
     if (initialUserName) {
-      setUserName(initialUserName);
+      setTimeout(() => {
+        setUserName((prev) => (prev !== initialUserName ? initialUserName : prev));
+      }, 0);
     } else {
       StorageService.getPreferences().then((p) => {
         const formatted = getFormattedUserName(p);
-        if (formatted) setUserName(formatted);
+        if (formatted) setUserName((prev) => (prev !== formatted ? formatted : prev));
       });
     }
   }, [initialUserName]);

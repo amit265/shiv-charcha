@@ -88,16 +88,22 @@ export default function ShivYatraMapScreen() {
     })),
   ];
 
-  const [selectedPin, setSelectedPin] = useState<MapPin>(pins[0]);
+  const [selectedPin, setSelectedPin] = useState<MapPin>(() => {
+    if (focusId) {
+      const match = pins.find((p) => p.id === focusId);
+      if (match) return match;
+    }
+    return pins[0];
+  });
 
   useEffect(() => {
     if (focusId) {
       const match = pins.find((p) => p.id === focusId);
-      if (match) {
-        setSelectedPin(match);
+      if (match && match.id !== selectedPin.id) {
+        setTimeout(() => setSelectedPin(match), 0);
       }
     }
-  }, [focusId]);
+  }, [focusId, selectedPin.id]);
 
   const filteredPins = pins.filter((p) => {
     if (activeFilter === 'all') return true;

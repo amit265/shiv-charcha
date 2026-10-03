@@ -6,28 +6,6 @@ import { APP_LINKS } from '@/constants/links';
 export function useDeepLinkHandler() {
   const router = useRouter();
 
-  useEffect(() => {
-    // 1. Cold start deep link handling (safely delayed until navigation container is mounted)
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        setTimeout(() => {
-          handleUrl(url);
-        }, 800);
-      }
-    }).catch(() => {});
-
-    // 2. Foreground deep link listener
-    const subscription = Linking.addEventListener('url', (event) => {
-      if (event.url) {
-        handleUrl(event.url);
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
   const handleUrl = (url: string) => {
     try {
       // Parse custom scheme or web URL
@@ -71,4 +49,26 @@ export function useDeepLinkHandler() {
       // Ignore invalid URL
     }
   };
+
+  useEffect(() => {
+    // 1. Cold start deep link handling (safely delayed until navigation container is mounted)
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        setTimeout(() => {
+          handleUrl(url);
+        }, 800);
+      }
+    }).catch(() => {});
+
+    // 2. Foreground deep link listener
+    const subscription = Linking.addEventListener('url', (event) => {
+      if (event.url) {
+        handleUrl(event.url);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 }

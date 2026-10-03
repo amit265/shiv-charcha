@@ -9,16 +9,15 @@ interface WebDeviceFrameProps {
 }
 
 export const WebDeviceFrame: React.FC<WebDeviceFrameProps> = ({ children }) => {
-  const [deviceMode, setDeviceMode] = useState<DeviceMode>('iphone');
-
-  useEffect(() => {
+  const [deviceMode, setDeviceMode] = useState<DeviceMode>(() => {
     if (Platform.OS === 'web' && typeof window !== 'undefined') {
       const saved = window.sessionStorage?.getItem('shiv_charcha_web_mode') as DeviceMode;
       if (saved && ['iphone', 'ipad', 'full'].includes(saved)) {
-        setDeviceMode(saved);
+        return saved;
       }
     }
-  }, []);
+    return 'iphone';
+  });
 
   const changeMode = (mode: DeviceMode) => {
     setDeviceMode(mode);

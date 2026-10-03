@@ -34,8 +34,10 @@ export function RewardedAdModal({ visible, onDismiss, onRewardGranted }: Props) 
 
   useEffect(() => {
     if (!visible) {
-      setStep('consent');
-      setSecondsLeft(AD_DURATION_SECONDS);
+      setTimeout(() => {
+        setStep((prev) => (prev !== 'consent' ? 'consent' : prev));
+        setSecondsLeft((prev) => (prev !== AD_DURATION_SECONDS ? AD_DURATION_SECONDS : prev));
+      }, 0);
     }
   }, [visible]);
 

@@ -265,7 +265,7 @@ const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) 
               <Text style={styles.omText}>🕉️</Text>
             </View>
             <Text style={styles.quoteBodyText}>
-              "हर हर महादेव • ॐ नमः शिवाय"
+              {'"'}हर हर महादेव • ॐ नमः शिवाय{'"'}
             </Text>
             <View style={styles.authorDivider} />
             <Text style={styles.authorText}>शिव महिमा 🔱</Text>

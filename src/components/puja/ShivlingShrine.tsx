@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, Image } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { colors, shadows } from '../../theme/colors';
@@ -33,17 +33,17 @@ export const ShivlingShrine: React.FC<ShivlingShrineProps> = ({
 }) => {
   const { theme } = useTheme();
 
-  // Animation Refs
-  const auraAnim = useRef(new Animated.Value(1)).current;
-  const flameAnim = useRef(new Animated.Value(1)).current;
-  const streamHeight = useRef(new Animated.Value(0)).current;
-  const streamPulse = useRef(new Animated.Value(0.9)).current;
-  const kalashTiltAnim = useRef(new Animated.Value(0)).current;
-  const rippleAnim = useRef(new Animated.Value(0)).current;
-  const garlandDropAnim = useRef(new Animated.Value(-100)).current;
-  const showerYAnim = useRef(new Animated.Value(0)).current;
-  const aartiOrbitalAnim = useRef(new Animated.Value(0)).current;
-  const smokeAnim = useRef(new Animated.Value(0)).current;
+  // Animation Values
+  const [auraAnim] = useState(() => new Animated.Value(1));
+  const [flameAnim] = useState(() => new Animated.Value(1));
+  const [streamHeight] = useState(() => new Animated.Value(0));
+  const [streamPulse] = useState(() => new Animated.Value(0.9));
+  const [kalashTiltAnim] = useState(() => new Animated.Value(0));
+  const [rippleAnim] = useState(() => new Animated.Value(0));
+  const [garlandDropAnim] = useState(() => new Animated.Value(-100));
+  const [showerYAnim] = useState(() => new Animated.Value(0));
+  const [aartiOrbitalAnim] = useState(() => new Animated.Value(0));
+  const [smokeAnim] = useState(() => new Animated.Value(0));
 
   // Divine Aura Pulsing Loop
   useEffect(() => {

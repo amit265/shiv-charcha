@@ -387,15 +387,6 @@ export const AdManager = {
 };
 
 export const useRewardedAdLoader = () => {
-  if (Platform.OS === 'web') {
-    return {
-      isLoaded: false,
-      isEarnedReward: false,
-      load: () => {},
-      show: () => {},
-    };
-  }
-
   const { useRewardedAd } = require('react-native-google-mobile-ads');
   const adUnitId = getGoogleAdUnitId('rewarded');
 
@@ -403,7 +394,7 @@ export const useRewardedAdLoader = () => {
     requestNonPersonalizedAdsOnly: true,
   });
 
-  if (!featureFlags.ads.enabled) {
+  if (Platform.OS === 'web' || !featureFlags.ads.enabled) {
     return {
       isLoaded: false,
       isEarnedReward: false,

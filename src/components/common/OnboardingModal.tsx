@@ -132,7 +132,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>पहला सूत्र - दया माँगना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                      "हे शिव! आप मेरे गुरु हैं, मुझ पर दया कर दीजिए।"
+                      {'"'}हे शिव! आप मेरे गुरु हैं, मुझ पर दया कर दीजिए।{'"'}
                     </Text>
                   </View>
                 </View>
@@ -144,7 +144,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>दूसरा सूत्र - चर्चा करना</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                      "अन्य लोगों से शिव गुरु की चर्चा करना तथा शिव को गुरु मानने की प्रेरणा देना।"
+                      {'"'}अन्य लोगों से शिव गुरु की चर्चा करना तथा शिव को गुरु मानने की प्रेरणा देना।{'"'}
                     </Text>
                   </View>
                 </View>
@@ -156,7 +156,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   <View style={styles.sutraTextCol}>
                     <Text style={[styles.sutraTitle, { color: theme.textPrimary }]}>तीसरा सूत्र - नमः शिवाय प्रणाम</Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                      "नमः शिवाय मंत्र से अपने गुरु शिव को 108 बार नमन/प्रणाम करना।"
+                      {'"'}नमः शिवाय मंत्र से अपने गुरु शिव को 108 बार नमन/प्रणाम करना।{'"'}
                     </Text>
                   </View>
                 </View>

@@ -31,18 +31,18 @@ export default function ProfileScreen() {
 
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadData();
-    }, [])
-  );
-
   const loadData = async () => {
     const p = await StorageService.getPreferences();
     const s = await StorageService.getStats();
     setPrefs(p);
     setStats(s);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const handleOpenEditModal = () => {
     setEditName(getFormattedUserName(prefs));

@@ -40,13 +40,6 @@ export default function ShivCharchaScreen() {
     sutra3: false,
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      Analytics.logScreen('ShivCharchaTab');
-      loadData();
-    }, [])
-  );
-
   const loadData = async () => {
     const data = await StorageService.getDaily3Sutras();
     const prefs = await StorageService.getPreferences();
@@ -62,6 +55,13 @@ export default function ShivCharchaScreen() {
       setIsTrackerCollapsed(true);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      Analytics.logScreen('ShivCharchaTab');
+      loadData();
+    }, [])
+  );
 
   const toggleSutra = async (key: 'sutra1' | 'sutra2' | 'sutra3') => {
     const updatedValue = !dailySutras[key];
@@ -252,7 +252,7 @@ export default function ShivCharchaScreen() {
                       🌸 प्रथम सूत्र: दया माँगी
                     </Text>
                     <Text style={[styles.sutraDesc, { color: theme.textSecondary }]}>
-                      "{getFirstSutraText(userPrefs)}"
+                      {`"${getFirstSutraText(userPrefs)}"`}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -406,7 +406,7 @@ export default function ShivCharchaScreen() {
 
           <View style={[styles.quoteBox, { borderLeftColor: theme.accent, backgroundColor: theme.background }]}>
             <Text style={[styles.quoteText, { color: theme.textSecondary }]}>
-              "{todayPrompt.sahibJiQuote}"
+              {`"${todayPrompt.sahibJiQuote}"`}
             </Text>
           </View>
 

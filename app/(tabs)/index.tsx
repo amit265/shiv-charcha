@@ -36,12 +36,6 @@ export default function HomeScreen() {
   const todayPrompt = getTodayCharchaPrompt();
   const featuredPravachan = pravachanLibrary[0];
 
-  useFocusEffect(
-    useCallback(() => {
-      loadUserData();
-    }, [])
-  );
-
   const loadUserData = async () => {
     const prefs = await StorageService.getPreferences();
     if (!prefs.hasCompletedOnboarding) {
@@ -58,6 +52,12 @@ export default function HomeScreen() {
     setSutraStreak(streakData.streak);
     setPast7Days(streakData.past7Days);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadUserData();
+    }, [])
+  );
 
   const toggleSutra = async (key: 'sutra1' | 'sutra2' | 'sutra3') => {
     const updatedValue = !dailySutras[key];
@@ -374,7 +374,7 @@ export default function HomeScreen() {
           <Text style={[styles.promptTopicText, { color: theme.textPrimary }]}>{todayPrompt.topicHindi}</Text>
 
           <View style={[styles.quoteBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
-            <Text style={[styles.quoteText, { color: theme.textSecondary }]}>"{todayPrompt.sahibJiQuote}"</Text>
+            <Text style={[styles.quoteText, { color: theme.textSecondary }]}>{`"${todayPrompt.sahibJiQuote}"`}</Text>
           </View>
 
           <View style={styles.promptActionRow}>
