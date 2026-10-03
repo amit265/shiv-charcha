@@ -27,7 +27,7 @@ export default function HomeScreen() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [formattedName, setFormattedName] = useState<string>('शिव शिष्य');
   const [sutraStreak, setSutraStreak] = useState<number>(0);
-  const [past7Days, setPast7Days] = useState<Array<{ date: string; dayName: string; completed: boolean }>>([]);
+  const [past7Days, setPast7Days] = useState<{ date: string; dayName: string; completed: boolean }[]>([]);
   const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
 
   const todayMsg = dailyMessages[0];

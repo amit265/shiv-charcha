@@ -359,7 +359,7 @@ export default function ReelsScreen() {
   };
 
   const mixedData = React.useMemo(() => {
-    const items: Array<{ id: string; type: 'quote' | 'ad'; quote?: ShivQuote; quoteIndex?: number }> = [];
+    const items: { id: string; type: 'quote' | 'ad'; quote?: ShivQuote; quoteIndex?: number }[] = [];
     quotesList.forEach((quote, idx) => {
       items.push({ id: quote.id, type: 'quote', quote, quoteIndex: idx });
       if ((idx + 1) % 5 === 0) {

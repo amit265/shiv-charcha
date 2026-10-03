@@ -1,3 +1,5 @@
+import { ThemeId } from '../theme/themes';
+
 export interface DailyMessage {
   id: string;
   date: string; // YYYY-MM-DD
@@ -133,8 +135,6 @@ export interface UserStats {
   booksReadCount: number;
   lastActiveDate: string;
 }
-
-import { ThemeId } from '../theme/themes';
 
 export type UserGender = 'male' | 'female' | 'neutral';
 export type DiscipleTitle = 'शिव शिष्य' | 'शिव शिष्या' | 'गुरु भाई' | 'गुरु बहिन' | 'शिव भक्त';

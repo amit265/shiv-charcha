@@ -140,7 +140,7 @@ export const StorageService = {
 
       // Also record Jap history timestamp
       const historyStr = (await AsyncStorage.getItem(STORAGE_KEYS.JAP_HISTORY)) || '[]';
-      const history: Array<{ timestamp: string; count: number }> = JSON.parse(historyStr);
+      const history: { timestamp: string; count: number }[] = JSON.parse(historyStr);
       history.unshift({ timestamp: new Date().toISOString(), count });
       await AsyncStorage.setItem(STORAGE_KEYS.JAP_HISTORY, JSON.stringify(history.slice(0, 100)));
 
@@ -199,7 +199,7 @@ export const StorageService = {
   },
 
   // Jap History
-  async getJapHistory(): Promise<Array<{ timestamp: string; count: number }>> {
+  async getJapHistory(): Promise<{ timestamp: string; count: number }[]> {
     try {
       const data = await AsyncStorage.getItem(STORAGE_KEYS.JAP_HISTORY);
       return data ? JSON.parse(data) : [];
@@ -241,7 +241,7 @@ export const StorageService = {
     }
   },
 
-  async getSutraStreak(): Promise<{ streak: number; past7Days: Array<{ date: string; dayName: string; completed: boolean }> }> {
+  async getSutraStreak(): Promise<{ streak: number; past7Days: { date: string; dayName: string; completed: boolean }[] }> {
     try {
       const historyStr = (await AsyncStorage.getItem('shiv_charcha_sutra_history_v1')) || '{}';
       const history = JSON.parse(historyStr);
@@ -249,7 +249,7 @@ export const StorageService = {
       const today = new Date();
       
       const dayNames = ['रवि', 'सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि'];
-      const past7Days: Array<{ date: string; dayName: string; completed: boolean }> = [];
+      const past7Days: { date: string; dayName: string; completed: boolean }[] = [];
       let streak = 0;
 
       // Generate 7 day status (from 6 days ago up to today)

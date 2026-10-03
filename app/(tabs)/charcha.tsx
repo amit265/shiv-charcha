@@ -26,7 +26,7 @@ export default function ShivCharchaScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userPrefs, setUserPrefs] = useState<any>(defaultPreferences);
   const [isTrackerCollapsed, setIsTrackerCollapsed] = useState(false);
-  const [streakInfo, setStreakInfo] = useState<{ streak: number; past7Days: Array<{ date: string; dayName: string; completed: boolean }> }>({
+  const [streakInfo, setStreakInfo] = useState<{ streak: number; past7Days: { date: string; dayName: string; completed: boolean }[] }>({
     streak: 0,
     past7Days: [],
   });

@@ -11,7 +11,7 @@ export default function ThemeSelectorScreen() {
   const router = useRouter();
   const { theme, themeId, setThemeId } = useTheme();
 
-  const themeList: Array<{ id: ThemeId; title: string; desc: string; icon: string }> = [
+  const themeList: { id: ThemeId; title: string; desc: string; icon: string }[] = [
     {
       id: 'divya_sukoon',
       title: THEMES.divya_sukoon.nameHindi,
