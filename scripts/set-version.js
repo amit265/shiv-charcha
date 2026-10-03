@@ -59,6 +59,7 @@ console.log(`  ${oldAppVersion.padEnd(10)} →  ${newVersion}\n`);
 // ── Update files ──────────────────────────────────────────
 updateJSON("app.json", (c) => {
   c.expo.version = newVersion;
+  c.expo.runtimeVersion = newVersion;
 });
 console.log(`  ✅ app.json          ${oldAppVersion} → ${newVersion}`);
 
