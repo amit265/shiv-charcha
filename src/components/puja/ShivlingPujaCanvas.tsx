@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert, ScrollView, Modal, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Alert, ScrollView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { colors, shadows } from '../../theme/colors';
 import { useTheme } from '../../context/ThemeContext';
@@ -29,8 +29,6 @@ export const ShivlingPujaCanvas: React.FC = () => {
   const [sankalpTarget, setSankalpTarget] = useState<number>(108);
   const [isWaterFlowing, setIsWaterFlowing] = useState<boolean>(false);
   const [isMilkFlowing, setIsMilkFlowing] = useState<boolean>(false);
-  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
-  const [showHint, setShowHint] = useState<boolean>(true);
 
   const [offerings, setOfferings] = useState<OfferingState>({
     flowers: 0,
@@ -221,105 +219,6 @@ export const ShivlingPujaCanvas: React.FC = () => {
     });
   };
 
-  // Render Horizontal Devotional Tray Helper Function
-  const renderTray = () => (
-    <View style={styles.trayWrapper}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.trayScrollContent}
-      >
-        {/* 1. Jalabhiskek */}
-        <TouchableOpacity
-          style={[styles.trayCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-          onPress={() => handleOffering('water')}
-          activeOpacity={0.8}
-        >
-          {offerings.waterCount > 0 && (
-            <View style={styles.trayBadge}>
-              <Text style={styles.trayBadgeText}>{offerings.waterCount}</Text>
-            </View>
-          )}
-          <Text style={styles.trayIcon}>🏺</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>जलधारा</Text>
-        </TouchableOpacity>
-
-        {/* 2. Doodh Abhishek */}
-        <TouchableOpacity
-          style={[styles.trayCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-          onPress={() => handleOffering('milk')}
-          activeOpacity={0.8}
-        >
-          {offerings.milkCount > 0 && (
-            <View style={styles.trayBadge}>
-              <Text style={styles.trayBadgeText}>{offerings.milkCount}</Text>
-            </View>
-          )}
-          <Text style={styles.trayIcon}>🥛</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>दुग्धधारा</Text>
-        </TouchableOpacity>
-
-        {/* 3. Pushpa */}
-        <TouchableOpacity
-          style={[styles.trayCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-          onPress={() => handleOffering('flower')}
-          activeOpacity={0.8}
-        >
-          {offerings.flowers > 0 && (
-            <View style={styles.trayBadge}>
-              <Text style={styles.trayBadgeText}>{offerings.flowers}</Text>
-            </View>
-          )}
-          <Text style={styles.trayIcon}>🌸</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>पुष्प</Text>
-        </TouchableOpacity>
-
-        {/* 4. Belpatra */}
-        <TouchableOpacity
-          style={[styles.trayCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-          onPress={() => handleOffering('belpatra')}
-          activeOpacity={0.8}
-        >
-          {offerings.belpatra > 0 && (
-            <View style={styles.trayBadge}>
-              <Text style={styles.trayBadgeText}>{offerings.belpatra}</Text>
-            </View>
-          )}
-          <Text style={styles.trayIcon}>🍃</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>बेलपत्र</Text>
-        </TouchableOpacity>
-
-        {/* 5. Mala (Garland) */}
-        <TouchableOpacity
-          style={[
-            styles.trayCard,
-            { backgroundColor: theme.cardBg, borderColor: theme.borderGold },
-            offerings.garlandPlaced && styles.trayCardActiveGold,
-          ]}
-          onPress={() => handleOffering('garland')}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.trayIcon}>🌺</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>माला</Text>
-        </TouchableOpacity>
-
-        {/* 6. Deepak (Diya) */}
-        <TouchableOpacity
-          style={[
-            styles.trayCard,
-            { backgroundColor: theme.cardBg, borderColor: theme.borderGold },
-            offerings.diyaLit && styles.trayCardActiveGold,
-          ]}
-          onPress={() => handleOffering('diya')}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.trayIcon}>🪔</Text>
-          <Text style={[styles.trayLabel, { color: theme.textPrimary }]}>दीपक</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       {/* Top Puja Mode Switcher Pills */}
@@ -382,7 +281,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
         </View>
       )}
 
-      {/* Uncluttered Temple Shrine Canvas */}
+      {/* Digital Shivling Shrine Canvas with Overlay Offering Buttons distributed along the borders */}
       <ShivlingShrine
         diyaLit={offerings.diyaLit}
         garlandPlaced={offerings.garlandPlaced}
@@ -430,38 +329,74 @@ export const ShivlingPujaCanvas: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Top-Right Shiv Dhun & Full Screen Controls */}
-          <View style={styles.topRightControlGroup}>
-            <TouchableOpacity style={styles.topRightChantingBtn} onPress={toggleBackgroundChanting} activeOpacity={0.75}>
-              <Text style={styles.topRightChantingText}>
-                {isPlaying ? '🔊 धुन बंद' : '🎵 शिव धुन'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.topRightFullScreenBtn} onPress={() => setIsFullScreen(true)} activeOpacity={0.75}>
-              <Text style={styles.topRightFullScreenText}>📱 पूर्ण दर्शन</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ShivlingShrine>
-
-      {/* First-Time User Experience Hint Banner */}
-      {showHint && (
-        <View style={[styles.hintCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
-          <Text style={[styles.hintText, { color: theme.textPrimary }]}>
-            💡 <Text style={{ fontWeight: 'bold' }}>सुझाव:</Text> जल, दुग्ध, पुष्प या बेलपत्र अर्पित करने के लिए नीचे दिए गए ट्रे से अर्पण चुनें।
-          </Text>
-          <TouchableOpacity onPress={() => setShowHint(false)} style={styles.hintDismissBtn}>
-            <Text style={styles.hintDismissText}>समझ गए ✕</Text>
+          {/* Top-Right Shiv Dhun Audio Toggle */}
+          <TouchableOpacity style={styles.topRightChantingBtn} onPress={toggleBackgroundChanting} activeOpacity={0.75}>
+            <Text style={styles.topRightChantingText}>
+              {isPlaying ? '🔊 धुन बंद' : '🎵 शिव धुन'}
+            </Text>
           </TouchableOpacity>
         </View>
-      )}
 
-      {/* Devotional Horizontal Offering Tray */}
-      <View style={styles.traySection}>
-        <Text style={[styles.traySectionTitle, { color: theme.textGold }]}>🌸 पावन अर्पण (Devotional Offerings)</Text>
-        {renderTray()}
-      </View>
+        {/* Left Border Column (3 offering buttons equally scattered & vertically centered) */}
+        <View style={styles.leftBorderColumn}>
+          <TouchableOpacity
+            style={styles.borderPillBtn}
+            onPress={() => handleOffering('flower')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🌸</Text>
+            <Text style={styles.borderLabel}>पुष्प</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.borderPillBtn}
+            onPress={() => handleOffering('belpatra')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🍃</Text>
+            <Text style={styles.borderLabel}>बेलपत्र</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.borderPillBtn}
+            onPress={() => handleOffering('water')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🏺</Text>
+            <Text style={styles.borderLabel}>जलधारा</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Right Border Column (3 offering buttons equally scattered & vertically centered) */}
+        <View style={styles.rightBorderColumn}>
+          <TouchableOpacity
+            style={[styles.borderPillBtn, offerings.garlandPlaced && styles.borderPillActiveGold]}
+            onPress={() => handleOffering('garland')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🌺</Text>
+            <Text style={styles.borderLabel}>माला</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.borderPillBtn, offerings.diyaLit && styles.borderPillActiveGold]}
+            onPress={() => handleOffering('diya')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🪔</Text>
+            <Text style={styles.borderLabel}>दीपक</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.borderPillBtn}
+            onPress={() => handleOffering('milk')}
+            activeOpacity={0.75}
+          >
+            <Text style={styles.borderIcon}>🏺</Text>
+            <Text style={styles.borderLabel}>दुग्धधारा</Text>
+          </TouchableOpacity>
+        </View>
+      </ShivlingShrine>
 
       {/* Devotional Sanskrit Mantra Card */}
       <PujaMantraCard activeOffering={activeOffering} />
@@ -482,57 +417,6 @@ export const ShivlingPujaCanvas: React.FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* Full Screen Immersive Darshan Modal */}
-      <Modal
-        visible={isFullScreen}
-        animationType="fade"
-        statusBarTranslucent
-        onRequestClose={() => setIsFullScreen(false)}
-      >
-        <SafeAreaView style={styles.fullScreenModalContainer}>
-          {/* Top Floating Control Overlay */}
-          <View style={styles.fullScreenTopOverlay}>
-            <TouchableOpacity
-              style={styles.fullScreenExitBtn}
-              onPress={() => setIsFullScreen(false)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.fullScreenExitText}>✕ सामान्य मोड</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.topRightChantingBtn}
-              onPress={toggleBackgroundChanting}
-              activeOpacity={0.75}
-            >
-              <Text style={styles.topRightChantingText}>
-                {isPlaying ? '🔊 धुन बंद' : '🎵 शिव धुन'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Expanded Full Screen Shivling Shrine */}
-          <View style={styles.fullScreenShrineWrapper}>
-            <ShivlingShrine
-              diyaLit={offerings.diyaLit}
-              garlandPlaced={offerings.garlandPlaced}
-              isWaterFlowing={isWaterFlowing}
-              isMilkFlowing={isMilkFlowing}
-              flowersCount={offerings.flowers}
-              belpatraCount={offerings.belpatra}
-              isAartiActive={mode === 'aarti'}
-              isDhoopActive={offerings.dhoopActive}
-              isFullScreen={true}
-            />
-          </View>
-
-          {/* Bottom Floating Devotional Controls Overlay */}
-          <View style={styles.fullScreenBottomOverlay}>
-            {renderTray()}
-          </View>
-        </SafeAreaView>
-      </Modal>
     </View>
   );
 };
@@ -585,6 +469,12 @@ const styles = StyleSheet.create({
   sankalpPillText: {
     fontSize: 12,
   },
+  actionsBar: {
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    ...shadows.soft,
+  },
   topHeaderBar: {
     position: 'absolute',
     top: 10,
@@ -596,15 +486,15 @@ const styles = StyleSheet.create({
     zIndex: 60,
   },
   topLeftResetBtn: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
     backgroundColor: 'rgba(20, 4, 8, 0.85)',
     borderWidth: 1,
     borderColor: 'rgba(255, 215, 0, 0.4)',
   },
   topLeftResetText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: 'bold',
     color: '#FFF8DC',
   },
@@ -615,145 +505,147 @@ const styles = StyleSheet.create({
   topInstrumentPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 7,
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: 'rgba(20, 4, 8, 0.85)',
     borderWidth: 1,
     borderColor: 'rgba(255, 215, 0, 0.4)',
-    marginHorizontal: 2,
+    marginHorizontal: 3,
   },
   topInstrumentIcon: {
-    fontSize: 14,
+    fontSize: 15,
   },
   topInstrumentLabel: {
-    fontSize: 9.5,
+    fontSize: 10,
     fontWeight: 'bold',
     color: '#FFF8DC',
-    marginLeft: 2,
-  },
-  topRightControlGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginLeft: 3,
   },
   topRightChantingBtn: {
-    paddingHorizontal: 7,
-    paddingVertical: 4,
-    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
     backgroundColor: 'rgba(20, 4, 8, 0.85)',
     borderWidth: 1,
     borderColor: colors.goldPrimary,
-    marginRight: 4,
   },
   topRightChantingText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: 'bold',
     color: colors.goldLight,
   },
-  topRightFullScreenBtn: {
-    paddingHorizontal: 7,
-    paddingVertical: 4,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255, 215, 0, 0.2)',
-    borderWidth: 1,
-    borderColor: colors.goldPrimary,
-  },
-  topRightFullScreenText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#FFD700',
-  },
-  hintCard: {
-    flexDirection: 'row',
+  leftBorderColumn: {
+    position: 'absolute',
+    left: 10,
+    top: 60,
+    bottom: 30,
+    justifyContent: 'space-around',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 10,
+    zIndex: 60,
   },
-  hintText: {
-    fontSize: 11,
-    flex: 1,
-    lineHeight: 16,
+  rightBorderColumn: {
+    position: 'absolute',
+    right: 10,
+    top: 60,
+    bottom: 30,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    zIndex: 60,
   },
-  hintDismissBtn: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255, 215, 0, 0.15)',
-    marginLeft: 8,
-  },
-  hintDismissText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: '#D4AF37',
-  },
-  traySection: {
-    marginTop: 12,
-  },
-  traySectionTitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 6,
-    paddingLeft: 4,
-  },
-  trayWrapper: {
-    width: '100%',
-  },
-  trayScrollContent: {
-    paddingVertical: 4,
-    paddingHorizontal: 2,
-  },
-  trayCard: {
-    width: 68,
-    height: 64,
+  borderPillBtn: {
+    width: 52,
+    height: 52,
     borderRadius: 16,
+    backgroundColor: 'rgba(20, 4, 8, 0.85)',
     borderWidth: 1.5,
+    borderColor: 'rgba(255, 215, 0, 0.35)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
     position: 'relative',
     ...shadows.soft,
   },
-  trayCardActiveGold: {
+  borderPillActiveGold: {
     borderColor: colors.goldPrimary,
-    backgroundColor: 'rgba(255, 215, 0, 0.25)',
+    backgroundColor: 'rgba(255, 215, 0, 0.3)',
   },
-  trayBadge: {
+  borderBadgeCount: {
     position: 'absolute',
     top: -5,
     right: -5,
     backgroundColor: colors.goldPrimary,
+    color: colors.maroonDark,
+    fontSize: 9,
+    fontWeight: 'bold',
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 7,
+    overflow: 'hidden',
+    zIndex: 10,
+  },
+  borderIcon: {
+    fontSize: 20,
+  },
+  borderLabel: {
+    fontSize: 8.5,
+    fontWeight: 'bold',
+    color: '#FFF8DC',
+    marginTop: 1,
+  },
+  chantingToggleBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 215, 0, 0.15)',
+  },
+  chantingToggleText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: colors.goldPrimary,
+  },
+  buttonsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  actionBtn: {
+    width: '23%',
+    borderRadius: 14,
+    paddingVertical: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+    borderWidth: 1,
+    position: 'relative',
+  },
+  badgeCount: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    backgroundColor: colors.goldPrimary,
+    color: colors.maroonDark,
+    fontSize: 10,
+    fontWeight: 'bold',
     paddingHorizontal: 5,
     paddingVertical: 1,
     borderRadius: 8,
-    zIndex: 10,
+    overflow: 'hidden',
   },
-  trayBadgeText: {
-    color: colors.maroonDark,
-    fontSize: 9.5,
-    fontWeight: 'bold',
+  actionIcon: {
+    fontSize: 24,
   },
-  trayIcon: {
-    fontSize: 22,
-  },
-  trayLabel: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginTop: 2,
-  },
-  actionsBar: {
-    borderRadius: 20,
-    padding: 14,
-    borderWidth: 1,
-    ...shadows.soft,
+  actionLabel: {
+    fontSize: 11,
+    marginTop: 4,
+    fontWeight: '600',
   },
   bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 215, 0, 0.15)',
   },
   resetBtn: {
     paddingVertical: 6,
@@ -772,49 +664,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#FFFFFF',
-  },
-  fullScreenModalContainer: {
-    flex: 1,
-    backgroundColor: '#0B0203',
-  },
-  fullScreenTopOverlay: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 25,
-    left: 14,
-    right: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    zIndex: 100,
-  },
-  fullScreenExitBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    backgroundColor: 'rgba(20, 4, 8, 0.85)',
-    borderWidth: 1,
-    borderColor: colors.goldPrimary,
-  },
-  fullScreenExitText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#FFD700',
-  },
-  fullScreenShrineWrapper: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  fullScreenBottomOverlay: {
-    position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 34 : 20,
-    left: 10,
-    right: 10,
-    backgroundColor: 'rgba(11, 2, 3, 0.88)',
-    borderRadius: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.3)',
-    zIndex: 100,
   },
 });
