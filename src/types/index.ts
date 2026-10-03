@@ -99,10 +99,12 @@ export interface ShareTemplate {
 export interface WallpaperItem {
   id: string;
   title: string;
-  category: 'shivling' | 'mantra' | 'art' | 'special';
-  imageUrl: string;
-  downloadUrl: string;
-  previewUrl: string;
+  category: 'all' | 'jyotirlinga' | 'swaroop' | 'himalaya' | 'mantra' | 'shivling' | 'art' | 'special';
+  imageUrl?: string;
+  downloadUrl?: string;
+  previewUrl?: string;
+  imageIndex?: number;
+  description?: string;
 }
 
 export interface RingtoneItem {

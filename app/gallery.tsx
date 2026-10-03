@@ -1,68 +1,488 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Platform,
+  Modal,
+  StatusBar,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import * as MediaLibrary from 'expo-media-library';
+import * as Sharing from 'expo-sharing';
+import * as Haptics from 'expo-haptics';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/components/common/Header';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { useTheme } from '@/context/ThemeContext';
-import { resolveImageSource } from '@/constants/imageAssets';
 import { wallpapersData } from '@/content/wallpapers';
+import { shivaBackgrounds } from '@/constants/shivaImages';
 import { shadows } from '@/theme/colors';
 import { WallpaperItem } from '@/types';
+import { safeShare } from '@/services/shareService';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+type FilterCategory = 'all' | 'jyotirlinga' | 'swaroop' | 'himalaya' | 'mantra';
 
 export default function GalleryScreen() {
   const { theme } = useTheme();
-  const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);
+  const insets = useSafeAreaInsets();
 
-  const handleSetWallpaper = (item: WallpaperItem) => {
-    if (Platform.OS === 'android') {
+  const [activeCategory, setActiveCategory] = useState<FilterCategory>('all');
+  const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);
+  const [showMockClock, setShowMockClock] = useState<boolean>(true);
+  const [showGuideModal, setShowGuideModal] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  const triggerHaptic = () => {
+    try {
+      if (Platform.OS !== 'web') {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
+    } catch (e) {}
+  };
+
+  const filteredWallpapers = wallpapersData.filter((item) => {
+    if (activeCategory === 'all') return true;
+    return item.category === activeCategory;
+  });
+
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'jyotirlinga':
+        return '🛕 ज्योतिर्लिंग';
+      case 'swaroop':
+        return '🔱 शिव स्वरूप';
+      case 'himalaya':
+        return '🏔️ हिमालय धाम';
+      case 'mantra':
+        return '📜 पावन मंत्र';
+      default:
+        return '🌸 शिव भक्ति';
+    }
+  };
+
+  const handleSaveToGallery = async (item: WallpaperItem) => {
+    triggerHaptic();
+    setIsSaving(true);
+    try {
+      const assetSource = shivaBackgrounds[item.imageIndex || 0];
+      const resolvedAsset = Image.resolveAssetSource(assetSource);
+
+      if (Platform.OS === 'web') {
+        Alert.alert(
+          'वॉलपेपर सहेजें',
+          'वेब ब्राउज़र पर चित्र पर राइट-क्लिक करके या प्रेस करके डाउनलोड करें।'
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      // Request media library permission
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'अनुमति आवश्यक है',
+          'चित्र आपकी फोन गैलरी में सहेजने के लिए फोटो एक्सेस अनुमति की आवश्यकता है। कृपया सेटिंग्स से अनुमति प्रदान करें।',
+          [{ text: 'ठीक है' }]
+        );
+        setIsSaving(false);
+        return;
+      }
+
+      // Save asset URI directly to user's photo gallery
+      await MediaLibrary.saveToLibraryAsync(resolvedAsset.uri);
+
       Alert.alert(
-        'वॉलपेपर सेट करें',
-        `"${item.title}" को अपने फोन का वॉलपेपर बनाने के लिए चित्र सहेजें और गैलरी से वॉलपेपर के रूप में सेट करें।`,
-        [{ text: 'ठीक है' }]
+        '🌸 वॉलपेपर सहेजा गया!',
+        `"${item.title}" चित्र आपकी फोन फोटो गैलरी में सफलतापूर्वक सहेज लिया गया है।\n\nआप अपने फोन की सेटिंग्स से इसे होम या लॉक स्क्रीन पर लगा सकते हैं।`,
+        [
+          { text: 'वॉलपेपर लगाने की विधि ➔', onPress: () => setShowGuideModal(true) },
+          { text: 'ठीक है' },
+        ]
       );
-    } else {
+    } catch (error) {
+      console.warn('Save wallpaper error:', error);
       Alert.alert(
-        'चित्र सहेजें',
-        'चित्र सहेजें और अपने फोन की वॉलपेपर सेटिंग से लगाएँ।',
-        [{ text: 'समझ गया' }]
+        'सूचना',
+        'चित्र शेयर करके या फोन फोटो ऐप में सहेजकर वॉलपेपर लगाएँ।',
+        [{ text: 'शेयर करें', onPress: () => handleShareWallpaper(item) }, { text: 'बंद करें' }]
       );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleShareWallpaper = async (item: WallpaperItem) => {
+    triggerHaptic();
+    try {
+      const assetSource = shivaBackgrounds[item.imageIndex || 0];
+      const resolvedAsset = Image.resolveAssetSource(assetSource);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(resolvedAsset.uri);
+      } else {
+        await safeShare({
+          title: item.title,
+          message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+        });
+      }
+    } catch (e) {
+      await safeShare({
+        title: item.title,
+        message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+      });
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header title="🖼️ पावन गैलरी व वॉलपेपर" subtitle="शिव वॉलपेपर देखें व डाउनलोड करें" showBack />
+      <Header title="🖼️ पावन गैलरी व वॉलपेपर" subtitle="उच्च गुणवत्ता वाले 20 शिव वॉलपेपर" showBack />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.sectionTitle, { color: theme.primary }]}>पावन शिव वॉलपेपर संग्रह 🖼️</Text>
-        <Text style={[styles.sectionSub, { color: theme.textSecondary }]}>
-          उच्च गुणवत्ता वाले भक्तिमय वॉलपेपर देखें और अपने फोन पर सजाएँ।
-        </Text>
+        {/* Intro Section */}
+        <View style={styles.introHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.primary }]}>पावन शिव वॉलपेपर संग्रह 🖼️</Text>
+          <Text style={[styles.sectionSub, { color: theme.textSecondary }]}>
+            भगवान शिव के 20 उच्च गुणवत्ता (HD) वॉलपेपर देखें, लॉक-स्क्रीन पर देखें और अपने फोन पर सहेजें।
+          </Text>
+        </View>
 
-        <View style={styles.grid}>
-          {wallpapersData.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
-              onPress={() => setSelectedWallpaper(item)}
-              activeOpacity={0.9}
+        {/* Category Filter Pills Bar */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterBar}>
+          <TouchableOpacity
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor: activeCategory === 'all' ? theme.primary : theme.surfaceElevated,
+                borderColor: activeCategory === 'all' ? theme.accent : theme.border,
+              },
+            ]}
+            onPress={() => {
+              triggerHaptic();
+              setActiveCategory('all');
+            }}
+            activeOpacity={0.8}
+          >
+            <Text
+              style={[
+                styles.filterPillText,
+                { color: activeCategory === 'all' ? theme.textWhite : theme.textPrimary },
+              ]}
             >
-              <Image
-                source={resolveImageSource(item.id || item.imageUrl, 'hero')}
-                style={styles.image}
-                resizeMode="contain"
-              />
-              <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>{item.title}</Text>
+              🔥 सभी ({wallpapersData.length})
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor: activeCategory === 'jyotirlinga' ? theme.primary : theme.surfaceElevated,
+                borderColor: activeCategory === 'jyotirlinga' ? theme.accent : theme.border,
+              },
+            ]}
+            onPress={() => {
+              triggerHaptic();
+              setActiveCategory('jyotirlinga');
+            }}
+            activeOpacity={0.8}
+          >
+            <Text
+              style={[
+                styles.filterPillText,
+                { color: activeCategory === 'jyotirlinga' ? theme.textWhite : theme.textPrimary },
+              ]}
+            >
+              🛕 ज्योतिर्लिंग
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor: activeCategory === 'swaroop' ? theme.primary : theme.surfaceElevated,
+                borderColor: activeCategory === 'swaroop' ? theme.accent : theme.border,
+              },
+            ]}
+            onPress={() => {
+              triggerHaptic();
+              setActiveCategory('swaroop');
+            }}
+            activeOpacity={0.8}
+          >
+            <Text
+              style={[
+                styles.filterPillText,
+                { color: activeCategory === 'swaroop' ? theme.textWhite : theme.textPrimary },
+              ]}
+            >
+              🔱 शिव स्वरूप
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor: activeCategory === 'himalaya' ? theme.primary : theme.surfaceElevated,
+                borderColor: activeCategory === 'himalaya' ? theme.accent : theme.border,
+              },
+            ]}
+            onPress={() => {
+              triggerHaptic();
+              setActiveCategory('himalaya');
+            }}
+            activeOpacity={0.8}
+          >
+            <Text
+              style={[
+                styles.filterPillText,
+                { color: activeCategory === 'himalaya' ? theme.textWhite : theme.textPrimary },
+              ]}
+            >
+              🏔️ हिमालय धाम
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.filterPill,
+              {
+                backgroundColor: activeCategory === 'mantra' ? theme.primary : theme.surfaceElevated,
+                borderColor: activeCategory === 'mantra' ? theme.accent : theme.border,
+              },
+            ]}
+            onPress={() => {
+              triggerHaptic();
+              setActiveCategory('mantra');
+            }}
+            activeOpacity={0.8}
+          >
+            <Text
+              style={[
+                styles.filterPillText,
+                { color: activeCategory === 'mantra' ? theme.textWhite : theme.textPrimary },
+              ]}
+            >
+              📜 पावन मंत्र
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* 2-Column Responsive Image Grid */}
+        <View style={styles.grid}>
+          {filteredWallpapers.map((item) => {
+            const imgSource = shivaBackgrounds[item.imageIndex || 0];
+            return (
               <TouchableOpacity
-                style={[styles.setBtn, { backgroundColor: theme.primary }]}
-                onPress={() => handleSetWallpaper(item)}
-                activeOpacity={0.8}
+                key={item.id}
+                style={[styles.card, { backgroundColor: theme.cardBg, borderColor: theme.border }]}
+                onPress={() => {
+                  triggerHaptic();
+                  setSelectedWallpaper(item);
+                  setShowMockClock(true);
+                }}
+                activeOpacity={0.88}
               >
-                <Text style={[styles.setBtnText, { color: theme.textWhite }]}>📱 वॉलपेपर लगाएँ</Text>
+                <View style={styles.cardImageContainer}>
+                  <Image source={imgSource} style={styles.image} resizeMode="cover" />
+                  <View style={[styles.categoryBadge, { backgroundColor: 'rgba(0,0,0,0.65)' }]}>
+                    <Text style={styles.categoryBadgeText}>{getCategoryLabel(item.category)}</Text>
+                  </View>
+                </View>
+
+                <Text style={[styles.cardTitle, { color: theme.textPrimary }]} numberOfLines={1}>
+                  {item.title}
+                </Text>
+
+                <View style={styles.cardBtnRow}>
+                  <TouchableOpacity
+                    style={[styles.previewBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+                    onPress={() => {
+                      triggerHaptic();
+                      setSelectedWallpaper(item);
+                      setShowMockClock(true);
+                    }}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={[styles.previewBtnText, { color: theme.primary }]}>👁️ देखें</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.saveBtn, { backgroundColor: theme.primary }]}
+                    onPress={() => handleSaveToGallery(item)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={[styles.saveBtnText, { color: theme.textWhite }]}>⬇️ सहेजें</Text>
+                  </TouchableOpacity>
+                </View>
               </TouchableOpacity>
-            </TouchableOpacity>
-          ))}
+            );
+          })}
         </View>
       </ScrollView>
+
+      {/* FULL-SCREEN WALLPAPER PREVIEW MODAL WITH MOCK LOCK SCREEN CLOCK TOGGLE */}
+      {selectedWallpaper && (
+        <Modal
+          visible={Boolean(selectedWallpaper)}
+          animationType="fade"
+          transparent={false}
+          onRequestClose={() => setSelectedWallpaper(null)}
+        >
+          <View style={styles.fullScreenModalBg}>
+            <StatusBar hidden />
+
+            {/* Background Fullscreen Wallpaper */}
+            <Image
+              source={shivaBackgrounds[selectedWallpaper.imageIndex || 0]}
+              style={styles.fullScreenImage}
+              resizeMode="cover"
+            />
+
+            {/* Mock Phone Lock-Screen Clock & Date Widget Overlay */}
+            {showMockClock && (
+              <View style={[styles.mockClockOverlay, { paddingTop: Math.max(insets.top, 50) }]} pointerEvents="none">
+                <Text style={styles.mockClockTime}>07:30</Text>
+                <Text style={styles.mockClockDate}>
+                  {new Date().toLocaleDateString('hi-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+                </Text>
+                <Text style={styles.mockClockSub}>ॐ नमः शिवाय 🙏</Text>
+              </View>
+            )}
+
+            {/* Top Modal Header Overlay Controls */}
+            <View style={[styles.modalTopBar, { paddingTop: Math.max(insets.top, 16) }]}>
+              <TouchableOpacity
+                style={styles.modalCloseBtn}
+                onPress={() => {
+                  triggerHaptic();
+                  setSelectedWallpaper(null);
+                }}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.modalCloseText}>✕ बंद करें</Text>
+              </TouchableOpacity>
+
+              {/* Toggle Mock Lock-Screen Clock Button */}
+              <TouchableOpacity
+                style={[
+                  styles.toggleClockBtn,
+                  showMockClock && { backgroundColor: theme.accent, borderColor: theme.accent },
+                ]}
+                onPress={() => {
+                  triggerHaptic();
+                  setShowMockClock((prev) => !prev);
+                }}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.toggleClockText, showMockClock && { color: theme.primaryDark }]}>
+                  {showMockClock ? '📱 घड़ी ओवरले: ON' : '📱 घड़ी ओवरले: OFF'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Bottom Modal Action Controls */}
+            <View style={[styles.modalBottomBar, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+              <Text style={styles.modalTitleText}>{selectedWallpaper.title}</Text>
+              <Text style={styles.modalDescText}>{selectedWallpaper.description}</Text>
+
+              <View style={styles.modalActionButtonsRow}>
+                <TouchableOpacity
+                  style={[styles.modalActionBtnSave, { backgroundColor: theme.accent }]}
+                  onPress={() => handleSaveToGallery(selectedWallpaper)}
+                  activeOpacity={0.85}
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <ActivityIndicator color={theme.primaryDark} size="small" />
+                  ) : (
+                    <Text style={[styles.modalActionBtnSaveText, { color: theme.primaryDark }]}>
+                      ⬇️ गैलरी में सहेजें
+                    </Text>
+                  )}
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalActionBtnShare, { backgroundColor: 'rgba(255,255,255,0.22)' }]}
+                  onPress={() => handleShareWallpaper(selectedWallpaper)}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.modalActionBtnShareText}>📤 शेयर</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalActionBtnGuide, { backgroundColor: 'rgba(255,255,255,0.22)' }]}
+                  onPress={() => {
+                    triggerHaptic();
+                    setShowGuideModal(true);
+                  }}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.modalActionBtnGuideText}>ℹ️ विधि</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+
+      {/* WALLPAPER APPLICATION GUIDANCE MODAL */}
+      <Modal
+        visible={showGuideModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowGuideModal(false)}
+      >
+        <View style={styles.guideModalOverlay}>
+          <View style={[styles.guideModalCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
+            <Text style={[styles.guideTitle, { color: theme.primary }]}>📱 फोन पर वॉलपेपर कैसे लगाएँ?</Text>
+
+            <View style={styles.guideStepItem}>
+              <View style={[styles.guideStepNum, { backgroundColor: theme.primary }]}>
+                <Text style={styles.guideStepNumText}>1</Text>
+              </View>
+              <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
+                <Text style={{ fontWeight: 'bold' }}>"⬇️ गैलरी में सहेजें"</Text> बटन दबाकर चित्र को अपने फोन की फोटो गैलरी में सहेजें।
+              </Text>
+            </View>
+
+            <View style={styles.guideStepItem}>
+              <View style={[styles.guideStepNum, { backgroundColor: theme.primary }]}>
+                <Text style={styles.guideStepNumText}>2</Text>
+              </View>
+              <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
+                अपने फोन की <Text style={{ fontWeight: 'bold' }}>सेटिंग्स (Settings) ➔ वॉलपेपर (Wallpaper)</Text> में जाएँ या गैलरी ऐप खोलें।
+              </Text>
+            </View>
+
+            <View style={styles.guideStepItem}>
+              <View style={[styles.guideStepNum, { backgroundColor: theme.primary }]}>
+                <Text style={styles.guideStepNumText}>3</Text>
+              </View>
+              <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
+                सहेजे गए चित्र को चुनें और <Text style={{ fontWeight: 'bold' }}>"होम स्क्रीन" या "लॉक स्क्रीन"</Text> के रूप में सेट करें।
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.guideCloseBtn, { backgroundColor: theme.primary }]}
+              onPress={() => setShowGuideModal(false)}
+              activeOpacity={0.85}
+            >
+              <Text style={[styles.guideCloseBtnText, { color: theme.textWhite }]}>समझ गया 🙏</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <SmartBanner />
     </View>
@@ -77,6 +497,9 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 110,
   },
+  introHeader: {
+    marginBottom: 12,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -84,7 +507,21 @@ const styles = StyleSheet.create({
   sectionSub: {
     fontSize: 12,
     marginTop: 2,
+  },
+  filterBar: {
+    flexDirection: 'row',
     marginBottom: 16,
+  },
+  filterPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
+    marginRight: 8,
+    borderWidth: 1,
+  },
+  filterPillText: {
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   grid: {
     flexDirection: 'row',
@@ -92,33 +529,263 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   card: {
-    width: '48%',
-    borderRadius: 16,
+    width: '48.5%',
+    borderRadius: 18,
     padding: 10,
     marginBottom: 16,
-    borderWidth: 1,
+    borderWidth: 1.2,
     ...shadows.soft,
+  },
+  cardImageContainer: {
+    width: '100%',
+    height: 190,
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 8,
+    backgroundColor: '#0F172A',
   },
   image: {
     width: '100%',
-    height: 180,
-    backgroundColor: '#0F172A',
-    borderRadius: 12,
-    marginBottom: 8,
+    height: '100%',
+  },
+  categoryBadge: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  categoryBadgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
   cardTitle: {
     fontSize: 13,
     fontWeight: 'bold',
-    textAlign: 'center',
     marginBottom: 8,
   },
-  setBtn: {
-    borderRadius: 10,
-    paddingVertical: 8,
+  cardBtnRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  previewBtn: {
+    flex: 1,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
     alignItems: 'center',
   },
-  setBtnText: {
+  previewBtnText: {
     fontSize: 11,
+    fontWeight: 'bold',
+  },
+  saveBtn: {
+    flex: 1,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  saveBtnText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+
+  /* FULL SCREEN PREVIEW MODAL STYLES */
+  fullScreenModalBg: {
+    flex: 1,
+    backgroundColor: '#000000',
+    justifyContent: 'space-between',
+  },
+  fullScreenImage: {
+    ...StyleSheet.absoluteFill,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  mockClockOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  mockClockTime: {
+    fontSize: 64,
+    fontWeight: '300',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+  },
+  mockClockDate: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginTop: -6,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
+  },
+  mockClockSub: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    marginTop: 4,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
+  },
+  modalTopBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    zIndex: 20,
+  },
+  modalCloseBtn: {
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  modalCloseText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  toggleClockBtn: {
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  toggleClockText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  modalBottomBar: {
+    backgroundColor: 'rgba(15, 23, 42, 0.85)',
+    padding: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    zIndex: 20,
+  },
+  modalTitleText: {
+    color: '#FFD700',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  modalDescText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    opacity: 0.9,
+    marginBottom: 16,
+    lineHeight: 17,
+  },
+  modalActionButtonsRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  modalActionBtnSave: {
+    flex: 1.4,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalActionBtnSaveText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  modalActionBtnShare: {
+    flex: 0.8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  modalActionBtnShareText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  modalActionBtnGuide: {
+    flex: 0.8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  modalActionBtnGuideText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+
+  /* GUIDANCE MODAL STYLES */
+  guideModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  guideModalCard: {
+    width: '100%',
+    borderRadius: 22,
+    padding: 22,
+    borderWidth: 1.5,
+    ...shadows.medium,
+  },
+  guideTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  guideStepItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  guideStepNum: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  guideStepNumText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  guideStepText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  guideCloseBtn: {
+    paddingVertical: 12,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  guideCloseBtnText: {
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });
