@@ -31,7 +31,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const { theme, themeId } = useTheme();
   const { config } = useRemoteConfig();
-  const { isAdFree, refreshAdState } = useAdState();
+  const { isAdFree, isRewardedLoaded, refreshAdState } = useAdState();
   const [showRewardedModal, setShowRewardedModal] = useState(false);
   const [remainingSecs, setRemainingSecs] = useState(0);
   const [prefs, setPrefs] = useState<UserPreferences>(defaultPreferences);
@@ -241,12 +241,18 @@ export default function SettingsScreen() {
               <Text style={[styles.itemDesc, { color: isAdFree ? theme.primary : theme.textSecondary, fontWeight: isAdFree ? 'bold' : 'normal' }]}>
                 {isAdFree
                   ? `⏱️ 100% विज्ञापन-मुक्त: ${formatTimer(remainingSecs)} शेष`
-                  : 'छोटा वीडियो देखें और 15 मिनट विज्ञापन हटाएँ'}
+                  : (isRewardedLoaded || Platform.OS === 'web')
+                  ? 'छोटा वीडियो देखें और 15 मिनट विज्ञापन हटाएँ'
+                  : '⏳ बैकग्राउंड में विज्ञापन लोड हो रहा है...'}
               </Text>
             </View>
-            <View style={[styles.actionBadge, { backgroundColor: isAdFree ? theme.accent : theme.primary }]}>
-              <Text style={[styles.actionBadgeText, { color: theme.textWhite }]}>
-                {isAdFree ? `⏱️ ${formatTimer(remainingSecs)}` : 'देखें ➔'}
+            <View style={[styles.actionBadge, { backgroundColor: isAdFree ? theme.accent : (isRewardedLoaded || Platform.OS === 'web') ? theme.primary : theme.surfaceElevated }]}>
+              <Text style={[styles.actionBadgeText, { color: (isRewardedLoaded || Platform.OS === 'web' || isAdFree) ? theme.textWhite : theme.primary }]}>
+                {isAdFree
+                  ? `⏱️ ${formatTimer(remainingSecs)}`
+                  : (isRewardedLoaded || Platform.OS === 'web')
+                  ? '▶️ देखें ➔'
+                  : '⏳ लोड हो रहा है...'}
               </Text>
             </View>
           </View>
