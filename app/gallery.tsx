@@ -74,33 +74,29 @@ export default function GalleryScreen() {
 
   const downloadWallpaperToCache = async (item: WallpaperItem): Promise<string> => {
     const idx = item.imageIndex || 0;
-    const hdUrl = shivaHdUrls[idx];
     const assetSource = shivaBackgrounds[idx];
     const resolvedAsset = Image.resolveAssetSource(assetSource);
     const localAssetUri = resolvedAsset?.uri;
 
-    const filename = `shiv_wallpaper_${item.id || idx}_${Date.now()}.webp`;
+    const filename = `shiv_wallpaper_${item.id || idx}.webp`;
     const destinationFile = new File(Paths.cache, filename);
 
-    // 1. Try remote HD URL if available
-    if (hdUrl) {
-      try {
-        const downloadedFile = await File.downloadFileAsync(hdUrl, destinationFile, { idempotent: true });
-        return downloadedFile.uri;
-      } catch (err) {
-        console.warn('HD CDN download failed, falling back to local bundled asset:', err);
-      }
-    }
-
-    // 2. Fallback to local bundled asset URI
+    // 1. Use local bundled asset first (instant, 0ms network latency, works 100% offline!)
     if (localAssetUri) {
       try {
         const downloadedFile = await File.downloadFileAsync(localAssetUri, destinationFile, { idempotent: true });
         return downloadedFile.uri;
       } catch (e) {
-        console.warn('Local asset download failed, returning uri directly:', e);
+        console.warn('Local asset resolve error, using raw uri:', e);
         return localAssetUri;
       }
+    }
+
+    // 2. Fallback to remote CDN URL if needed
+    const hdUrl = shivaHdUrls[idx];
+    if (hdUrl) {
+      const downloadedFile = await File.downloadFileAsync(hdUrl, destinationFile, { idempotent: true });
+      return downloadedFile.uri;
     }
 
     throw new Error('No valid image URI found for wallpaper');

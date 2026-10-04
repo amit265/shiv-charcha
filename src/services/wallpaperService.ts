@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
+import * as Sharing from 'expo-sharing';
 
 const { WallpaperModule } = NativeModules;
 
@@ -18,10 +19,21 @@ export const setWallpaperDirect = async (
       return true;
     } catch (error) {
       console.warn('Native WallpaperModule error:', error);
-      throw error;
     }
   }
 
-  // Fallback if native module not supported on current platform
+  // Fallback for Expo Go or uncompiled dev clients
+  if (Platform.OS === 'android' && (await Sharing.isAvailableAsync())) {
+    try {
+      await Sharing.shareAsync(imageUriOrUrl, {
+        dialogTitle: 'वॉलपेपर के रूप में सेट करें',
+        mimeType: 'image/jpeg',
+      });
+      return true;
+    } catch (intentErr) {
+      console.warn('Share intent fallback error:', intentErr);
+    }
+  }
+
   return false;
 };
