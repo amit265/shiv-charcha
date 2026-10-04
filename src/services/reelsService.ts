@@ -6,39 +6,52 @@ import { safeShare } from './shareService';
 const LIKED_REELS_KEY = '@shiv_charcha_liked_reels';
 const CACHED_REELS_KEY = '@shiv_charcha_remote_reels_json';
 
-// Remote JSON URL hosted on GitHub raw repository - edit this file anytime to update reels instantly in app!
+// Remote API endpoint on Mahavyoma Studio website
 export const REMOTE_REELS_JSON_URL =
-  'https://raw.githubusercontent.com/amit265/shiv-charcha/main/assets/data/reels.json';
+  'https://mahavyomastudio.com/apps/shiv-charcha/data/reels.json';
+export const REMOTE_REELS_API_FALLBACK =
+  'https://mahavyomastudio.com/api/reels.json';
 
 export const MAHAVYOMA_BHAKTI_YT_URL = 'https://youtube.com/@mahavyomabhakti';
 
 export class ReelsService {
   /**
    * Returns curated list of Shiv Charcha Reels.
-   * Fetches remote catalog from API/JSON endpoint with cached & local fallbacks.
+   * Fetches remote catalog from Mahavyoma Studio Website API endpoint with cached & local fallbacks.
    */
   static async getReels(): Promise<ShivReel[]> {
-    try {
-      // 1. Fetch remote JSON catalog with 4s timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const fetchFromUrl = async (url: string): Promise<ShivReel[] | null> => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-      const response = await fetch(REMOTE_REELS_JSON_URL, {
-        signal: controller.signal,
-        headers: { 'Cache-Control': 'no-cache' },
-      });
-      clearTimeout(timeoutId);
+        const response = await fetch(url, {
+          signal: controller.signal,
+          headers: { 'Cache-Control': 'no-cache', Accept: 'application/json' },
+        });
+        clearTimeout(timeoutId);
 
-      if (response.ok) {
-        const remoteData = await response.json();
-        if (Array.isArray(remoteData) && remoteData.length > 0) {
-          await AsyncStorage.setItem(CACHED_REELS_KEY, JSON.stringify(remoteData));
-          return remoteData as ShivReel[];
+        if (response.ok) {
+          const remoteData = await response.json();
+          const items = Array.isArray(remoteData) ? remoteData : remoteData?.reels;
+          if (Array.isArray(items) && items.length > 0) {
+            await AsyncStorage.setItem(CACHED_REELS_KEY, JSON.stringify(items));
+            return items as ShivReel[];
+          }
         }
+      } catch {
+        // Continue fallback
       }
-    } catch {
-      // Network offline or fetch failed - proceed to fallback cache
-    }
+      return null;
+    };
+
+    // 1. Fetch from primary website API URL
+    const primaryData = await fetchFromUrl(REMOTE_REELS_JSON_URL);
+    if (primaryData) return primaryData;
+
+    // 2. Fetch from secondary website API endpoint fallback
+    const fallbackData = await fetchFromUrl(REMOTE_REELS_API_FALLBACK);
+    if (fallbackData) return fallbackData;
 
     // 2. Try loading cached remote reels if available
     try {
