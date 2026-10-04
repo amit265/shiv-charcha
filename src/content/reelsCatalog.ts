@@ -1,6 +1,7 @@
 export interface ShivReel {
   id: string;
   youtubeVideoId: string;
+  thumbnailUrl?: string;
   videoUrl?: string;
   title: string;
   subTitle: string;
