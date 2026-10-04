@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -16,6 +16,8 @@ import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPro
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 import { Analytics } from '@/services/analytics/analytics';
+import { ReelsService } from '@/services/reelsService';
+import { ShivReel, getReelThumbnailUrl } from '@/content/reelsCatalog';
 
 type CategoryHub = 'all' | 'sutras' | 'understanding' | 'daily_life' | 'faq' | 'books' | 'audio' | 'sadhna';
 
@@ -68,6 +70,29 @@ export default function ShivCharchaScreen() {
     sutra2: false,
     sutra3: false,
   });
+
+  const [reelsCatalog, setReelsCatalog] = useState<ShivReel[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      const cached = await ReelsService.getCachedReels();
+      if (isMounted && cached && cached.length > 0) {
+        setReelsCatalog(cached);
+      }
+      try {
+        const synced = await ReelsService.syncRemoteReels();
+        if (isMounted && synced && synced.length > 0) {
+          setReelsCatalog(synced);
+        }
+      } catch {
+        // Silently keep cached
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const loadData = async () => {
     const data = await StorageService.getDaily3Sutras();
@@ -451,27 +476,54 @@ export default function ShivCharchaScreen() {
           </View>
         </View>
 
-        {/* SHIV CHARCHA REELS BANNER */}
-        <TouchableOpacity
-          style={[styles.reelsBanner, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}
-          onPress={() => router.push('/reels' as any)}
-          activeOpacity={0.88}
-        >
-          <View style={styles.reelsBannerRow}>
-            <Text style={{ fontSize: 36 }}>🎬</Text>
-            <View style={{ flex: 1 }}>
-              <View style={[styles.reelsBadge, { backgroundColor: theme.accent }]}>
-                <Text style={[styles.reelsBadgeText, { color: theme.primaryDark }]}>✨ महाव्योम भक्ति रील्स</Text>
-              </View>
-              <Text style={[styles.reelsBannerTitle, { color: theme.textGold }]}>
-                15-सेकंड शिव चर्चा रील्स देखें ➔
+        {/* PROMINENT SHIV CHARCHA REELS SHOWCASE SECTION */}
+        <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
+          <View style={styles.reelsShowcaseHeaderRow}>
+            <View>
+              <Text style={[styles.reelsShowcaseBadge, { backgroundColor: theme.accent, color: theme.primaryDark }]}>
+                वीडियो ज्ञान
               </Text>
-              <Text style={[styles.reelsBannerSub, { color: theme.textWhite }]}>
-                3 सूत्र • साहब श्री विचार • शिव भक्ति रील्स • व्हाट्सएप स्टेटस
-              </Text>
+              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🎬 शिव चर्चा रील्स</Text>
             </View>
+            <TouchableOpacity onPress={() => router.push('/reels' as any)} activeOpacity={0.8}>
+              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी देखें ➔</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+
+          <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
+            साहब श्री हरिंद्रानंद जी के 3 सूत्र, गोष्ठी व शिव विचार वीडियो रील्स में देखें
+          </Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScrollRow}>
+            {reelsCatalog.map((reel) => {
+              const thumbUrl = getReelThumbnailUrl(reel);
+              return (
+                <TouchableOpacity
+                  key={reel.id}
+                  style={[styles.reelThumbCard, { borderColor: theme.borderGold }]}
+                  onPress={() => router.push({ pathname: '/reels', params: { startReelId: reel.id } } as any)}
+                  activeOpacity={0.85}
+                >
+                  {thumbUrl ? (
+                    <Image source={{ uri: thumbUrl }} style={styles.reelThumbImage} resizeMode="cover" />
+                  ) : (
+                    <View style={styles.reelThumbBg} />
+                  )}
+                  <View style={styles.reelThumbPlayOverlay}>
+                    <View style={styles.playIconCircle}>
+                      <Text style={styles.reelPlayIcon}>▶️</Text>
+                    </View>
+                  </View>
+                  <View style={styles.reelThumbOverlay}>
+                    <Text style={styles.reelThumbTitle} numberOfLines={2}>
+                      {reel.title}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
 
         {/* SEARCH BAR */}
         <View style={styles.searchRow}>
@@ -1591,36 +1643,92 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
   },
-  reelsBanner: {
-    borderRadius: 18,
+  reelsShowcaseCard: {
+    borderRadius: 20,
     padding: 16,
+    marginBottom: 18,
     borderWidth: 1.5,
-    marginBottom: 16,
     ...shadows.medium,
   },
-  reelsBannerRow: {
+  reelsShowcaseHeaderRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 12,
+    marginBottom: 6,
   },
-  reelsBadge: {
-    alignSelf: 'flex-start',
+  reelsShowcaseBadge: {
+    fontSize: 10,
+    fontWeight: 'bold',
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 6,
-    marginBottom: 4,
+    alignSelf: 'flex-start',
+    marginBottom: 2,
   },
-  reelsBadgeText: {
+  reelsShowcaseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  reelsShowcaseAllBtn: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  reelsShowcaseSub: {
+    fontSize: 12,
+    opacity: 0.9,
+    marginBottom: 12,
+    lineHeight: 16,
+  },
+  reelsScrollRow: {
+    gap: 10,
+  },
+  reelThumbCard: {
+    width: 110,
+    height: 160,
+    borderRadius: 14,
+    borderWidth: 1.2,
+    backgroundColor: '#0B132B',
+    overflow: 'hidden',
+    position: 'relative',
+    justifyContent: 'space-between',
+  },
+  reelThumbImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+  },
+  reelThumbBg: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reelThumbPlayOverlay: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 2,
+  },
+  reelPlayIcon: {
+    fontSize: 16,
+  },
+  reelThumbOverlay: {
+    padding: 6,
+    backgroundColor: 'rgba(0,0,0,0.75)',
+  },
+  reelThumbTitle: {
+    color: '#FFFFFF',
     fontSize: 10,
     fontWeight: 'bold',
-  },
-  reelsBannerTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  reelsBannerSub: {
-    fontSize: 11,
-    marginTop: 2,
-    lineHeight: 16,
+    lineHeight: 13,
   },
 });

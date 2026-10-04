@@ -21,7 +21,7 @@ import { resolveImageSource } from '@/constants/imageAssets';
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 import { ReelsService } from '@/services/reelsService';
-import { ShivReel } from '@/content/reelsCatalog';
+import { ShivReel, getReelThumbnailUrl } from '@/content/reelsCatalog';
 
 function FloatingMiniReelPlayer({
   reel,
@@ -421,23 +421,33 @@ export default function HomeScreen() {
           </Text>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScrollRow}>
-            {reelsCatalog.map((reel) => (
-              <TouchableOpacity
-                key={reel.id}
-                style={[styles.reelThumbCard, { borderColor: theme.borderGold }]}
-                onPress={() => router.push('/reels' as any)}
-                activeOpacity={0.85}
-              >
-                <View style={styles.reelThumbBg}>
-                  <Text style={styles.reelPlayIcon}>▶️</Text>
-                </View>
-                <View style={styles.reelThumbOverlay}>
-                  <Text style={styles.reelThumbTitle} numberOfLines={2}>
-                    {reel.title}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+            {reelsCatalog.map((reel) => {
+              const thumbUrl = getReelThumbnailUrl(reel);
+              return (
+                <TouchableOpacity
+                  key={reel.id}
+                  style={[styles.reelThumbCard, { borderColor: theme.borderGold }]}
+                  onPress={() => router.push({ pathname: '/reels', params: { startReelId: reel.id } } as any)}
+                  activeOpacity={0.85}
+                >
+                  {thumbUrl ? (
+                    <Image source={{ uri: thumbUrl }} style={styles.reelThumbImage} resizeMode="cover" />
+                  ) : (
+                    <View style={styles.reelThumbBg} />
+                  )}
+                  <View style={styles.reelThumbPlayOverlay}>
+                    <View style={styles.playIconCircle}>
+                      <Text style={styles.reelPlayIcon}>▶️</Text>
+                    </View>
+                  </View>
+                  <View style={styles.reelThumbOverlay}>
+                    <Text style={styles.reelThumbTitle} numberOfLines={2}>
+                      {reel.title}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
         </View>
 
@@ -1247,19 +1257,41 @@ const styles = StyleSheet.create({
     borderWidth: 1.2,
     backgroundColor: '#0B132B',
     overflow: 'hidden',
+    position: 'relative',
     justifyContent: 'space-between',
+  },
+  reelThumbImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
   },
   reelThumbBg: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  reelThumbPlayOverlay: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 2,
+  },
   reelPlayIcon: {
-    fontSize: 24,
+    fontSize: 16,
   },
   reelThumbOverlay: {
     padding: 6,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.75)',
   },
   reelThumbTitle: {
     color: '#FFFFFF',

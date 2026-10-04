@@ -12,7 +12,7 @@ import {
   Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
@@ -173,13 +173,41 @@ function SingleReelView({
   );
 }
 
+function shuffleArray<T>(array: T[]): T[] {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 export default function ShivReelsScreen() {
   const router = useRouter();
+  const { startReelId } = useLocalSearchParams<{ startReelId?: string }>();
   const { theme } = useTheme();
   const [itemsList, setItemsList] = useState<FeedItem[]>([]);
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const [activeReelId, setActiveReelId] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const prepareReelsOrder = useCallback(
+    (reels: ShivReel[]): ShivReel[] => {
+      if (!reels || reels.length === 0) return [];
+
+      if (startReelId) {
+        const targetIndex = reels.findIndex((r) => r.id === startReelId);
+        if (targetIndex !== -1) {
+          const targetReel = reels[targetIndex];
+          const remaining = reels.filter((r) => r.id !== startReelId);
+          return [targetReel, ...shuffleArray(remaining)];
+        }
+      }
+
+      return shuffleArray(reels);
+    },
+    [startReelId]
+  );
 
   useEffect(() => {
     Analytics.logScreen('ShivReelsScreen');
@@ -204,11 +232,12 @@ export default function ShivReelsScreen() {
       if (!isMounted) return;
       setLikedIds(liked);
 
-      const initialFeed = buildFeed(cachedReels);
+      const orderedReels = prepareReelsOrder(cachedReels);
+      const initialFeed = buildFeed(orderedReels);
       setItemsList(initialFeed);
 
-      if (cachedReels.length > 0) {
-        setActiveReelId(cachedReels[0].id);
+      if (orderedReels.length > 0) {
+        setActiveReelId(orderedReels[0].id);
       }
       setIsLoading(false);
 
@@ -216,7 +245,8 @@ export default function ShivReelsScreen() {
       try {
         const remoteReels = await ReelsService.syncRemoteReels();
         if (isMounted && remoteReels && remoteReels.length > 0) {
-          setItemsList(buildFeed(remoteReels));
+          const orderedRemote = prepareReelsOrder(remoteReels);
+          setItemsList(buildFeed(orderedRemote));
         }
       } catch {
         // Silently preserve cached/local feed
@@ -226,7 +256,7 @@ export default function ShivReelsScreen() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [prepareReelsOrder]);
 
   const handleToggleLike = async (reelId: string) => {
     const isNowLiked = await ReelsService.toggleLikeReel(reelId);
