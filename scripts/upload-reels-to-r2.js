@@ -66,7 +66,7 @@ async function runUploadSync() {
 
   for (let idx = 0; idx < reels.length; idx++) {
     const item = reels[idx];
-    const objectKey = `${item.youtubeVideoId}.mp4`;
+    const objectKey = `videos/${item.youtubeVideoId}.mp4`;
     const exists = await checkFileExistsInR2(objectKey);
 
     if (exists) {

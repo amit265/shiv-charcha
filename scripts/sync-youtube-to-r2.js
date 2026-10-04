@@ -119,7 +119,7 @@ async function syncYouTubeToR2() {
 
         console.log(`\n🎬 Processing Short: [${videoId}] ${title}`);
 
-        const objectKey = `${videoId}.mp4`;
+        const objectKey = `videos/${videoId}.mp4`;
         const existsInR2 = await checkFileExistsInR2(objectKey);
 
         let videoUrl;
