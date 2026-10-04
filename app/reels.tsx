@@ -1,602 +1,371 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
-  Dimensions,
-  FlatList,
   TouchableOpacity,
-  Platform,
-  Alert,
+  FlatList,
+  Dimensions,
+  ViewToken,
+  SafeAreaView,
   StatusBar,
+  Platform,
 } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
-import ViewShot from 'react-native-view-shot';
-import * as Sharing from 'expo-sharing';
-import * as Haptics from 'expo-haptics';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { quotesList, ShivQuote } from '@/content/quotes';
-import { shivaBackgrounds } from '@/constants/shivaImages';
-import { colors, shadows } from '@/theme/colors';
-import { safeShare } from '@/services/shareService';
-import { useAudio } from '@/context/AudioContext';
-import { audioLibrary } from '@/content/audioLibrary';
-import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { useRouter } from 'expo-router';
+import YoutubePlayer from 'react-native-youtube-iframe';
+import { useTheme } from '@/context/ThemeContext';
+import { shadows } from '@/theme/colors';
+import { ShivReel } from '@/content/reelsCatalog';
+import { ReelsService } from '@/services/reelsService';
+import { SmartBanner } from '@/components/common/SmartBanner';
+import { Analytics } from '@/services/analytics/analytics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+// Calculate container height subtracting header and safe margin
+const REEL_HEIGHT = SCREEN_HEIGHT - (Platform.OS === 'ios' ? 120 : 100);
 
-interface ReelItemProps {
-  quote: ShivQuote;
-  index: number;
-  onClose: () => void;
-}
+type FeedItem =
+  | { type: 'reel'; data: ShivReel }
+  | { type: 'ad'; id: string };
 
-const SingleReelItem: React.FC<ReelItemProps> = ({ quote, index, onClose }) => {
-  const insets = useSafeAreaInsets();
-  const { playSoundEffect, isPlaying, togglePlayPause } = useAudio();
-  const viewShotRef = useRef<any>(null);
-
-  const [bgIndex, setBgIndex] = useState<number>(index % shivaBackgrounds.length);
-  const [likes, setLikes] = useState<number>(Math.floor(108 + ((index * 37) % 500)));
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  const triggerHaptic = () => {
-    try {
-      if (Platform.OS !== 'web') {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      }
-    } catch (e) {}
-  };
-
-  const handleLike = () => {
-    triggerHaptic();
-    playSoundEffect('chime');
-    setIsLiked((prev) => !prev);
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-  };
-
-  const handleToggleSound = () => {
-    triggerHaptic();
-    togglePlayPause();
-  };
-
-  const handleCycleBg = () => {
-    triggerHaptic();
-    setBgIndex((prev) => (prev + 1) % shivaBackgrounds.length);
-  };
-
-  const handleShare = async () => {
-    triggerHaptic();
-    const shareMessage = `🌸 *शिव चर्चा पावन विचार* 🌸\n\n"${quote.quote}"\n\n- ${quote.author}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`;
-
-    try {
-      if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
-        const uri = await viewShotRef.current.capture();
-
-        if (Platform.OS === 'web' && typeof document !== 'undefined') {
-          try {
-            const link = document.createElement('a');
-            link.href = uri;
-            link.download = `shiv-charcha-quote-${quote.id}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          } catch (e) {}
-
-          await safeShare({
-            title: quote.category,
-            message: shareMessage,
-          });
-          return;
-        }
-
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri);
-        } else {
-          await safeShare({
-            title: quote.category,
-            message: shareMessage,
-            url: uri,
-          });
-        }
-      } else {
-        await safeShare({
-          title: quote.category,
-          message: shareMessage,
-        });
-      }
-    } catch (err) {
-      await safeShare({
-        title: quote.category,
-        message: shareMessage,
-      });
-    }
-  };
-
-  const handleSaveImage = async () => {
-    triggerHaptic();
-    setIsSaving(true);
-    try {
-      if (viewShotRef.current && typeof viewShotRef.current.capture === 'function') {
-        const uri = await viewShotRef.current.capture();
-
-        if (Platform.OS === 'web' && typeof document !== 'undefined') {
-          const link = document.createElement('a');
-          link.href = uri;
-          link.download = `shiv-charcha-quote-${quote.id}.png`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          Alert.alert('सफलता 🙏', 'शिव चर्चा चित्र क्लिपबोर्ड/डाउनलोड में सहेजा गया!');
-        } else if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri);
-        } else {
-          Alert.alert('सफलता 🙏', 'चित्र शेयरिंग उपलब्ध है!');
-        }
-      }
-    } catch (err) {
-      Alert.alert('त्रुटि', 'चित्र सहेजने में समस्या आई।');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const topInsetPadding = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44) + 8;
-  const bottomInsetPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 16 : 0) + 12;
-
-  return (
-    <View style={styles.reelItemContainer}>
-      {/* ViewShot Container for Image Capturing */}
-      <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 0.95 }} style={styles.viewShotFrame}>
-        <ImageBackground
-          source={shivaBackgrounds[bgIndex]}
-          style={styles.bgImage}
-          resizeMode="cover"
-        >
-          {/* Dark Overlay Vignette for High Contrast Typography */}
-          <View style={styles.darkGradientOverlay} />
-
-          {/* Top Bar inside Reel */}
-          <View style={[styles.topHeader, { paddingTop: topInsetPadding }]}>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.8}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </TouchableOpacity>
-
-            <View style={styles.categoryBadge}>
-              <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail">
-                🌺 {quote.category}
-              </Text>
-            </View>
-
-            <View style={styles.counterBadge}>
-              <Text style={styles.counterText}>{index + 1} / {quotesList.length}</Text>
-            </View>
-          </View>
-
-          {/* Center Card with Devotional Quote */}
-          <View style={styles.quoteCardCenter}>
-            <View style={styles.omWatermark}>
-              <Text style={styles.omText}>ॐ</Text>
-            </View>
-
-            <Text style={styles.quoteSymbolOpen}>“</Text>
-            <Text
-              style={[
-                styles.quoteBodyText,
-                quote.quote.length > 120
-                  ? { fontSize: 17, lineHeight: 25 }
-                  : quote.quote.length > 70
-                  ? { fontSize: 19, lineHeight: 28 }
-                  : { fontSize: 21, lineHeight: 31 },
-              ]}
-            >
-              {quote.quote}
-            </Text>
-            <Text style={styles.quoteSymbolClose}>”</Text>
-
-            <View style={styles.authorDivider} />
-            <Text style={styles.authorText}>- {quote.author}</Text>
-            <Text style={styles.appBrandingText}>शिव चर्चा • हर हर महादेव 🙏</Text>
-          </View>
-        </ImageBackground>
-      </ViewShot>
-
-      {/* Right Actions Bar Overlay */}
-      <View style={[styles.rightActionsPanel, { bottom: bottomInsetPadding + 50 }]}>
-        {/* Heart / Blessing Button */}
-        <TouchableOpacity style={styles.actionBtn} onPress={handleLike} activeOpacity={0.8}>
-          <View style={[styles.actionIconCircle, isLiked && styles.actionIconCircleActive]}>
-            <Text style={styles.actionEmoji}>{isLiked ? '❤️' : '🌸'}</Text>
-          </View>
-          <Text style={styles.actionLabel}>{likes}</Text>
-        </TouchableOpacity>
-
-        {/* Sound Mute / Unmute Button */}
-        <TouchableOpacity style={styles.actionBtn} onPress={handleToggleSound} activeOpacity={0.8}>
-          <View style={[styles.actionIconCircle, isPlaying && styles.actionIconCircleActive]}>
-            <Text style={styles.actionEmoji}>{isPlaying ? '🔊' : '🔇'}</Text>
-          </View>
-          <Text style={styles.actionLabel}>{isPlaying ? 'ध्वनि' : 'म्यूट'}</Text>
-        </TouchableOpacity>
-
-        {/* Share Button */}
-        <TouchableOpacity style={styles.actionBtn} onPress={handleShare} activeOpacity={0.8}>
-          <View style={styles.actionIconCircle}>
-            <Text style={styles.actionEmoji}>📤</Text>
-          </View>
-          <Text style={styles.actionLabel}>शेयर</Text>
-        </TouchableOpacity>
-
-        {/* Save Image Button */}
-        <TouchableOpacity style={styles.actionBtn} onPress={handleSaveImage} activeOpacity={0.8}>
-          <View style={styles.actionIconCircle}>
-            <Text style={styles.actionEmoji}>💾</Text>
-          </View>
-          <Text style={styles.actionLabel}>{isSaving ? '...' : 'सहेजें'}</Text>
-        </TouchableOpacity>
-
-        {/* Cycle Wallpaper Button */}
-        <TouchableOpacity style={styles.actionBtn} onPress={handleCycleBg} activeOpacity={0.8}>
-          <View style={styles.actionIconCircle}>
-            <Text style={styles.actionEmoji}>🎨</Text>
-          </View>
-          <Text style={styles.actionLabel}>वॉलपेपर</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bottom Hint Indicator */}
-      <View style={[styles.bottomHint, { paddingBottom: bottomInsetPadding }]}>
-        <Text style={styles.hintText}>ऊपर स्क्रॉल करें 👆</Text>
-      </View>
-    </View>
-  );
-};
-const FullScreenNativeAdReel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const insets = useSafeAreaInsets();
-  const { isPlaying, togglePlayPause } = useAudio();
-  const [adLoaded, setAdLoaded] = useState<boolean | null>(null);
-  const topInsetPadding = Math.max(insets.top, Platform.OS === 'android' ? (StatusBar.currentHeight || 24) : 44) + 8;
-  const bottomInsetPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 16 : 0) + 12;
-
-  const triggerHaptic = () => {
-    try {
-      if (Platform.OS !== 'web') {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      }
-    } catch (e) {}
-  };
-
-  const handleToggleSound = () => {
-    triggerHaptic();
-    togglePlayPause();
-  };
-
-  return (
-    <View style={styles.reelItemContainer}>
-      <View style={styles.bgImage}>
-        <View style={styles.darkGradientOverlay} />
-        <View style={[styles.topHeader, { paddingTop: topInsetPadding }]}>
-          <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.8}>
-            <Text style={styles.closeIcon}>✕</Text>
-          </TouchableOpacity>
-          <View style={styles.categoryBadge}>
-            <Text style={styles.categoryText} numberOfLines={1} ellipsizeMode="tail">
-              📢 प्रायोजित संदेश
-            </Text>
-          </View>
-        </View>
-
-        {adLoaded !== false ? (
-          <View style={adLoaded ? styles.quoteCardCenter : styles.hiddenAdContainer}>
-            {adLoaded && (
-              <Text style={{ fontSize: 13, color: colors.goldLight, marginBottom: 12, fontWeight: 'bold' }}>
-                🌸 प्रायोजित संदेश
-              </Text>
-            )}
-            <NativeAdCard
-              forceShow
-              onAdLoaded={() => setAdLoaded(true)}
-              onAdFailedToLoad={() => setAdLoaded(false)}
-            />
-          </View>
-        ) : (
-          <View style={styles.quoteCardCenter}>
-            <View style={styles.omWatermark}>
-              <Text style={styles.omText}>🕉️</Text>
-            </View>
-            <Text style={styles.quoteBodyText}>
-              {'"'}हर हर महादेव • ॐ नमः शिवाय{'"'}
-            </Text>
-            <View style={styles.authorDivider} />
-            <Text style={styles.authorText}>शिव महिमा 🔱</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Right Actions Bar for Ad Reel */}
-      <View style={[styles.rightActionsPanel, { bottom: bottomInsetPadding + 50 }]}>
-        <TouchableOpacity style={styles.actionBtn} onPress={handleToggleSound} activeOpacity={0.8}>
-          <View style={[styles.actionIconCircle, isPlaying && styles.actionIconCircleActive]}>
-            <Text style={styles.actionEmoji}>{isPlaying ? '🔊' : '🔇'}</Text>
-          </View>
-          <Text style={styles.actionLabel}>{isPlaying ? 'ध्वनि' : 'म्यूट'}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={[styles.bottomHint, { paddingBottom: bottomInsetPadding }]}>
-        <Text style={styles.hintText}>ऊपर स्क्रॉल करें 👆</Text>
-      </View>
-    </View>
-  );
+const VIEWABILITY_CONFIG = {
+  itemVisiblePercentThreshold: 70,
 };
 
-export default function ReelsScreen() {
+export default function ShivReelsScreen() {
   const router = useRouter();
-  const { playTrack, pauseTrack } = useAudio();
+  const { theme } = useTheme();
+  const [itemsList, setItemsList] = useState<FeedItem[]>([]);
+  const [likedIds, setLikedIds] = useState<string[]>([]);
+  const [activeReelId, setActiveReelId] = useState<string>('');
 
-  useFocusEffect(
-    useCallback(() => {
-      const reelTrack = audioLibrary.find((t) => t.id === 'a-mantra-108') || audioLibrary[0];
-      if (reelTrack) {
-        playTrack(reelTrack);
+  useEffect(() => {
+    Analytics.logScreen('ShivReelsScreen');
+    let isMounted = true;
+    (async () => {
+      const rawReels = await ReelsService.getReels();
+      const liked = await ReelsService.getLikedReelIds();
+      if (!isMounted) return;
+      setLikedIds(liked);
+
+      const feed: FeedItem[] = [];
+      rawReels.forEach((reel, index) => {
+        feed.push({ type: 'reel', data: reel });
+        if ((index + 1) % 4 === 0) {
+          feed.push({ type: 'ad', id: `ad-${index}` });
+        }
+      });
+
+      setItemsList(feed);
+      if (rawReels.length > 0) {
+        setActiveReelId(rawReels[0].id);
       }
-
-      return () => {
-        pauseTrack();
-      };
-    }, [playTrack, pauseTrack])
-  );
-
-  const handleClose = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.push('/(tabs)' as any);
-    }
-  };
-
-  const mixedData = React.useMemo(() => {
-    const items: { id: string; type: 'quote' | 'ad'; quote?: ShivQuote; quoteIndex?: number }[] = [];
-    quotesList.forEach((quote, idx) => {
-      items.push({ id: quote.id, type: 'quote', quote, quoteIndex: idx });
-      if ((idx + 1) % 5 === 0) {
-        items.push({ id: `ad-${idx}`, type: 'ad' });
-      }
-    });
-    return items;
+    })();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
+  const handleToggleLike = async (reelId: string) => {
+    const isNowLiked = await ReelsService.toggleLikeReel(reelId);
+    if (isNowLiked) {
+      setLikedIds((prev) => [...prev, reelId]);
+    } else {
+      setLikedIds((prev) => prev.filter((id) => id !== reelId));
+    }
+  };
+
+  const onViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      if (viewableItems.length > 0) {
+        const currentItem = viewableItems[0].item as FeedItem;
+        if (currentItem && currentItem.type === 'reel') {
+          setActiveReelId(currentItem.data.id);
+        }
+      }
+    },
+    []
+  );
+
+  const renderReelItem = ({ item }: { item: FeedItem }) => {
+    if (item.type === 'ad') {
+      return (
+        <View style={[styles.reelContainer, { backgroundColor: theme.cardBg, justifyContent: 'center', alignItems: 'center' }]}>
+          <View style={[styles.adCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+            <Text style={[styles.adCardTitle, { color: theme.primary }]}>🌸 हर हर महादेव 🙏</Text>
+            <Text style={[styles.adCardSub, { color: theme.textSecondary }]}>
+              शिव शिष्यता के प्रचार-प्रसार में सहयोग करें
+            </Text>
+            <SmartBanner />
+          </View>
+        </View>
+      );
+    }
+
+    const reel = item.data;
+    const isLiked = likedIds.includes(reel.id);
+    const isPlaying = activeReelId === reel.id;
+
+    return (
+      <View style={[styles.reelContainer, { backgroundColor: '#000000' }]}>
+        {/* YOUTUBE SHORTS PLAYER */}
+        <View style={styles.playerWrapper}>
+          <YoutubePlayer
+            height={REEL_HEIGHT - 60}
+            width={SCREEN_WIDTH}
+            play={isPlaying}
+            videoId={reel.youtubeVideoId}
+            initialPlayerParams={{
+              preventFullScreen: true,
+              controls: true,
+              modestbranding: true,
+              rel: false,
+            }}
+          />
+        </View>
+
+        {/* BOTTOM LEFT OVERLAY INFO */}
+        <View style={styles.bottomInfoOverlay}>
+          <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
+            <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
+              🎬 15s शिव रील्स • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
+            </Text>
+          </View>
+          <Text style={[styles.reelTitleText, { color: '#FFFFFF' }]}>{reel.title}</Text>
+          <Text style={[styles.reelSubText, { color: '#E2E8F0' }]}>{reel.subTitle}</Text>
+
+          {/* READ ARTICLE SHORTCUT IF LINKED */}
+          {reel.teachingId && (
+            <TouchableOpacity
+              style={[styles.teachingLinkBtn, { backgroundColor: 'rgba(230, 81, 0, 0.85)', borderColor: theme.accent }]}
+              onPress={() => router.push(`/teaching/${reel.teachingId}` as any)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.teachingLinkText}>📖 विस्तृत लेख पढ़ें ➔</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* RIGHT SIDEBAR ACTIONS OVERLAY */}
+        <View style={styles.rightActionsOverlay}>
+          {/* LIKE BUTTON */}
+          <TouchableOpacity
+            style={styles.actionIconButton}
+            onPress={() => handleToggleLike(reel.id)}
+            activeOpacity={0.8}
+          >
+            <View style={[styles.actionIconCircle, { backgroundColor: isLiked ? '#EF4444' : 'rgba(0,0,0,0.6)' }]}>
+              <Text style={{ fontSize: 20 }}>{isLiked ? '❤️' : '🤍'}</Text>
+            </View>
+            <Text style={styles.actionLabelText}>{reel.likesCount + (isLiked ? 1 : 0)}</Text>
+          </TouchableOpacity>
+
+          {/* WHATSAPP SHARE BUTTON */}
+          <TouchableOpacity
+            style={styles.actionIconButton}
+            onPress={() => ReelsService.shareReel(reel)}
+            activeOpacity={0.8}
+          >
+            <View style={[styles.actionIconCircle, { backgroundColor: '#25D366' }]}>
+              <Text style={{ fontSize: 20 }}>📲</Text>
+            </View>
+            <Text style={styles.actionLabelText}>शेयर</Text>
+          </TouchableOpacity>
+
+          {/* YOUTUBE CHANNEL SUBSCRIBE */}
+          <TouchableOpacity
+            style={styles.actionIconButton}
+            onPress={() => ReelsService.openYouTubeChannel()}
+            activeOpacity={0.8}
+          >
+            <View style={[styles.actionIconCircle, { backgroundColor: '#FF0000' }]}>
+              <Text style={{ fontSize: 18 }}>🔔</Text>
+            </View>
+            <Text style={styles.actionLabelText}>सब्सक्राइब</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.screenContainer}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+    <SafeAreaView style={[styles.container, { backgroundColor: '#000000' }]}>
+      <StatusBar barStyle="light-content" />
+
+      {/* TOP HEADER BAR */}
+      <View style={[styles.topHeader, { backgroundColor: theme.primaryDark, borderBottomColor: theme.borderGold }]}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
+          <Text style={[styles.backBtnText, { color: theme.textGold }]}>← शिव चर्चा</Text>
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.textGold }]}>🎬 शिव चर्चा रील्स</Text>
+        <TouchableOpacity
+          style={[styles.ytSubscribeBtn, { backgroundColor: '#FF0000' }]}
+          onPress={() => ReelsService.openYouTubeChannel()}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.ytSubscribeText}>► YT चैनल</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* REELS VERTICAL FEED */}
       <FlatList
-        data={mixedData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item, index }) => {
-          if (item.type === 'ad') {
-            return <FullScreenNativeAdReel onClose={handleClose} />;
-          }
-          return <SingleReelItem quote={item.quote!} index={item.quoteIndex!} onClose={handleClose} />;
-        }}
+        data={itemsList}
+        renderItem={renderReelItem}
+        keyExtractor={(item) => (item.type === 'reel' ? item.data.id : item.id)}
         pagingEnabled
         showsVerticalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToInterval={SCREEN_HEIGHT}
+        snapToInterval={REEL_HEIGHT}
         snapToAlignment="start"
+        decelerationRate="fast"
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={VIEWABILITY_CONFIG}
         getItemLayout={(_, index) => ({
-          length: SCREEN_HEIGHT,
-          offset: SCREEN_HEIGHT * index,
+          length: REEL_HEIGHT,
+          offset: REEL_HEIGHT * index,
           index,
         })}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screenContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#000000',
-  },
-  reelItemContainer: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-    position: 'relative',
-    backgroundColor: '#000000',
-  },
-  viewShotFrame: {
-    width: '100%',
-    height: '100%',
-  },
-  bgImage: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  darkGradientOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(30, 5, 8, 0.58)',
   },
   topHeader: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    height: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    zIndex: 10,
+    borderBottomWidth: 1,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 215, 0, 0.3)',
+  backBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
-  closeIcon: {
+  backBtnText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  headerTitle: {
     fontSize: 16,
-    color: colors.bgIvory,
     fontWeight: 'bold',
   },
-  categoryBadge: {
-    backgroundColor: colors.maroonPrimary,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: colors.goldPrimary,
-    maxWidth: '58%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  categoryText: {
-    fontSize: 12.5,
-    fontWeight: 'bold',
-    color: colors.goldLight,
-    textAlign: 'center',
-  },
-  counterBadge: {
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  ytSubscribeBtn: {
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 14,
   },
-  counterText: {
-    fontSize: 12,
-    color: colors.bgIvory,
-    fontWeight: '600',
+  ytSubscribeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: 'bold',
   },
-  quoteCardCenter: {
-    width: '86%',
-    backgroundColor: 'rgba(54, 8, 15, 0.72)',
-    borderRadius: 24,
-    paddingHorizontal: 24,
-    paddingVertical: 30,
-    alignItems: 'center',
-    borderWidth: 1.8,
-    borderColor: colors.goldPrimary,
-    ...shadows.gold,
+  reelContainer: {
+    width: SCREEN_WIDTH,
+    height: REEL_HEIGHT,
+    position: 'relative',
+    justifyContent: 'center',
   },
-  hiddenAdContainer: {
-    height: 0,
-    width: 0,
-    opacity: 0,
-    overflow: 'hidden',
-  },
-  omWatermark: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.goldPrimary,
+  playerWrapper: {
+    width: SCREEN_WIDTH,
+    height: REEL_HEIGHT - 60,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
   },
-  omText: {
-    fontSize: 26,
-    color: colors.maroonDark,
-    fontWeight: 'bold',
-  },
-  quoteSymbolOpen: {
-    fontSize: 36,
-    color: colors.goldPrimary,
-    fontWeight: 'bold',
-    marginBottom: -10,
-    alignSelf: 'flex-start',
-  },
-  quoteBodyText: {
-    fontSize: 21,
-    lineHeight: 32,
-    fontWeight: 'bold',
-    color: colors.goldLight,
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  quoteSymbolClose: {
-    fontSize: 36,
-    color: colors.goldPrimary,
-    fontWeight: 'bold',
-    marginTop: -10,
-    alignSelf: 'flex-end',
-  },
-  authorDivider: {
-    width: 60,
-    height: 2,
-    backgroundColor: colors.goldPrimary,
-    marginVertical: 14,
-  },
-  authorText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: colors.bgIvory,
-  },
-  appBrandingText: {
-    fontSize: 11,
-    color: colors.goldPrimary,
-    marginTop: 8,
-    opacity: 0.9,
-  },
-  rightActionsPanel: {
+  bottomInfoOverlay: {
     position: 'absolute',
-    right: 14,
-    alignItems: 'center',
+    bottom: 24,
+    left: 16,
+    right: 80,
     zIndex: 10,
   },
-  actionBtn: {
-    alignItems: 'center',
-    marginBottom: 18,
+  categoryBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 6,
   },
-  actionIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.goldPrimary,
-    ...shadows.soft,
-  },
-  actionIconCircleActive: {
-    backgroundColor: colors.maroonPrimary,
-    borderColor: colors.goldLight,
-  },
-  actionEmoji: {
-    fontSize: 20,
-  },
-  actionLabel: {
+  categoryBadgeText: {
     fontSize: 11,
     fontWeight: 'bold',
-    color: colors.bgIvory,
-    marginTop: 4,
+  },
+  reelTitleText: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 4,
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
-  bottomHint: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  hintText: {
+  reelSubText: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.75)',
-    fontWeight: '600',
+    lineHeight: 17,
+    marginBottom: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  teachingLinkBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  teachingLinkText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  rightActionsOverlay: {
+    position: 'absolute',
+    right: 14,
+    bottom: 40,
+    alignItems: 'center',
+    gap: 16,
+    zIndex: 10,
+  },
+  actionIconButton: {
+    alignItems: 'center',
+  },
+  actionIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+    ...shadows.soft,
+  },
+  actionLabelText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  adCard: {
+    width: '90%',
+    padding: 20,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    ...shadows.medium,
+  },
+  adCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 6,
+  },
+  adCardSub: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 16,
   },
 });

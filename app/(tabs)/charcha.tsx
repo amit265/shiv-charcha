@@ -439,6 +439,28 @@ export default function ShivCharchaScreen() {
           </View>
         </View>
 
+        {/* SHIV CHARCHA REELS BANNER */}
+        <TouchableOpacity
+          style={[styles.reelsBanner, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}
+          onPress={() => router.push('/reels' as any)}
+          activeOpacity={0.88}
+        >
+          <View style={styles.reelsBannerRow}>
+            <Text style={{ fontSize: 36 }}>🎬</Text>
+            <View style={{ flex: 1 }}>
+              <View style={[styles.reelsBadge, { backgroundColor: theme.accent }]}>
+                <Text style={[styles.reelsBadgeText, { color: theme.primaryDark }]}>✨ महाव्योम भक्ति रील्स</Text>
+              </View>
+              <Text style={[styles.reelsBannerTitle, { color: theme.textGold }]}>
+                15-सेकंड शिव चर्चा रील्स देखें ➔
+              </Text>
+              <Text style={[styles.reelsBannerSub, { color: theme.textWhite }]}>
+                3 सूत्र • साहब श्री विचार • शिव भक्ति रील्स • व्हाट्सएप स्टेटस
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
         {/* SEARCH BAR */}
         <View style={styles.searchRow}>
           <TextInput
@@ -1556,5 +1578,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
+  },
+  reelsBanner: {
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1.5,
+    marginBottom: 16,
+    ...shadows.medium,
+  },
+  reelsBannerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  reelsBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginBottom: 4,
+  },
+  reelsBadgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  reelsBannerTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  reelsBannerSub: {
+    fontSize: 11,
+    marginTop: 2,
+    lineHeight: 16,
   },
 });
