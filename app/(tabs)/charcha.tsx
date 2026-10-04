@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -14,15 +14,41 @@ import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { Analytics } from '@/services/analytics/analytics';
-import { SmartBanner } from '@/components/common/SmartBanner';
 
-type FilterCategory = 'all' | 'understand' | 'faq' | 'books' | 'audio' | 'sadhna';
+type CategoryHub = 'all' | 'sutras' | 'understanding' | 'daily_life' | 'faq' | 'books' | 'audio' | 'sadhna';
+
+const categoryInfoMap: Record<string, { title: string; icon: string; desc: string; badge: string }> = {
+  sutras: {
+    title: 'त्रिवेणी सूत्र एवं भावार्थ',
+    icon: '🌸',
+    desc: 'दया, चर्चा व 108 जाप की संपूर्ण व्याख्या एवं अभ्यास विधि',
+    badge: '5 विषय • ऑडियो',
+  },
+  understanding: {
+    title: 'साहब श्री व दीदी माँ के विचार',
+    icon: '🔱',
+    desc: 'शिव को गुरु क्यों और कैसे बनाएँ? अनमोल विचार व दर्शन',
+    badge: '5 विषय • ऑडियो',
+  },
+  daily_life: {
+    title: 'गृहस्थ जीवन व आचरण',
+    icon: '🏡',
+    desc: 'परिवार, कर्म, महिलाएँ व गृहस्थ जीवन में शिव शिष्यता',
+    badge: '4 विषय • ऑडियो',
+  },
+  faq: {
+    title: 'शंका समाधान (FAQ)',
+    icon: '❓',
+    desc: 'नए शिष्यों की आम शंकाएँ, भ्रम व उनके प्रमाणिक समाधान',
+    badge: '4 प्रश्नोत्तर',
+  },
+};
 
 export default function ShivCharchaScreen() {
   const router = useRouter();
   const { theme } = useTheme();
   const { playTrack } = useAudio();
-  const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
+  const [activeHub, setActiveHub] = useState<CategoryHub>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [userPrefs, setUserPrefs] = useState<any>(defaultPreferences);
   const [isTrackerCollapsed, setIsTrackerCollapsed] = useState(false);
@@ -105,14 +131,19 @@ export default function ShivCharchaScreen() {
     });
   };
 
-  // Filtered lists based on search and active filter
+  // Filtered lists based on search and active hub
   const filteredTeachings = teachingTopics.filter((t) => {
     const matchesSearch =
       t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.summary.toLowerCase().includes(searchQuery.toLowerCase());
+      t.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.subTitle.toLowerCase().includes(searchQuery.toLowerCase());
     if (!matchesSearch) return false;
-    if (activeFilter === 'understand') return t.category !== 'faq';
-    if (activeFilter === 'faq') return t.category === 'faq';
+
+    if (activeHub === 'sutras') return t.category === 'sutras';
+    if (activeHub === 'understanding') return t.category === 'understanding';
+    if (activeHub === 'daily_life') return t.category === 'daily_life';
+    if (activeHub === 'faq') return t.category === 'faq';
+    if (activeHub === 'books' || activeHub === 'audio' || activeHub === 'sadhna') return false;
     return true;
   });
 
@@ -128,10 +159,12 @@ export default function ShivCharchaScreen() {
       (a.artist && a.artist.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const isDetailedListView = activeHub !== 'all' || searchQuery.trim().length > 0;
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header
-        title="शिव चर्चा • 3 सूत्र व विचार"
+        title="शिव चर्चा • 3 सूत्र व ज्ञान"
         subtitle="साहब श्री हरिंद्रानंद जी का पावन संदेश"
         rightAction={
           <TouchableOpacity
@@ -165,9 +198,8 @@ export default function ShivCharchaScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* PHASE 1: DAILY 3 SUTRA PRACTICE TRACKER & CELEBRATION */}
+        {/* DAILY 3 SUTRA PRACTICE TRACKER */}
         <View style={[styles.trackerCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
-          {/* Header Row (Clickable to Collapse / Expand) */}
           <TouchableOpacity
             style={[styles.trackerHeaderRow, { marginBottom: isTrackerCollapsed ? 0 : 12 }]}
             onPress={() => setIsTrackerCollapsed((prev) => !prev)}
@@ -205,7 +237,6 @@ export default function ShivCharchaScreen() {
             </View>
           </TouchableOpacity>
 
-          {/* COMPACT ACTIONS WHEN COLLAPSED & COMPLETED */}
           {isTrackerCollapsed && isAllCompleted && (
             <View style={[styles.compactCelebrationRow, { borderTopColor: theme.border }]}>
               <Text style={[styles.compactCelebrationText, { color: theme.primary }]}>
@@ -231,12 +262,9 @@ export default function ShivCharchaScreen() {
             </View>
           )}
 
-          {/* EXPANDED 3 SUTRA CHECKLIST & CELEBRATION */}
           {!isTrackerCollapsed && (
             <>
-              {/* 3 Sutra Checkable Items */}
               <View style={styles.sutrasList}>
-                {/* Sutra 1 */}
                 <TouchableOpacity
                   style={[
                     styles.sutraCheckRow,
@@ -261,7 +289,6 @@ export default function ShivCharchaScreen() {
                   </View>
                 </TouchableOpacity>
 
-                {/* Sutra 2 */}
                 <TouchableOpacity
                   style={[
                     styles.sutraCheckRow,
@@ -286,7 +313,6 @@ export default function ShivCharchaScreen() {
                   </View>
                 </TouchableOpacity>
 
-                {/* Sutra 3 */}
                 <TouchableOpacity
                   style={[
                     styles.sutraCheckRow,
@@ -319,7 +345,6 @@ export default function ShivCharchaScreen() {
                 </TouchableOpacity>
               </View>
 
-              {/* CELEBRATORY BANNER & WHATSAPP SHARE WHEN 3/3 COMPLETED */}
               {isAllCompleted && (
                 <View style={[styles.celebrationCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.accent }]}>
                   <Text style={[styles.celebrationTitle, { color: theme.primary }]}>
@@ -350,7 +375,6 @@ export default function ShivCharchaScreen() {
             </>
           )}
 
-          {/* 7-DAY SADHNA STREAK TRACKER */}
           {streakInfo.past7Days.length > 0 && (
             <View style={[styles.streakRow, { borderTopColor: theme.border }]}>
               <View style={styles.streakHeaderRow}>
@@ -387,7 +411,7 @@ export default function ShivCharchaScreen() {
           )}
         </View>
 
-        {/* TODAY'S CHARCHA PROMPT CARD (SUTRA 2 FOCUS) */}
+        {/* TODAY'S CHARCHA PROMPT CARD */}
         <View style={[styles.promptCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
           <View style={styles.promptHeaderRow}>
             <View style={[styles.promptBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.accent }]}>
@@ -399,9 +423,6 @@ export default function ShivCharchaScreen() {
           </View>
 
           <Text style={[styles.promptTitle, { color: theme.primary }]}>{todayPrompt.title}</Text>
-          <Text style={[{ fontSize: 12, color: theme.textSecondary, marginBottom: 8, fontStyle: 'italic' }]}>
-            {todayPrompt.topicHindi}
-          </Text>
 
           <View style={[styles.promptContentBox, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}>
             <Text style={[styles.promptQuestionLabel, { color: theme.secondary }]}>💡 चर्चा का मुख्य बिंदु / विचार:</Text>
@@ -435,99 +456,7 @@ export default function ShivCharchaScreen() {
           </View>
         </View>
 
-        {/* Cross Promotion Banner */}
-        <ContextualCrossPromotion targetAppId="vrat-sathi" style={{ paddingHorizontal: 0 }} />
-
-        {/* PHASE 2: CORE PILLARS OF SHIV CHARCHA */}
-        <View style={styles.pillarsContainer}>
-          <Text style={[styles.pillarsTitle, { color: theme.primary }]}>🔱 शिव चर्चा के 5 पावन स्तम्भ</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillarsScroll}>
-            {/* Pillar 1: Sutra 1 */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-              onPress={() => router.push('/teaching/t-sutra-1-daya' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>🌸</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>प्रथम सूत्र</Text>
-              <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>दया माँगना</Text>
-            </TouchableOpacity>
-
-            {/* Pillar 2: Sutra 2 */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-              onPress={() => router.push('/teaching/t-sutra-2-charcha' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>🗣️</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>द्वितीय सूत्र</Text>
-              <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>चर्चा करना</Text>
-            </TouchableOpacity>
-
-            {/* Pillar 3: Sutra 3 */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-              onPress={() => router.push('/jap' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>📿</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>तृतीय सूत्र</Text>
-              <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>108 जाप</Text>
-            </TouchableOpacity>
-
-            {/* Pillar 4: Sahib Shri Harindranand Ji */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-              onPress={() => router.push('/teaching/t-harindranand-ji' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>🔱</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>साहब श्री</Text>
-              <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>हरिंद्रानंद जी</Text>
-            </TouchableOpacity>
-
-            {/* Pillar 5: Didi Maa Neelam Anand Ji */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
-              onPress={() => router.push('/teaching/t-neelam-anand-ji' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>🌺</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>दीदी माँ</Text>
-              <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>नीलम आनंद जी</Text>
-            </TouchableOpacity>
-
-            {/* Pillar 6: Gosthi Helper */}
-            <TouchableOpacity
-              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}
-              onPress={() => router.push('/gosthi' as any)}
-              activeOpacity={0.88}
-            >
-              <Text style={styles.pillarIcon}>🏡</Text>
-              <Text style={[styles.pillarLabel, { color: theme.primary }]}>शिव चर्चा</Text>
-              <Text style={[styles.pillarSub, { color: theme.accent }]}>गोष्ठी टाइमर</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-
-        {/* SHIV CHARCHA GOSTHI BANNER */}
-        <TouchableOpacity
-          style={[styles.gosthiBanner, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-          onPress={() => router.push('/gosthi' as any)}
-          activeOpacity={0.88}
-        >
-          <View style={styles.gosthiBannerRow}>
-            <Text style={{ fontSize: 32 }}>🏡</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.gosthiBannerTitle, { color: theme.primary }]}>घर पर शिव चर्चा गोष्ठी आयोजित करें ➔</Text>
-              <Text style={[styles.gosthiBannerSub, { color: theme.textSecondary }]}>
-                45-मिनट गोष्ठी टाइमर व सुंदर व्हाट्सएप निमंत्रण कार्ड बनाएँ
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        {/* SEARCH BAR & CATEGORY FILTER PILLS */}
+        {/* SEARCH BAR */}
         <View style={styles.searchRow}>
           <TextInput
             style={[
@@ -545,238 +474,434 @@ export default function ShivCharchaScreen() {
           />
           {searchQuery ? (
             <TouchableOpacity style={styles.clearSearchBtn} onPress={() => setSearchQuery('')}>
-              <Text style={{ color: theme.textMuted }}>✕</Text>
+              <Text style={{ color: theme.textMuted, fontSize: 16 }}>✕</Text>
             </TouchableOpacity>
           ) : null}
         </View>
 
-        {/* Live Search Result Count */}
-        {searchQuery.trim().length > 0 && (
-          <View style={[styles.resultCountBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
-            <Text style={[styles.resultCountText, { color: theme.primary }]}>
-              🔍 {filteredTeachings.length + filteredBooks.length + filteredAudio.length} परिणाम मिले
+        {/* Dynamic Header when inside Category or Search */}
+        {isDetailedListView && (
+          <View style={styles.hubHeaderNav}>
+            <TouchableOpacity
+              style={[styles.backToHubBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+              onPress={() => {
+                setActiveHub('all');
+                setSearchQuery('');
+              }}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.backToHubText, { color: theme.primary }]}>← शिव चर्चा मुख्य Hub पर लौटें</Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.activeCategoryHeading, { color: theme.primary }]}>
+              {searchQuery.trim().length > 0
+                ? `🔍 खोज परिणाम (${filteredTeachings.length + filteredBooks.length + filteredAudio.length})`
+                : `${categoryInfoMap[activeHub]?.icon || '📖'} ${categoryInfoMap[activeHub]?.title || 'विषय सूचि'}`}
             </Text>
           </View>
         )}
 
-        {/* Filter Pills Horizontal Scroll */}
+        {/* FILTER PILLS HORIZONTAL SCROLL */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterPillsScroll}>
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'all' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('all')}
+            style={[styles.filterPill, activeHub === 'all' && !searchQuery && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => {
+              setActiveHub('all');
+              setSearchQuery('');
+            }}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'all' ? theme.textWhite : theme.textPrimary }]}>
-              🔥 सभी
+            <Text style={[styles.filterPillText, { color: activeHub === 'all' && !searchQuery ? theme.textWhite : theme.textPrimary }]}>
+              🔥 मुख्य Hub
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'understand' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('understand')}
+            style={[styles.filterPill, activeHub === 'sutras' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('sutras')}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'understand' ? theme.textWhite : theme.textPrimary }]}>
-              💡 3 सूत्र व विषय
+            <Text style={[styles.filterPillText, { color: activeHub === 'sutras' ? theme.textWhite : theme.textPrimary }]}>
+              🌸 3 सूत्र (5)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'faq' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('faq')}
+            style={[styles.filterPill, activeHub === 'understanding' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('understanding')}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'faq' ? theme.textWhite : theme.textPrimary }]}>
-              ❓ शंका समाधान ({teachingTopics.filter(t => t.category === 'faq').length})
+            <Text style={[styles.filterPillText, { color: activeHub === 'understanding' ? theme.textWhite : theme.textPrimary }]}>
+              🔱 साहब विचार (5)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'books' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('books')}
+            style={[styles.filterPill, activeHub === 'daily_life' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('daily_life')}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'books' ? theme.textWhite : theme.textPrimary }]}>
-              📚 पुस्तकें & ग्रंथ
+            <Text style={[styles.filterPillText, { color: activeHub === 'daily_life' ? theme.textWhite : theme.textPrimary }]}>
+              🏡 गृहस्थ आचरण (4)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'audio' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('audio')}
+            style={[styles.filterPill, activeHub === 'faq' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('faq')}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'audio' ? theme.textWhite : theme.textPrimary }]}>
-              🎧 ऑडियो पुस्तकालय
+            <Text style={[styles.filterPillText, { color: activeHub === 'faq' ? theme.textWhite : theme.textPrimary }]}>
+              ❓ शंका समाधान (4)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.filterPill, activeFilter === 'sadhna' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
-            onPress={() => setActiveFilter('sadhna')}
+            style={[styles.filterPill, activeHub === 'books' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('books')}
           >
-            <Text style={[styles.filterPillText, { color: activeFilter === 'sadhna' ? theme.textWhite : theme.textPrimary }]}>
-              📿 साधना साधन
+            <Text style={[styles.filterPillText, { color: activeHub === 'books' ? theme.textWhite : theme.textPrimary }]}>
+              📚 पुस्तकें
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.filterPill, activeHub === 'audio' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveHub('audio')}
+          >
+            <Text style={[styles.filterPillText, { color: activeHub === 'audio' ? theme.textWhite : theme.textPrimary }]}>
+              🎧 ऑडियो
             </Text>
           </TouchableOpacity>
         </ScrollView>
 
-        {/* SECTION A - समझें (TEACHINGS) */}
-        {(activeFilter === 'all' || activeFilter === 'understand' || activeFilter === 'faq') && filteredTeachings.length > 0 && (
-          <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { color: theme.primary }]}>
-              {activeFilter === 'faq' ? '❓ शंका समाधान व जिज्ञासा (5 प्रश्न व उत्तर)' : '💡 शिव शिष्यता के मूल विषय'}
-            </Text>
+        {/* MAIN HUB DASHBOARD (WHEN activeHub === 'all' AND NO SEARCH) */}
+        {!isDetailedListView && (
+          <>
+            {/* CATEGORY CARDS 2x2 GRID */}
+            <View style={styles.hubGridSection}>
+              <Text style={[styles.hubGridTitle, { color: theme.primary }]}>📚 शिव ज्ञान एवं चर्चा विषय श्रेणियाँ</Text>
+              <Text style={[styles.hubGridSub, { color: theme.textSecondary }]}>
+                किसी भी श्रेणी पर टैप कर विस्तृत लेख, ऑडियो एवं मार्गदर्शन पढ़ें
+              </Text>
 
-            {filteredTeachings.map((topic) => (
-              <View key={topic.id} style={[styles.topicCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-                {topic.imageUrl ? (
-                  <Image source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')} style={styles.topicImage} />
-                ) : null}
-                <Text style={[styles.topicTitle, { color: theme.textPrimary }]}>{topic.title}</Text>
-                <Text style={[styles.topicSubtitle, { color: theme.secondary }]}>{topic.subTitle}</Text>
-                <Text style={[styles.topicSummary, { color: theme.textSecondary }]}>{topic.summary}</Text>
+              <View style={styles.grid2x2}>
+                {/* CATEGORY CARD 1: SUTRAS */}
+                <TouchableOpacity
+                  style={[styles.gridCategoryCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+                  onPress={() => setActiveHub('sutras')}
+                  activeOpacity={0.88}
+                >
+                  <View style={styles.gridCardTopRow}>
+                    <Text style={styles.gridCardIcon}>🌸</Text>
+                    <View style={[styles.gridBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                      <Text style={[styles.gridBadgeText, { color: theme.primary }]}>5 विषय • ऑडियो</Text>
+                    </View>
+                  </View>
+                  <Text style={[styles.gridCardTitle, { color: theme.textPrimary }]}>त्रिवेणी सूत्र एवं भावार्थ</Text>
+                  <Text style={[styles.gridCardSub, { color: theme.textSecondary }]} numberOfLines={2}>
+                    दया, चर्चा व 108 जाप की संपूर्ण व्याख्या एवं विधि
+                  </Text>
+                  <Text style={[styles.gridCardArrow, { color: theme.secondary }]}>देखें ➔</Text>
+                </TouchableOpacity>
 
-                <View style={styles.cardActionsRow}>
-                  {topic.audioUrl && (
-                    <TouchableOpacity
-                      style={[styles.listenBtn, { backgroundColor: theme.primary }]}
-                      onPress={() =>
-                        playTrack({
-                          id: topic.id,
-                          title: topic.title,
-                          subtitle: topic.subTitle,
-                          category: 'teachings',
-                          duration: topic.audioDuration || 180,
-                          audioUrl: topic.audioUrl || '',
-                          coverImage: topic.imageUrl || '',
-                        })
-                      }
-                      activeOpacity={0.8}
-                    >
-                      <Text style={[styles.listenBtnText, { color: theme.textWhite }]}>🎧 सुनें</Text>
-                    </TouchableOpacity>
-                  )}
+                {/* CATEGORY CARD 2: UNDERSTANDING */}
+                <TouchableOpacity
+                  style={[styles.gridCategoryCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+                  onPress={() => setActiveHub('understanding')}
+                  activeOpacity={0.88}
+                >
+                  <View style={styles.gridCardTopRow}>
+                    <Text style={styles.gridCardIcon}>🔱</Text>
+                    <View style={[styles.gridBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                      <Text style={[styles.gridBadgeText, { color: theme.primary }]}>5 विषय • ऑडियो</Text>
+                    </View>
+                  </View>
+                  <Text style={[styles.gridCardTitle, { color: theme.textPrimary }]}>साहब श्री व दीदी माँ</Text>
+                  <Text style={[styles.gridCardSub, { color: theme.textSecondary }]} numberOfLines={2}>
+                    शिव को गुरु क्यों और कैसे बनाएँ? अनमोल विचार
+                  </Text>
+                  <Text style={[styles.gridCardArrow, { color: theme.secondary }]}>देखें ➔</Text>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[styles.readBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-                    onPress={() => router.push(`/teaching/${topic.id}` as any)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={[styles.readBtnText, { color: theme.primary }]}>📖 विस्तृत पढ़ें</Text>
-                  </TouchableOpacity>
+                {/* CATEGORY CARD 3: DAILY LIFE */}
+                <TouchableOpacity
+                  style={[styles.gridCategoryCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+                  onPress={() => setActiveHub('daily_life')}
+                  activeOpacity={0.88}
+                >
+                  <View style={styles.gridCardTopRow}>
+                    <Text style={styles.gridCardIcon}>🏡</Text>
+                    <View style={[styles.gridBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                      <Text style={[styles.gridBadgeText, { color: theme.primary }]}>4 विषय • ऑडियो</Text>
+                    </View>
+                  </View>
+                  <Text style={[styles.gridCardTitle, { color: theme.textPrimary }]}>गृहस्थ जीवन व आचरण</Text>
+                  <Text style={[styles.gridCardSub, { color: theme.textSecondary }]} numberOfLines={2}>
+                    परिवार, कर्म, महिलाएँ व व्यावहारिक नियम
+                  </Text>
+                  <Text style={[styles.gridCardArrow, { color: theme.secondary }]}>देखें ➔</Text>
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[styles.shareIconBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
-                    onPress={() => handleShareTopic(topic.title, topic.summary)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.shareIconText}>📤</Text>
-                  </TouchableOpacity>
+                {/* CATEGORY CARD 4: FAQ */}
+                <TouchableOpacity
+                  style={[styles.gridCategoryCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}
+                  onPress={() => setActiveHub('faq')}
+                  activeOpacity={0.88}
+                >
+                  <View style={styles.gridCardTopRow}>
+                    <Text style={styles.gridCardIcon}>❓</Text>
+                    <View style={[styles.gridBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+                      <Text style={[styles.gridBadgeText, { color: theme.primary }]}>4 प्रश्नोत्तर</Text>
+                    </View>
+                  </View>
+                  <Text style={[styles.gridCardTitle, { color: theme.textPrimary }]}>शंका समाधान (FAQ)</Text>
+                  <Text style={[styles.gridCardSub, { color: theme.textSecondary }]} numberOfLines={2}>
+                    नए शिष्यों की आम शंकाएँ व प्रमाणिक समाधान
+                  </Text>
+                  <Text style={[styles.gridCardArrow, { color: theme.secondary }]}>देखें ➔</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* SHIV CHARCHA GOSTHI BANNER */}
+            <TouchableOpacity
+              style={[styles.gosthiBanner, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+              onPress={() => router.push('/gosthi' as any)}
+              activeOpacity={0.88}
+            >
+              <View style={styles.gosthiBannerRow}>
+                <Text style={{ fontSize: 36 }}>🏡</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.gosthiBannerTitle, { color: theme.primary }]}>घर पर शिव चर्चा गोष्ठी आयोजित करें ➔</Text>
+                  <Text style={[styles.gosthiBannerSub, { color: theme.textSecondary }]}>
+                    45-मिनट गोष्ठी टाइमर व सुंदर व्हाट्सएप निमंत्रण कार्ड बनाएँ
+                  </Text>
                 </View>
               </View>
-            ))}
-          </View>
-        )}
+            </TouchableOpacity>
 
-        {/* SECTION B - पुस्तकें (BOOKS) */}
-        {(activeFilter === 'all' || activeFilter === 'books') && filteredBooks.length > 0 && (
-          <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { color: theme.primary }]}>📚 शिव चर्चा ग्रंथ व पुस्तकें</Text>
+            {/* BOOKS SHORTCUT SECTION */}
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeaderRow}>
+                <Text style={[styles.sectionTitle, { color: theme.primary }]}>📚 शिव चर्चा ग्रंथ व पुस्तकें</Text>
+                <TouchableOpacity onPress={() => setActiveHub('books')} activeOpacity={0.7}>
+                  <Text style={[styles.seeAllText, { color: theme.secondary }]}>सभी पुस्तकें देखें ➔</Text>
+                </TouchableOpacity>
+              </View>
 
-            {filteredBooks.map((book) => (
+              {booksLibrary.slice(0, 2).map((book) => (
+                <TouchableOpacity
+                  key={book.id}
+                  style={[styles.bookCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+                  onPress={() => router.push(`/book/${book.id}` as any)}
+                  activeOpacity={0.9}
+                >
+                  <Image source={resolveImageSource(book.id || book.coverImage, 'book')} style={styles.bookCover} />
+                  <View style={styles.bookDetails}>
+                    <Text style={[styles.bookTitle, { color: theme.primary }]}>{book.title}</Text>
+                    <Text style={[styles.bookAuthor, { color: theme.textMuted }]}>लेखक: {book.author}</Text>
+                    <Text style={[styles.easyTag, { color: theme.secondary }]}>✨ आसान भाषा में व्याख्या</Text>
+                    <Text style={[styles.bookSummary, { color: theme.textSecondary }]} numberOfLines={2}>
+                      {book.easySummary}
+                    </Text>
+                    <Text style={[styles.chapterBadge, { color: theme.primary }]}>
+                      📚 {book.totalChapters} अध्याय सम्मलित ➔
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* AUDIO SHORTCUT SECTION */}
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeaderRow}>
+                <Text style={[styles.sectionTitle, { color: theme.primary }]}>🎧 ऑडियो पुस्तकालय व भजन</Text>
+                <TouchableOpacity onPress={() => router.push('/audio-hub' as any)} activeOpacity={0.7}>
+                  <Text style={[styles.seeAllText, { color: theme.secondary }]}>सभी ऑडियो देखें ➔</Text>
+                </TouchableOpacity>
+              </View>
+
+              {audioLibrary.slice(0, 3).map((audio) => (
+                <View key={audio.id} style={[styles.audioRowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+                  <Image source={resolveImageSource(audio.id || audio.coverImage, 'stotra')} style={styles.audioCover} />
+                  <View style={styles.audioMeta}>
+                    <Text style={[styles.audioRowTitle, { color: theme.textPrimary }]}>{audio.title}</Text>
+                    <Text style={[styles.audioRowSubtitle, { color: theme.textMuted }]}>
+                      {audio.artist || audio.subtitle} • {Math.floor(audio.duration / 60)} मि
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.audioPlayBtn, { backgroundColor: theme.primary }]}
+                    onPress={() => playTrack(audio)}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={[styles.audioPlayIcon, { color: theme.textWhite }]}>▶️</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
+            {/* SADHNA EXPERIENCE MODULE */}
+            <View style={styles.sectionContainer}>
+              <Text style={[styles.sectionTitle, { color: theme.primary }]}>📿 मार्गदर्शित साधना अनुभव</Text>
+
               <TouchableOpacity
-                key={book.id}
-                style={[styles.bookCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-                onPress={() => router.push(`/book/${book.id}` as any)}
+                style={[styles.sadhnaCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
+                onPress={() => router.push('/jap' as any)}
                 activeOpacity={0.9}
               >
-                <Image source={resolveImageSource(book.id || book.coverImage, 'book')} style={styles.bookCover} />
-                <View style={styles.bookDetails}>
-                  <Text style={[styles.bookTitle, { color: theme.primary }]}>{book.title}</Text>
-                  <Text style={[styles.bookAuthor, { color: theme.textMuted }]}>लेखक: {book.author}</Text>
-                  <Text style={[styles.easyTag, { color: theme.secondary }]}>✨ आसान भाषा में व्याख्या</Text>
-                  <Text style={[styles.bookSummary, { color: theme.textSecondary }]} numberOfLines={2}>
-                    {book.easySummary}
-                  </Text>
-                  <Text style={[styles.chapterBadge, { color: theme.primary }]}>
-                    📚 {book.totalChapters} अध्याय सम्मलित ➔
-                  </Text>
+                <Text style={styles.sadhnaIcon}>📿</Text>
+                <View style={styles.sadhnaTextCol}>
+                  <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>108 नमः शिवाय जाप</Text>
+                  <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>तृतीय सूत्र - डिजिटल रुद्राक्ष माला साधना</Text>
                 </View>
               </TouchableOpacity>
-            ))}
-          </View>
-        )}
 
-        {/* SECTION C - ऑडियो (AUDIO LIBRARY) */}
-        {(activeFilter === 'all' || activeFilter === 'audio') && filteredAudio.length > 0 && (
-          <View style={styles.sectionContainer}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <Text style={[styles.sectionTitle, { color: theme.primary, marginBottom: 0 }]}>🎧 भजन व अमृत वाणी</Text>
-              <TouchableOpacity onPress={() => router.push('/audio-hub' as any)} activeOpacity={0.7}>
-                <Text style={{ fontSize: 13, color: theme.secondary, fontWeight: 'bold' }}>
-                  सभी प्रवचन देखें ➔
-                </Text>
+              <TouchableOpacity
+                style={[styles.sadhnaCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
+                onPress={() => router.push('/puja' as any)}
+                activeOpacity={0.9}
+              >
+                <Text style={styles.sadhnaIcon}>🌸</Text>
+                <View style={styles.sadhnaTextCol}>
+                  <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>शिव लिंग पूजा सेवा</Text>
+                  <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>जल, पुष्प, बेलपत्र व आरती अर्पित करें</Text>
+                </View>
               </TouchableOpacity>
             </View>
 
-            {filteredAudio.map((audio) => (
-              <View key={audio.id} style={[styles.audioRowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
-                <Image source={resolveImageSource(audio.id || audio.coverImage, 'stotra')} style={styles.audioCover} />
-                <View style={styles.audioMeta}>
-                  <Text style={[styles.audioRowTitle, { color: theme.textPrimary }]}>{audio.title}</Text>
-                  <Text style={[styles.audioRowSubtitle, { color: theme.textMuted }]}>
-                    {audio.artist || audio.subtitle} • {Math.floor(audio.duration / 60)} मि
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={[styles.audioPlayBtn, { backgroundColor: theme.primary }]}
-                  onPress={() => playTrack(audio)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[styles.audioPlayIcon, { color: theme.textWhite }]}>▶️</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+            {/* Cross Promotion Banner */}
+            <ContextualCrossPromotion targetAppId="vrat-sathi" style={{ paddingHorizontal: 0 }} />
+          </>
         )}
 
-        {/* SECTION D - साधना (SADHNA HUB) */}
-        {(activeFilter === 'all' || activeFilter === 'sadhna') && (
-          <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { color: theme.primary }]}>📿 मार्गदर्शित साधना अनुभव</Text>
+        {/* DETAILED TOPIC READER LIST VIEW (WHEN A CATEGORY OR SEARCH IS ACTIVE) */}
+        {isDetailedListView && (
+          <>
+            {/* TEACHINGS LIST */}
+            {(activeHub === 'all' || activeHub === 'sutras' || activeHub === 'understanding' || activeHub === 'daily_life' || activeHub === 'faq') &&
+              filteredTeachings.length > 0 && (
+                <View style={styles.sectionContainer}>
+                  {filteredTeachings.map((topic) => (
+                    <View key={topic.id} style={[styles.topicCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+                      {topic.imageUrl ? (
+                        <Image source={resolveImageSource(topic.id || topic.imageUrl, 'teaching')} style={styles.topicImage} />
+                      ) : null}
+                      <Text style={[styles.topicTitle, { color: theme.textPrimary }]}>{topic.title}</Text>
+                      <Text style={[styles.topicSubtitle, { color: theme.secondary }]}>{topic.subTitle}</Text>
+                      <Text style={[styles.topicSummary, { color: theme.textSecondary }]}>{topic.summary}</Text>
 
-            <TouchableOpacity
-              style={[styles.sadhnaCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
-              onPress={() => router.push('/jap' as any)}
-              activeOpacity={0.9}
-            >
-              <Text style={styles.sadhnaIcon}>📿</Text>
-              <View style={styles.sadhnaTextCol}>
-                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>108 नमः शिवाय जाप</Text>
-                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>तृतीय सूत्र - डिजिटल रुद्राक्ष माला साधना</Text>
-              </View>
-            </TouchableOpacity>
+                      <View style={styles.cardActionsRow}>
+                        {topic.audioUrl && (
+                          <TouchableOpacity
+                            style={[styles.listenBtn, { backgroundColor: theme.primary }]}
+                            onPress={() =>
+                              playTrack({
+                                id: topic.id,
+                                title: topic.title,
+                                subtitle: topic.subTitle,
+                                category: 'teachings',
+                                duration: topic.audioDuration || 180,
+                                audioUrl: topic.audioUrl || '',
+                                coverImage: topic.imageUrl || '',
+                              })
+                            }
+                            activeOpacity={0.8}
+                          >
+                            <Text style={[styles.listenBtnText, { color: theme.textWhite }]}>🎧 सुनें</Text>
+                          </TouchableOpacity>
+                        )}
 
-            <TouchableOpacity
-              style={[styles.sadhnaCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
-              onPress={() => router.push('/puja' as any)}
-              activeOpacity={0.9}
-            >
-              <Text style={styles.sadhnaIcon}>🌸</Text>
-              <View style={styles.sadhnaTextCol}>
-                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>शिव लिंग पूजा सेवा</Text>
-                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>जल, पुष्प, बेलपत्र व आरती अर्पित करें</Text>
-              </View>
-            </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.readBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+                          onPress={() => router.push(`/teaching/${topic.id}` as any)}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={[styles.readBtnText, { color: theme.primary }]}>📖 विस्तृत पढ़ें</Text>
+                        </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.sadhnaCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
-              onPress={() => router.push('/teaching/t-three-sutras' as any)}
-              activeOpacity={0.9}
-            >
-              <Text style={styles.sadhnaIcon}>🙏</Text>
-              <View style={styles.sadhnaTextCol}>
-                <Text style={[styles.sadhnaTitle, { color: theme.textGold }]}>दया माँगना व चर्चा करना</Text>
-                <Text style={[styles.sadhnaSub, { color: theme.textWhite }]}>प्रथम व द्वितीय सूत्र का पूर्ण अभ्यास</Text>
+                        <TouchableOpacity
+                          style={[styles.shareIconBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.border }]}
+                          onPress={() => handleShareTopic(topic.title, topic.summary)}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.shareIconText}>📤</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+            {/* BOOKS LIST WHEN Category = 'books' or Search */}
+            {(activeHub === 'all' || activeHub === 'books' || searchQuery.trim().length > 0) && filteredBooks.length > 0 && (
+              <View style={styles.sectionContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.primary }]}>📚 शिव चर्चा ग्रंथ व पुस्तकें</Text>
+                {filteredBooks.map((book) => (
+                  <TouchableOpacity
+                    key={book.id}
+                    style={[styles.bookCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+                    onPress={() => router.push(`/book/${book.id}` as any)}
+                    activeOpacity={0.9}
+                  >
+                    <Image source={resolveImageSource(book.id || book.coverImage, 'book')} style={styles.bookCover} />
+                    <View style={styles.bookDetails}>
+                      <Text style={[styles.bookTitle, { color: theme.primary }]}>{book.title}</Text>
+                      <Text style={[styles.bookAuthor, { color: theme.textMuted }]}>लेखक: {book.author}</Text>
+                      <Text style={[styles.easyTag, { color: theme.secondary }]}>✨ आसान भाषा में व्याख्या</Text>
+                      <Text style={[styles.bookSummary, { color: theme.textSecondary }]} numberOfLines={2}>
+                        {book.easySummary}
+                      </Text>
+                      <Text style={[styles.chapterBadge, { color: theme.primary }]}>
+                        📚 {book.totalChapters} अध्याय सम्मलित ➔
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
               </View>
-            </TouchableOpacity>
-          </View>
+            )}
+
+            {/* AUDIO LIST WHEN Category = 'audio' or Search */}
+            {(activeHub === 'all' || activeHub === 'audio' || searchQuery.trim().length > 0) && filteredAudio.length > 0 && (
+              <View style={styles.sectionContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.primary }]}>🎧 ऑडियो पुस्तकालय</Text>
+                {filteredAudio.map((audio) => (
+                  <View key={audio.id} style={[styles.audioRowCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+                    <Image source={resolveImageSource(audio.id || audio.coverImage, 'stotra')} style={styles.audioCover} />
+                    <View style={styles.audioMeta}>
+                      <Text style={[styles.audioRowTitle, { color: theme.textPrimary }]}>{audio.title}</Text>
+                      <Text style={[styles.audioRowSubtitle, { color: theme.textMuted }]}>
+                        {audio.artist || audio.subtitle} • {Math.floor(audio.duration / 60)} मि
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={[styles.audioPlayBtn, { backgroundColor: theme.primary }]}
+                      onPress={() => playTrack(audio)}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={[styles.audioPlayIcon, { color: theme.textWhite }]}>▶️</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* NO RESULTS FOUND */}
+            {filteredTeachings.length === 0 && filteredBooks.length === 0 && filteredAudio.length === 0 && (
+              <View style={[styles.noResultBox, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
+                <Text style={{ fontSize: 32, marginBottom: 8 }}>🔍</Text>
+                <Text style={[styles.noResultTitle, { color: theme.primary }]}>कोई विषय नहीं मिला</Text>
+                <Text style={[styles.noResultSub, { color: theme.textSecondary }]}>
+                  कृपया खोज शब्द बदलें या अन्य श्रेणी का चयन करें।
+                </Text>
+                <TouchableOpacity
+                  style={[styles.resetSearchBtn, { backgroundColor: theme.primary }]}
+                  onPress={() => {
+                    setActiveHub('all');
+                    setSearchQuery('');
+                  }}
+                >
+                  <Text style={{ color: theme.textWhite, fontWeight: 'bold' }}>मुख्य Hub पर लौटें</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
         )}
       </ScrollView>
     </View>
@@ -998,6 +1123,134 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  /* Streak Styles */
+  streakRow: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+  },
+  streakHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  streakTitle: {
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  streakHint: {
+    fontSize: 11,
+  },
+  past7DaysRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 4,
+  },
+  dayDotCol: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  dayDotIcon: {
+    fontSize: 14,
+    marginBottom: 2,
+  },
+  dayDotName: {
+    fontSize: 10,
+  },
+
+  /* Daily Prompt Card Styles */
+  promptCard: {
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    ...shadows.soft,
+  },
+  promptHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  promptBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  promptBadgeText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  promptDate: {
+    fontSize: 11,
+  },
+  promptTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    lineHeight: 22,
+  },
+  promptContentBox: {
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  promptQuestionLabel: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  promptQuestion: {
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  quoteBox: {
+    borderLeftWidth: 3,
+    paddingLeft: 10,
+    paddingVertical: 6,
+    paddingRight: 8,
+    borderRadius: 6,
+    marginBottom: 12,
+  },
+  quoteText: {
+    fontSize: 12,
+    fontStyle: 'italic',
+    lineHeight: 17,
+  },
+  promptActionsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  sharePromptWhatsappBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  sharePromptWhatsappText: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  markSutra2Btn: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  markSutra2Text: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+
   /* Search & Filters */
   searchRow: {
     position: 'relative',
@@ -1032,14 +1285,131 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  /* Hub Category Grid (2x2) */
+  hubGridSection: {
+    marginBottom: 18,
+  },
+  hubGridTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  hubGridSub: {
+    fontSize: 12,
+    marginBottom: 12,
+  },
+  grid2x2: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  gridCategoryCard: {
+    width: '48%',
+    borderRadius: 18,
+    padding: 14,
+    borderWidth: 1.5,
+    ...shadows.soft,
+    justifyContent: 'space-between',
+  },
+  gridCardTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  gridCardIcon: {
+    fontSize: 26,
+  },
+  gridBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  gridBadgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  gridCardTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  gridCardSub: {
+    fontSize: 11,
+    lineHeight: 16,
+    marginBottom: 8,
+  },
+  gridCardArrow: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+
+  /* Gosthi Banner Styles */
+  gosthiBanner: {
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1.5,
+    marginBottom: 18,
+    ...shadows.soft,
+  },
+  gosthiBannerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  gosthiBannerTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  gosthiBannerSub: {
+    fontSize: 12,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+
+  /* Section Containers */
   sectionContainer: {
-    marginBottom: 16,
+    marginBottom: 18,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 12,
   },
+  seeAllText: {
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+
+  /* Hub Navigation Bar */
+  hubHeaderNav: {
+    marginBottom: 14,
+  },
+  backToHubBtn: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 8,
+  },
+  backToHubText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  activeCategoryHeading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  /* Cards */
   topicCard: {
     borderRadius: 20,
     padding: 16,
@@ -1209,208 +1579,27 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  /* Streak Styles */
-  streakRow: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-  },
-  streakHeaderRow: {
-    flexDirection: 'row',
+  /* No Results */
+  noResultBox: {
+    borderRadius: 18,
+    padding: 24,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  streakTitle: {
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
-  streakHint: {
-    fontSize: 11,
-  },
-  past7DaysRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 4,
-  },
-  dayDotCol: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 2,
-    borderRadius: 10,
     borderWidth: 1,
+    marginTop: 16,
   },
-  dayDotIcon: {
-    fontSize: 14,
-    marginBottom: 2,
-  },
-  dayDotName: {
-    fontSize: 10,
-  },
-
-  /* Daily Prompt Card Styles */
-  promptCard: {
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1.5,
-    ...shadows.soft,
-  },
-  promptHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  promptBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  promptBadgeText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-  },
-  promptDate: {
-    fontSize: 11,
-  },
-  promptTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    lineHeight: 22,
-  },
-  promptContentBox: {
-    padding: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 10,
-  },
-  promptQuestionLabel: {
-    fontSize: 11,
+  noResultTitle: {
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 4,
   },
-  promptQuestion: {
-    fontSize: 13,
-    lineHeight: 19,
-  },
-  quoteBox: {
-    borderLeftWidth: 3,
-    paddingLeft: 10,
-    paddingVertical: 6,
-    paddingRight: 8,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  quoteText: {
+  noResultSub: {
     fontSize: 12,
-    fontStyle: 'italic',
-    lineHeight: 17,
-  },
-  quoteAuthor: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  promptActionsRow: {
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-  },
-  sharePromptWhatsappBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  sharePromptWhatsappText: {
-    color: '#FFF',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  markSutra2Btn: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  markSutra2Text: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-
-  /* Core Pillars Styles */
-  pillarsContainer: {
+    textAlign: 'center',
     marginBottom: 16,
   },
-  pillarsTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  pillarsScroll: {
-    flexDirection: 'row',
-  },
-  pillarCard: {
-    width: 105,
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    alignItems: 'center',
-    marginRight: 10,
-    ...shadows.soft,
-  },
-  pillarIcon: {
-    fontSize: 26,
-    marginBottom: 6,
-  },
-  pillarLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  pillarSub: {
-    fontSize: 10,
-    marginTop: 2,
-    textAlign: 'center',
-  },
-
-  /* Gosthi Banner Styles */
-  gosthiBanner: {
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1.5,
-    marginBottom: 16,
-    ...shadows.soft,
-  },
-  gosthiBannerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  gosthiBannerTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  gosthiBannerSub: {
-    fontSize: 11,
-    marginTop: 2,
-  },
-
-  /* Search Counter Styles */
-  resultCountBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginBottom: 10,
-  },
-  resultCountText: {
-    fontSize: 11,
-    fontWeight: 'bold',
+  resetSearchBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
   },
 });
