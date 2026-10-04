@@ -111,6 +111,7 @@ export default function ShivCharchaScreen() {
       t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.summary.toLowerCase().includes(searchQuery.toLowerCase());
     if (!matchesSearch) return false;
+    if (activeFilter === 'understand') return t.category !== 'faq';
     if (activeFilter === 'faq') return t.category === 'faq';
     return true;
   });
@@ -495,6 +496,17 @@ export default function ShivCharchaScreen() {
               <Text style={[styles.pillarLabel, { color: theme.primary }]}>दीदी माँ</Text>
               <Text style={[styles.pillarSub, { color: theme.textSecondary }]}>नीलम आनंद जी</Text>
             </TouchableOpacity>
+
+            {/* Pillar 6: Gosthi Helper */}
+            <TouchableOpacity
+              style={[styles.pillarCard, { backgroundColor: theme.cardBg, borderColor: theme.accent }]}
+              onPress={() => router.push('/gosthi' as any)}
+              activeOpacity={0.88}
+            >
+              <Text style={styles.pillarIcon}>🏡</Text>
+              <Text style={[styles.pillarLabel, { color: theme.primary }]}>शिव चर्चा</Text>
+              <Text style={[styles.pillarSub, { color: theme.accent }]}>गोष्ठी टाइमर</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
@@ -572,7 +584,7 @@ export default function ShivCharchaScreen() {
             onPress={() => setActiveFilter('faq')}
           >
             <Text style={[styles.filterPillText, { color: activeFilter === 'faq' ? theme.textWhite : theme.textPrimary }]}>
-              ❓ शंका समाधान
+              ❓ शंका समाधान ({teachingTopics.filter(t => t.category === 'faq').length})
             </Text>
           </TouchableOpacity>
 
@@ -605,9 +617,11 @@ export default function ShivCharchaScreen() {
         </ScrollView>
 
         {/* SECTION A - समझें (TEACHINGS) */}
-        {(activeFilter === 'all' || activeFilter === 'understand') && filteredTeachings.length > 0 && (
+        {(activeFilter === 'all' || activeFilter === 'understand' || activeFilter === 'faq') && filteredTeachings.length > 0 && (
           <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { color: theme.primary }]}>💡 शिव शिष्यता के मूल विषय</Text>
+            <Text style={[styles.sectionTitle, { color: theme.primary }]}>
+              {activeFilter === 'faq' ? '❓ शंका समाधान व जिज्ञासा (5 प्रश्न व उत्तर)' : '💡 शिव शिष्यता के मूल विषय'}
+            </Text>
 
             {filteredTeachings.map((topic) => (
               <View key={topic.id} style={[styles.topicCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
