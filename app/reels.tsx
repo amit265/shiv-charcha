@@ -7,10 +7,10 @@ import {
   FlatList,
   Dimensions,
   ViewToken,
-  SafeAreaView,
   StatusBar,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { useTheme } from '@/context/ThemeContext';
@@ -115,12 +115,19 @@ export default function ShivReelsScreen() {
             width={SCREEN_WIDTH}
             play={isPlaying}
             videoId={reel.youtubeVideoId}
+            webViewProps={{
+              allowsInlineMediaPlayback: true,
+              mediaPlaybackRequiresUserAction: false,
+              androidLayerType: 'hardware',
+            }}
+            webViewStyle={{ opacity: 0.99 }}
             initialPlayerParams={{
               preventFullScreen: true,
               controls: true,
               modestbranding: true,
               rel: false,
             }}
+            onError={(e: string) => console.log('YouTube Player Error:', e)}
           />
         </View>
 
