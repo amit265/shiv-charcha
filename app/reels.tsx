@@ -12,7 +12,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import YoutubePlayer from 'react-native-youtube-iframe';
+import { WebView } from 'react-native-webview';
+// @ts-ignore
+// eslint-disable-next-line import/no-unresolved
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
 import { ShivReel } from '@/content/reelsCatalog';
@@ -21,8 +24,7 @@ import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { Analytics } from '@/services/analytics/analytics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-// Calculate container height subtracting header and safe margin
-const REEL_HEIGHT = SCREEN_HEIGHT - (Platform.OS === 'ios' ? 120 : 100);
+const REEL_HEIGHT = SCREEN_HEIGHT;
 
 type FeedItem =
   | { type: 'reel'; data: ShivReel }
@@ -31,6 +33,67 @@ type FeedItem =
 const VIEWABILITY_CONFIG = {
   itemVisiblePercentThreshold: 70,
 };
+
+const getReelHtml = (videoId: string, isPlaying: boolean) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; background: #000; overflow: hidden; }
+    html, body { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    .container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      transform: translate(-50%, -50%) scale(1.35);
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${isPlaying ? 1 : 0}&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+</body>
+</html>
+`;
+
+function NativeReelVideo({ videoUrl, isPlaying }: { videoUrl: string; isPlaying: boolean }) {
+  const player = useVideoPlayer(videoUrl, (p: any) => {
+    p.loop = true;
+    if (isPlaying) {
+      p.play();
+    } else {
+      p.pause();
+    }
+  });
+
+  useEffect(() => {
+    if (isPlaying) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isPlaying, player]);
+
+  return (
+    <VideoView
+      style={styles.fullWebView}
+      player={player}
+      allowsFullscreen={false}
+      showsVideoControls={false}
+      contentFit="cover"
+    />
+  );
+}
 
 export default function ShivReelsScreen() {
   const router = useRouter();
@@ -119,44 +182,35 @@ export default function ShivReelsScreen() {
     const isPlaying = activeReelId === reel.id;
 
     return (
-      <View style={[styles.reelContainer, { backgroundColor: '#000000' }]}>
-        {/* YOUTUBE SHORTS PLAYER */}
-        <View style={styles.playerWrapper}>
-          <YoutubePlayer
-            height={REEL_HEIGHT - 60}
-            width={SCREEN_WIDTH}
-            play={isPlaying}
-            videoId={reel.youtubeVideoId}
-            webViewProps={{
-              allowsInlineMediaPlayback: true,
-              mediaPlaybackRequiresUserAction: false,
-              androidLayerType: 'hardware',
-            }}
-            webViewStyle={{ opacity: 0.99 }}
-            initialPlayerParams={{
-              preventFullScreen: true,
-              controls: true,
-              modestbranding: true,
-              rel: false,
-            }}
-            onError={(e: string) => console.log('YouTube Player Error:', e)}
+      <View style={styles.reelContainer}>
+        {/* NATIVE MP4 VIDEO PLAYER OR FALLBACK EMBED */}
+        {reel.videoUrl ? (
+          <NativeReelVideo videoUrl={reel.videoUrl} isPlaying={isPlaying} />
+        ) : (
+          <WebView
+            source={{ html: getReelHtml(reel.youtubeVideoId, isPlaying) }}
+            style={styles.fullWebView}
+            scrollEnabled={false}
+            allowsInlineMediaPlayback
+            mediaPlaybackRequiresUserAction={false}
+            androidLayerType="hardware"
+            originWhitelist={['*']}
           />
-        </View>
+        )}
 
         {/* BOTTOM LEFT OVERLAY INFO */}
         <View style={styles.bottomInfoOverlay}>
           <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
             <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
-              🎬 15s शिव रील्स • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
+              🎬 15s शिव रील • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
             </Text>
           </View>
-          <Text style={[styles.reelTitleText, { color: '#FFFFFF' }]}>{reel.title}</Text>
-          <Text style={[styles.reelSubText, { color: '#E2E8F0' }]}>{reel.subTitle}</Text>
+          <Text style={styles.reelTitleText}>{reel.title}</Text>
+          <Text style={styles.reelSubText}>{reel.subTitle}</Text>
 
-          {/* READ ARTICLE SHORTCUT IF LINKED */}
           {reel.teachingId && (
             <TouchableOpacity
-              style={[styles.teachingLinkBtn, { backgroundColor: 'rgba(230, 81, 0, 0.85)', borderColor: theme.accent }]}
+              style={[styles.teachingLinkBtn, { backgroundColor: 'rgba(230, 81, 0, 0.9)', borderColor: theme.accent }]}
               onPress={() => router.push(`/teaching/${reel.teachingId}` as any)}
               activeOpacity={0.8}
             >
@@ -165,7 +219,7 @@ export default function ShivReelsScreen() {
           )}
         </View>
 
-        {/* RIGHT SIDEBAR ACTIONS OVERLAY */}
+        {/* RIGHT SIDEBAR FLOATING ACTIONS */}
         <View style={styles.rightActionsOverlay}>
           {/* LIKE BUTTON */}
           <TouchableOpacity
@@ -179,7 +233,7 @@ export default function ShivReelsScreen() {
             <Text style={styles.actionLabelText}>{reel.likesCount + (isLiked ? 1 : 0)}</Text>
           </TouchableOpacity>
 
-          {/* WHATSAPP SHARE BUTTON */}
+          {/* WHATSAPP SHARE */}
           <TouchableOpacity
             style={styles.actionIconButton}
             onPress={() => ReelsService.shareReel(reel)}
@@ -191,7 +245,7 @@ export default function ShivReelsScreen() {
             <Text style={styles.actionLabelText}>शेयर</Text>
           </TouchableOpacity>
 
-          {/* YOUTUBE CHANNEL SUBSCRIBE */}
+          {/* YOUTUBE SUBSCRIBE */}
           <TouchableOpacity
             style={styles.actionIconButton}
             onPress={() => ReelsService.openYouTubeChannel()}
@@ -208,23 +262,29 @@ export default function ShivReelsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: '#000000' }]}>
-      <StatusBar barStyle="light-content" />
+    <View style={styles.mainWrapper}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* TOP HEADER BAR */}
-      <View style={[styles.topHeader, { backgroundColor: theme.primaryDark, borderBottomColor: theme.borderGold }]}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
-          <Text style={[styles.backBtnText, { color: theme.textGold }]}>← शिव चर्चा</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.textGold }]}>🎬 शिव चर्चा रील्स</Text>
-        <TouchableOpacity
-          style={[styles.ytSubscribeBtn, { backgroundColor: '#FF0000' }]}
-          onPress={() => ReelsService.openYouTubeChannel()}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.ytSubscribeText}>► YT चैनल</Text>
-        </TouchableOpacity>
-      </View>
+      {/* FLOATING TOP HEADER */}
+      <SafeAreaView style={styles.floatingHeaderArea}>
+        <View style={styles.floatingHeaderRow}>
+          <TouchableOpacity
+            style={[styles.floatingBackBtn, { backgroundColor: 'rgba(0,0,0,0.5)', borderColor: theme.borderGold }]}
+            onPress={() => router.back()}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.floatingBackText, { color: theme.textGold }]}>← शिव चर्चा</Text>
+          </TouchableOpacity>
+          <Text style={styles.floatingTitleText}>🎬 शिव चर्चा रील्स</Text>
+          <TouchableOpacity
+            style={[styles.floatingSubscribeBtn, { backgroundColor: '#FF0000' }]}
+            onPress={() => ReelsService.openYouTubeChannel()}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.floatingSubscribeText}>► YT चैनल</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
 
       {/* REELS VERTICAL FEED */}
       <FlatList
@@ -244,40 +304,53 @@ export default function ShivReelsScreen() {
           index,
         })}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainWrapper: {
     flex: 1,
+    backgroundColor: '#000000',
   },
-  topHeader: {
+  floatingHeaderArea: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+  },
+  floatingHeaderRow: {
     height: 52,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
   },
-  backBtn: {
+  floatingBackBtn: {
+    paddingHorizontal: 12,
     paddingVertical: 6,
-    paddingHorizontal: 8,
+    borderRadius: 14,
+    borderWidth: 1,
   },
-  backBtnText: {
-    fontSize: 14,
+  floatingBackText: {
+    fontSize: 13,
     fontWeight: 'bold',
   },
-  headerTitle: {
+  floatingTitleText: {
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
-  ytSubscribeBtn: {
+  floatingSubscribeBtn: {
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 14,
   },
-  ytSubscribeText: {
+  floatingSubscribeText: {
     color: '#FFFFFF',
     fontSize: 11,
     fontWeight: 'bold',
@@ -286,20 +359,19 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: REEL_HEIGHT,
     position: 'relative',
-    justifyContent: 'center',
+    backgroundColor: '#000000',
   },
-  playerWrapper: {
+  fullWebView: {
     width: SCREEN_WIDTH,
-    height: REEL_HEIGHT - 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: REEL_HEIGHT,
+    backgroundColor: '#000000',
   },
   bottomInfoOverlay: {
     position: 'absolute',
-    bottom: 24,
+    bottom: Platform.OS === 'ios' ? 40 : 24,
     left: 16,
     right: 80,
-    zIndex: 10,
+    zIndex: 20,
   },
   categoryBadge: {
     alignSelf: 'flex-start',
@@ -307,27 +379,29 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   categoryBadgeText: {
     fontSize: 11,
     fontWeight: 'bold',
   },
   reelTitleText: {
+    color: '#FFFFFF',
     fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 4,
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowColor: 'rgba(0, 0, 0, 0.9)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
+    textShadowRadius: 4,
   },
   reelSubText: {
+    color: '#E2E8F0',
     fontSize: 12,
     lineHeight: 17,
-    marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.9)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   teachingLinkBtn: {
     alignSelf: 'flex-start',
@@ -344,10 +418,10 @@ const styles = StyleSheet.create({
   rightActionsOverlay: {
     position: 'absolute',
     right: 14,
-    bottom: 40,
+    bottom: Platform.OS === 'ios' ? 50 : 30,
     alignItems: 'center',
     gap: 16,
-    zIndex: 10,
+    zIndex: 20,
   },
   actionIconButton: {
     alignItems: 'center',
@@ -365,9 +439,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 11,
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
+    textShadowColor: 'rgba(0, 0, 0, 0.9)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   adCard: {
     width: SCREEN_WIDTH - 32,

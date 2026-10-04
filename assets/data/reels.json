@@ -1,68 +1,79 @@
 [
   {
-    "id": "reel-sutra-1",
-    "youtubeVideoId": "S-7BfM2L8-k",
-    "title": "पहला सूत्र: दया क्यों माँगते हैं?",
-    "subTitle": "साहब श्री हरिंद्रानंद जी का अनमोल संदेश",
-    "category": "sutras",
-    "likesCount": 1240,
-    "sharesCount": 380,
-    "teachingId": "t-sutra-1-daya",
-    "youtubeUrl": "https://youtube.com/shorts/S-7BfM2L8-k"
-  },
-  {
-    "id": "reel-sutra-2",
-    "youtubeVideoId": "Z6K5Y3kG9rQ",
-    "title": "दूसरा सूत्र: शिव चर्चा कैसे करें?",
-    "subTitle": "चर्चा करने का सही भाव और तरीका",
-    "category": "sutras",
-    "likesCount: 980,
-    "sharesCount": 290,
-    "teachingId": "t-sutra-2-charcha",
-    "youtubeUrl": "https://youtube.com/shorts/Z6K5Y3kG9rQ"
-  },
-  {
-    "id": "reel-sutra-3",
-    "youtubeVideoId": "V9f-1H4wK8E",
-    "title": "तीसरा सूत्र: 108 नमः शिवाय का महत्व",
-    "subTitle": "रुद्राक्ष माला और दैनिक पंचाक्षर जाप",
-    "category": "sutras",
-    "likesCount": 1560,
-    "sharesCount": 510,
-    "teachingId": "t-sutra-3-jap",
-    "youtubeUrl": "https://youtube.com/shorts/V9f-1H4wK8E"
-  },
-  {
-    "id": "reel-gosthi-1",
-    "youtubeVideoId": "P3X-9wK7J2Y",
-    "title": "घर पर शिव चर्चा गोष्ठी का आनंद",
-    "subTitle": "45-मिनट की आदर्श गोष्ठी विधि",
-    "category": "gosthi",
-    "likesCount": 870,
-    "sharesCount": 210,
-    "teachingId": "t-gosthi-meaning",
-    "youtubeUrl": "https://youtube.com/shorts/P3X-9wK7J2Y"
-  },
-  {
-    "id": "reel-sahib-ji-1",
-    "youtubeVideoId": "K9j8-L2m4Np",
-    "title": "शिव केवल भगवान नहीं, साक्षात् गुरु हैं",
-    "subTitle": "साहब श्री का पावन उद्घोष",
-    "category": "sahib_ji",
-    "likesCount": 2100,
-    "sharesCount": 840,
-    "teachingId": "t-harindranand-ji",
-    "youtubeUrl": "https://youtube.com/shorts/K9j8-L2m4Np"
-  },
-  {
-    "id": "reel-mahadev-1",
-    "youtubeVideoId": "M7X4W9pQ1zY",
-    "title": "शिव शिष्यता में कोई कर्मकांड नहीं",
-    "subTitle": "दीदी माँ नीलम आनंद जी का पावन ज्ञान",
+    "id": "reel-6BDmszb4pa8",
+    "youtubeVideoId": "6BDmszb4pa8",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/6BDmszb4pa8.mp4",
+    "title": "शिव चर्चा अब आपके मोबाइल पर! #महादेव #शिवगुरु #शिवशिष्य #शिवचर्चा",
+    "subTitle": "🙏 शिव गुरु साधना अब आपके मोबाइल पर!",
     "category": "mahadev",
-    "likesCount": 1850,
-    "sharesCount": 620,
-    "teachingId": "t-no-rituals",
-    "youtubeUrl": "https://youtube.com/shorts/M7X4W9pQ1zY"
+    "likesCount": 1200,
+    "sharesCount": 320,
+    "youtubeUrl": "https://youtube.com/shorts/6BDmszb4pa8"
+  },
+  {
+    "id": "reel-iIVXj3kV35M",
+    "youtubeVideoId": "iIVXj3kV35M",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/iIVXj3kV35M.mp4",
+    "title": "क्या दया माँगने के लिए मंदिर जाना ज़रूरी है? #महादेव #शिवगुरु",
+    "subTitle": "क्या शिव से दया माँगने के लिए मंदिर या विशेष स्थान आवश्यक है?",
+    "category": "mahadev",
+    "likesCount": 1340,
+    "sharesCount": 355,
+    "youtubeUrl": "https://youtube.com/shorts/iIVXj3kV35M"
+  },
+  {
+    "id": "reel-fC2BhUmM7h8",
+    "youtubeVideoId": "fC2BhUmM7h8",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/fC2BhUmM7h8.mp4",
+    "title": "हे शिव, आप मेरे गुरु हैं... | शिव शिष्यता का भाव",
+    "subTitle": "क्या आप जानते हैं कि शिव को गुरु मानने का सबसे सरल वाक्य क्या है?",
+    "category": "mahadev",
+    "likesCount": 1480,
+    "sharesCount": 390,
+    "youtubeUrl": "https://youtube.com/shorts/fC2BhUmM7h8"
+  },
+  {
+    "id": "reel-QWiTUwKY67Q",
+    "youtubeVideoId": "QWiTUwKY67Q",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/QWiTUwKY67Q.mp4",
+    "title": "दया माँगना क्या है? | शिव चर्चा का पहला सूत्र",
+    "subTitle": "शिव चर्चा का पहला सूत्र है — दया माँगना। इसका वास्तविक अर्थ",
+    "category": "mahadev",
+    "likesCount": 1620,
+    "sharesCount": 425,
+    "youtubeUrl": "https://youtube.com/shorts/QWiTUwKY67Q"
+  },
+  {
+    "id": "reel-l1r87fswRbo",
+    "youtubeVideoId": "l1r87fswRbo",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/l1r87fswRbo.mp4",
+    "title": "शिव चर्चा का दूसरा सूत्र — चर्चा करना | शिव गुरु",
+    "subTitle": "शिव चर्चा का दूसरा सूत्र — शिव गुरु की महिमा की चर्चा करना",
+    "category": "mahadev",
+    "likesCount": 1900,
+    "sharesCount": 495,
+    "youtubeUrl": "https://youtube.com/shorts/l1r87fswRbo"
+  },
+  {
+    "id": "reel-gwQy0L5umUM",
+    "youtubeVideoId": "gwQy0L5umUM",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/gwQy0L5umUM.mp4",
+    "title": "शिव चर्चा का तीसरा सूत्र — प्रणाम करना | 108 जाप",
+    "subTitle": "शिव चर्चा का तीसरा सूत्र — 108 नमः शिवाय जाप",
+    "category": "mahadev",
+    "likesCount": 2040,
+    "sharesCount": 530,
+    "youtubeUrl": "https://youtube.com/shorts/gwQy0L5umUM"
+  },
+  {
+    "id": "reel-Kuj5W_8_fhQ",
+    "youtubeVideoId": "Kuj5W_8_fhQ",
+    "videoUrl": "https://mahavyomastudio.com/apps/shiv-charcha/reels/Kuj5W_8_fhQ.mp4",
+    "title": "शिव चर्चा का पहला सूत्र - दया माँगना | @Mahavyomabhakti",
+    "subTitle": "शिव गुरु से दया माँगने की पावन विधि व भाव",
+    "category": "mahadev",
+    "likesCount": 2180,
+    "sharesCount": 565,
+    "youtubeUrl": "https://youtube.com/shorts/Kuj5W_8_fhQ"
   }
 ]
