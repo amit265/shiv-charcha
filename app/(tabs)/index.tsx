@@ -10,6 +10,7 @@ import { sacredDates } from '@/content/dates';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { pravachanLibrary } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
+import { getRandomQuote, ShivQuote } from '@/content/quotes';
 import { safeShare } from '@/services/shareService';
 
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -79,9 +80,17 @@ export default function HomeScreen() {
   const [sutraStreak, setSutraStreak] = useState<number>(0);
   const [past7Days, setPast7Days] = useState<{ date: string; dayName: string; completed: boolean }[]>([]);
   const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
+  const [currentQuote, setCurrentQuote] = useState<ShivQuote>(getRandomQuote());
   const [reelsCatalog, setReelsCatalog] = useState<ShivReel[]>([]);
   const [randomReel, setRandomReel] = useState<ShivReel | null>(null);
   const [showMiniModal, setShowMiniModal] = useState<boolean>(true);
+
+  const handleShareQuote = async () => {
+    await safeShare({
+      title: 'शिव चर्चा पावन विचार',
+      message: `🌸 *शिव चर्चा पावन सुविचार* 🌸\n\n"${currentQuote.quote}"\n\n— ${currentQuote.author}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+    });
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -630,27 +639,39 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* SECTION: SHIV CHARCHA QUOTES & WHATSAPP STATUS CARDS */}
+        {/* SECTION: SHIV CHARCHA RANDOM QUOTE & STATUS CARD */}
         <View style={[styles.shareTeaserCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
-          <Text style={[styles.shareTeaserTitle, { color: theme.textGold }]}>🎨 शिव चर्चा अनमोल सुविचार व स्टेटस</Text>
-          <Text style={[styles.shareTeaserSub, { color: theme.textWhite }]}>
-            साहब श्री हरिंद्रानंद जी व दीदी माँ के 100+ पावन सुविचारों के सुंदर कार्ड बनाएँ व व्हाट्सएप पर साझा करें।
+          <View style={styles.quoteCardHeaderRow}>
+            <View style={[styles.quoteBadgePill, { backgroundColor: theme.accent }]}>
+              <Text style={[styles.quoteBadgeText, { color: theme.primaryDark }]}>✨ आज का पावन सुविचार</Text>
+            </View>
+            <TouchableOpacity onPress={() => setCurrentQuote(getRandomQuote())} activeOpacity={0.7}>
+              <Text style={[styles.refreshQuoteText, { color: theme.textGold }]}>🔄 दूसरा सुविचार</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={[styles.quoteTextDisplay, { color: theme.textWhite }]}>
+            {`"${currentQuote.quote}"`}
           </Text>
+          <Text style={[styles.quoteAuthorDisplay, { color: theme.textGold }]}>
+            — {currentQuote.author}
+          </Text>
+
           <View style={styles.teaserBtnRow}>
             <TouchableOpacity
-              style={[styles.shareTeaserBtn, { backgroundColor: theme.accent }]}
-              onPress={() => router.push('/gallery' as any)}
-              activeOpacity={0.8}
+              style={[styles.shareTeaserBtn, { backgroundColor: '#25D366' }]}
+              onPress={handleShareQuote}
+              activeOpacity={0.85}
             >
-              <Text style={[styles.shareTeaserBtnText, { color: theme.primaryDark }]}>🎨 सुविचार कार्ड बनाएँ</Text>
+              <Text style={[styles.shareTeaserBtnText, { color: '#FFFFFF' }]}>🟢 व्हाट्सएप शेयर</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.shareTeaserOutlineBtn, { borderColor: theme.accent }]}
+              style={[styles.shareTeaserOutlineBtn, { borderColor: theme.accent, backgroundColor: theme.accent }]}
               onPress={() => router.push('/gallery' as any)}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
             >
-              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.textGold }]}>🖼️ HD वॉलपेपर</Text>
+              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.primaryDark }]}>🎨 सुविचार कार्ड</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1138,21 +1159,41 @@ const styles = StyleSheet.create({
   },
   shareTeaserCard: {
     borderRadius: 20,
-    padding: 20,
-    alignItems: 'center',
+    padding: 18,
     borderWidth: 1.5,
+    ...shadows.medium,
   },
-  shareTeaserTitle: {
-    fontSize: 18,
+  quoteCardHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  quoteBadgePill: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  quoteBadgeText: {
+    fontSize: 10,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
-  shareTeaserSub: {
-    fontSize: 13,
-    opacity: 0.85,
-    textAlign: 'center',
-    marginTop: 6,
-    lineHeight: 18,
+  refreshQuoteText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  quoteTextDisplay: {
+    fontSize: 15,
+    fontStyle: 'italic',
+    lineHeight: 22,
+    fontWeight: '600',
+    marginBottom: 6,
+  },
+  quoteAuthorDisplay: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'right',
+    marginBottom: 12,
   },
   teaserBtnRow: {
     flexDirection: 'row',
