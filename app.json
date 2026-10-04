@@ -30,7 +30,8 @@
       "permissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.FOREGROUND_SERVICE",
-        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.SET_WALLPAPER"
       ],
       "blockedPermissions": [
         "android.permission.READ_MEDIA_IMAGES",

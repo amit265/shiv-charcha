@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
+import { File, Paths } from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/components/common/Header';
@@ -71,16 +72,46 @@ export default function GalleryScreen() {
     }
   };
 
+  const downloadWallpaperToCache = async (item: WallpaperItem): Promise<string> => {
+    const idx = item.imageIndex || 0;
+    const hdUrl = shivaHdUrls[idx];
+    const assetSource = shivaBackgrounds[idx];
+    const resolvedAsset = Image.resolveAssetSource(assetSource);
+    const localAssetUri = resolvedAsset?.uri;
+
+    const filename = `shiv_wallpaper_${item.id || idx}_${Date.now()}.webp`;
+    const destinationFile = new File(Paths.cache, filename);
+
+    // 1. Try remote HD URL if available
+    if (hdUrl) {
+      try {
+        const downloadedFile = await File.downloadFileAsync(hdUrl, destinationFile, { idempotent: true });
+        return downloadedFile.uri;
+      } catch (err) {
+        console.warn('HD CDN download failed, falling back to local bundled asset:', err);
+      }
+    }
+
+    // 2. Fallback to local bundled asset URI
+    if (localAssetUri) {
+      try {
+        const downloadedFile = await File.downloadFileAsync(localAssetUri, destinationFile, { idempotent: true });
+        return downloadedFile.uri;
+      } catch (e) {
+        console.warn('Local asset download failed, returning uri directly:', e);
+        return localAssetUri;
+      }
+    }
+
+    throw new Error('No valid image URI found for wallpaper');
+  };
+
   const handleApplyDirectWallpaper = async (item: WallpaperItem, destination: WallpaperDestination) => {
     triggerHaptic();
     setIsSaving(true);
     try {
-      const assetSource = shivaBackgrounds[item.imageIndex || 0];
-      const resolvedAsset = Image.resolveAssetSource(assetSource);
-      const hdUrl = shivaHdUrls[item.imageIndex || 0];
-      const imagePathOrUrl = resolvedAsset?.uri || hdUrl;
-
-      const applied = await setWallpaperDirect(imagePathOrUrl, destination);
+      const localFileUri = await downloadWallpaperToCache(item);
+      const applied = await setWallpaperDirect(localFileUri, destination);
 
       if (applied) {
         const destLabel = destination === 'home' ? 'होम स्क्रीन' : destination === 'lock' ? 'लॉक स्क्रीन' : 'होम व लॉक स्क्रीन';
@@ -109,15 +140,11 @@ export default function GalleryScreen() {
     triggerHaptic();
     setIsSaving(true);
     try {
-      const assetSource = shivaBackgrounds[item.imageIndex || 0];
-      const resolvedAsset = Image.resolveAssetSource(assetSource);
-
       if (Platform.OS === 'web') {
         Alert.alert(
           'वॉलपेपर सहेजें',
           'वेब ब्राउज़र पर चित्र पर राइट-क्लिक करके या प्रेस करके डाउनलोड करें।'
         );
-        setIsSaving(false);
         return;
       }
 
@@ -129,26 +156,28 @@ export default function GalleryScreen() {
           'चित्र आपकी फोन गैलरी में सहेजने के लिए फोटो एक्सेस अनुमति की आवश्यकता है। कृपया सेटिंग्स से अनुमति प्रदान करें।',
           [{ text: 'ठीक है' }]
         );
-        setIsSaving(false);
         return;
       }
 
-      // Save asset URI directly to user's photo gallery
-      await MediaLibrary.saveToLibraryAsync(resolvedAsset.uri);
+      // Download HD image file to cache directory first
+      const localFileUri = await downloadWallpaperToCache(item);
+
+      // Save local file URI directly to device photo gallery
+      await MediaLibrary.saveToLibraryAsync(localFileUri);
 
       Alert.alert(
         '🌸 वॉलपेपर सहेजा गया!',
-        `"${item.title}" चित्र आपकी फोन फोटो गैलरी में सफलतापूर्वक सहेज लिया गया है।\n\nआप अपने फोन की सेटिंग्स से इसे होम या लॉक स्क्रीन पर लगा सकते हैं।`,
+        `"${item.title}" चित्र (HD) आपकी फोन फोटो गैलरी में सफलतापूर्वक सहेज लिया गया है।\n\nआप अपने फोन की सेटिंग्स से भी इसे होम या लॉक स्क्रीन पर लगा सकते हैं।`,
         [
           { text: 'वॉलपेपर लगाने की विधि ➔', onPress: () => setShowGuideModal(true) },
-          { text: 'ठीक है' },
+          { text: 'जय हो! 🙏' },
         ]
       );
     } catch (error) {
       console.warn('Save wallpaper error:', error);
       Alert.alert(
-        'सूचना',
-        'चित्र शेयर करके या फोन फोटो ऐप में सहेजकर वॉलपेपर लगाएँ।',
+        'त्रुटि',
+        'चित्र आपकी फोटो गैलरी में सहेजने में विफल। कृपया पुन: प्रयास करें।',
         [{ text: 'शेयर करें', onPress: () => handleShareWallpaper(item) }, { text: 'बंद करें' }]
       );
     } finally {
@@ -159,11 +188,23 @@ export default function GalleryScreen() {
   const handleShareWallpaper = async (item: WallpaperItem) => {
     triggerHaptic();
     try {
-      const assetSource = shivaBackgrounds[item.imageIndex || 0];
-      const resolvedAsset = Image.resolveAssetSource(assetSource);
+      if (Platform.OS === 'web') {
+        await safeShare({
+          title: item.title,
+          message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+        });
+        return;
+      }
+
+      // Download HD image file to local cache first
+      const localFileUri = await downloadWallpaperToCache(item);
 
       if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(resolvedAsset.uri);
+        await Sharing.shareAsync(localFileUri, {
+          mimeType: 'image/jpeg',
+          dialogTitle: `🌸 ${item.title} - शिव चर्चा`,
+          UTI: 'public.jpeg',
+        });
       } else {
         await safeShare({
           title: item.title,
@@ -171,6 +212,7 @@ export default function GalleryScreen() {
         });
       }
     } catch (e) {
+      console.warn('Share wallpaper error:', e);
       await safeShare({
         title: item.title,
         message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
