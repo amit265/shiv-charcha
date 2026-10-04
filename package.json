@@ -1,7 +1,7 @@
 {
   "name": "shiv-charcha",
   "main": "expo-router/entry",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1146.0",
     "@distube/ytdl-core": "^4.16.12",

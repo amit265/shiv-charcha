@@ -2,7 +2,7 @@
   "expo": {
     "name": "शिव चर्चा",
     "slug": "shiv-charcha",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "shivcharcha",
@@ -115,7 +115,7 @@
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
-    "runtimeVersion": "1.0.5",
+    "runtimeVersion": "1.0.6",
     "experiments": {
       "typedRoutes": false
     },
