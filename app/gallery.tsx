@@ -21,10 +21,11 @@ import { Header } from '@/components/common/Header';
 import { SmartBanner } from '@/components/common/SmartBanner';
 import { useTheme } from '@/context/ThemeContext';
 import { wallpapersData } from '@/content/wallpapers';
-import { shivaBackgrounds } from '@/constants/shivaImages';
+import { shivaBackgrounds, shivaHdUrls } from '@/constants/shivaImages';
 import { shadows } from '@/theme/colors';
 import { WallpaperItem } from '@/types';
 import { safeShare } from '@/services/shareService';
+import { setWallpaperDirect, WallpaperDestination } from '@/services/wallpaperService';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -38,6 +39,8 @@ export default function GalleryScreen() {
   const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);
   const [showMockClock, setShowMockClock] = useState<boolean>(true);
   const [showGuideModal, setShowGuideModal] = useState<boolean>(false);
+  const [showSetModal, setShowSetModal] = useState<boolean>(false);
+  const [wallpaperTargetItem, setWallpaperTargetItem] = useState<WallpaperItem | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const triggerHaptic = () => {
@@ -65,6 +68,40 @@ export default function GalleryScreen() {
         return '📜 पावन मंत्र';
       default:
         return '🌸 शिव भक्ति';
+    }
+  };
+
+  const handleApplyDirectWallpaper = async (item: WallpaperItem, destination: WallpaperDestination) => {
+    triggerHaptic();
+    setIsSaving(true);
+    try {
+      const assetSource = shivaBackgrounds[item.imageIndex || 0];
+      const resolvedAsset = Image.resolveAssetSource(assetSource);
+      const hdUrl = shivaHdUrls[item.imageIndex || 0];
+      const imagePathOrUrl = resolvedAsset?.uri || hdUrl;
+
+      const applied = await setWallpaperDirect(imagePathOrUrl, destination);
+
+      if (applied) {
+        const destLabel = destination === 'home' ? 'होम स्क्रीन' : destination === 'lock' ? 'लॉक स्क्रीन' : 'होम व लॉक स्क्रीन';
+        Alert.alert(
+          '🌸 हर हर महादेव!',
+          `"${item.title}" वॉलपेपर आपकी ${destLabel} पर सफलतापूर्वक सेट कर दिया गया है!`,
+          [{ text: 'जय हो! 🙏' }]
+        );
+      } else {
+        await handleSaveToGallery(item);
+      }
+    } catch (error) {
+      console.warn('Direct wallpaper error:', error);
+      Alert.alert(
+        'सूचना',
+        'चित्र को आपकी फोटो गैलरी में सहेजा जा रहा है, ताकि आप सेटिंग्स से लगा सकें।',
+        [{ text: 'सहेजें', onPress: () => handleSaveToGallery(item) }]
+      );
+    } finally {
+      setIsSaving(false);
+      setShowSetModal(false);
     }
   };
 
@@ -398,7 +435,11 @@ export default function GalleryScreen() {
               <View style={styles.modalActionButtonsRow}>
                 <TouchableOpacity
                   style={[styles.modalActionBtnSave, { backgroundColor: theme.accent }]}
-                  onPress={() => handleSaveToGallery(selectedWallpaper)}
+                  onPress={() => {
+                    triggerHaptic();
+                    setWallpaperTargetItem(selectedWallpaper);
+                    setShowSetModal(true);
+                  }}
                   activeOpacity={0.85}
                   disabled={isSaving}
                 >
@@ -406,7 +447,7 @@ export default function GalleryScreen() {
                     <ActivityIndicator color={theme.primaryDark} size="small" />
                   ) : (
                     <Text style={[styles.modalActionBtnSaveText, { color: theme.primaryDark }]}>
-                      ⬇️ गैलरी में सहेजें
+                      ✨ वॉलपेपर सेट करें
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -421,19 +462,73 @@ export default function GalleryScreen() {
 
                 <TouchableOpacity
                   style={[styles.modalActionBtnGuide, { backgroundColor: 'rgba(255,255,255,0.22)' }]}
-                  onPress={() => {
-                    triggerHaptic();
-                    setShowGuideModal(true);
-                  }}
+                  onPress={() => handleSaveToGallery(selectedWallpaper)}
                   activeOpacity={0.85}
                 >
-                  <Text style={styles.modalActionBtnGuideText}>ℹ️ विधि</Text>
+                  <Text style={styles.modalActionBtnGuideText}>⬇️ सहेजें</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </Modal>
       )}
+
+      {/* DIRECT WALLPAPER TARGET SELECTION MODAL */}
+      <Modal
+        visible={showSetModal && Boolean(wallpaperTargetItem)}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowSetModal(false)}
+      >
+        <View style={styles.guideModalOverlay}>
+          <View style={[styles.guideModalCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
+            <Text style={[styles.guideTitle, { color: theme.primary }]}>✨ वॉलपेपर कहाँ सेट करें?</Text>
+            <Text style={{ fontSize: 13, color: theme.textSecondary, textAlign: 'center', marginBottom: 16 }}>
+              {wallpaperTargetItem?.title}
+            </Text>
+
+            <TouchableOpacity
+              style={[styles.setOptionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'home')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.setOptionBtnText, { color: theme.primary }]}>📱 होम स्क्रीन पर लगाएँ</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.setOptionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'lock')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.setOptionBtnText, { color: theme.primary }]}>🔒 लॉक स्क्रीन पर लगाएँ</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.setOptionBtn, { backgroundColor: theme.primary, borderColor: theme.accent }]}
+              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'both')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.setOptionBtnText, { color: theme.textWhite }]}>✨ दोनों स्क्रीन पर लगाएँ (Home + Lock)</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.setOptionBtn, { backgroundColor: 'transparent', borderColor: theme.border }]}
+              onPress={() => wallpaperTargetItem && handleSaveToGallery(wallpaperTargetItem)}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.setOptionBtnText, { color: theme.textSecondary }]}>⬇️ केवल फोन गैलरी में सहेजें</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.guideCloseBtn, { backgroundColor: 'rgba(0,0,0,0.1)', marginTop: 8 }]}
+              onPress={() => setShowSetModal(false)}
+              activeOpacity={0.85}
+            >
+              <Text style={[styles.guideCloseBtnText, { color: theme.textPrimary }]}>✕ रद्द करें</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* WALLPAPER APPLICATION GUIDANCE MODAL */}
       <Modal
@@ -451,7 +546,7 @@ export default function GalleryScreen() {
                 <Text style={styles.guideStepNumText}>1</Text>
               </View>
               <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
-                <Text style={{ fontWeight: 'bold' }}>{'"'}⬇️ गैलरी में सहेजें{'"'}</Text> बटन दबाकर चित्र को अपने फोन की फोटो गैलरी में सहेजें।
+                <Text style={{ fontWeight: 'bold' }}>{'"'}✨ वॉलपेपर सेट करें{'"'}</Text> बटन दबाकर सीधे होम या लॉक स्क्रीन पर लगाएँ।
               </Text>
             </View>
 
@@ -460,16 +555,7 @@ export default function GalleryScreen() {
                 <Text style={styles.guideStepNumText}>2</Text>
               </View>
               <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
-                अपने फोन की <Text style={{ fontWeight: 'bold' }}>सेटिंग्स (Settings) ➔ वॉलपेपर (Wallpaper)</Text> में जाएँ या गैलरी ऐप खोलें।
-              </Text>
-            </View>
-
-            <View style={styles.guideStepItem}>
-              <View style={[styles.guideStepNum, { backgroundColor: theme.primary }]}>
-                <Text style={styles.guideStepNumText}>3</Text>
-              </View>
-              <Text style={[styles.guideStepText, { color: theme.textPrimary }]}>
-                सहेजे गए चित्र को चुनें और <Text style={{ fontWeight: 'bold' }}>{'"'}होम स्क्रीन{'"'} या {'"'}लॉक स्क्रीन{'"'}</Text> के रूप में सेट करें।
+                या चित्र को फोन गैलरी में सहेजकर सेटिंग्स से चुनें।
               </Text>
             </View>
 
@@ -734,7 +820,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  /* GUIDANCE MODAL STYLES */
+  setOptionBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  setOptionBtnText: {
+    fontSize: 13.5,
+    fontWeight: 'bold',
+  },
   guideModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.65)',
