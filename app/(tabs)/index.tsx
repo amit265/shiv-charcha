@@ -630,27 +630,27 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* SECTION: REELS & SHARE TEASER */}
+        {/* SECTION: SHIV CHARCHA QUOTES & WHATSAPP STATUS CARDS */}
         <View style={[styles.shareTeaserCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
-          <Text style={[styles.shareTeaserTitle, { color: theme.textGold }]}>शिव चर्चा विचार रील्स व शेयर 🎬</Text>
+          <Text style={[styles.shareTeaserTitle, { color: theme.textGold }]}>🎨 शिव चर्चा अनमोल सुविचार व स्टेटस</Text>
           <Text style={[styles.shareTeaserSub, { color: theme.textWhite }]}>
-            100+ पावन भक्ति विचारों को फुल-स्क्रीन रील मोड में देखें, वॉलपेपर बदलें व साझा करें।
+            साहब श्री हरिंद्रानंद जी व दीदी माँ के 100+ पावन सुविचारों के सुंदर कार्ड बनाएँ व व्हाट्सएप पर साझा करें।
           </Text>
           <View style={styles.teaserBtnRow}>
             <TouchableOpacity
               style={[styles.shareTeaserBtn, { backgroundColor: theme.accent }]}
-              onPress={() => router.push('/reels' as any)}
+              onPress={() => router.push('/gallery' as any)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.shareTeaserBtnText, { color: theme.primaryDark }]}>🎬 100 रील्स स्क्रॉल</Text>
+              <Text style={[styles.shareTeaserBtnText, { color: theme.primaryDark }]}>🎨 सुविचार कार्ड बनाएँ</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.shareTeaserOutlineBtn, { borderColor: theme.accent }]}
-              onPress={() => router.push('/share' as any)}
+              onPress={() => router.push('/gallery' as any)}
               activeOpacity={0.8}
             >
-              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.textGold }]}>🎨 शेयर कार्ड</Text>
+              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.textGold }]}>🖼️ HD वॉलपेपर</Text>
             </TouchableOpacity>
           </View>
         </View>
