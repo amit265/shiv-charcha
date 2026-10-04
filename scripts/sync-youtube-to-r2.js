@@ -192,10 +192,26 @@ export const shivReelsCatalog: ShivReel[] = ${JSON.stringify(reels, null, 2)};
 
       fs.writeFileSync(reelsCatalogPath, catalogCode);
 
+      try {
+        console.log(`  ⬆️ Uploading reels.json catalog to Cloudflare R2...`);
+        const r2JsonCommand = new PutObjectCommand({
+          Bucket: BUCKET_NAME,
+          Key: 'reels.json',
+          Body: Buffer.from(JSON.stringify(reels, null, 2), 'utf-8'),
+          ContentType: 'application/json',
+          CacheControl: 'public, max-age=300',
+        });
+        await s3Client.send(r2JsonCommand);
+        console.log(`  ✅ Public R2 Catalog URL: ${R2_PUBLIC_BASE_URL}/reels.json`);
+      } catch (r2Err) {
+        console.error(`  ⚠️ Failed to upload reels.json to R2:`, r2Err.message);
+      }
+
       console.log(`\n======================================================`);
       console.log(`🎉 Sync Complete! Processed ${reels.length} YouTube Shorts.`);
       console.log(`📄 Updated: assets/data/reels.json`);
       console.log(`📄 Updated: src/content/reelsCatalog.ts`);
+      console.log(`🌐 R2 Catalog: ${R2_PUBLIC_BASE_URL}/reels.json`);
       console.log(`======================================================\n`);
     } else {
       console.log('No YouTube Shorts entries found in channel.');
