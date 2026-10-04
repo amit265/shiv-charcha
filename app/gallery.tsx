@@ -81,23 +81,30 @@ export default function GalleryScreen() {
     const filename = `shiv_wallpaper_hd_${item.id || idx}.jpg`;
     const destinationFile = new File(Paths.cache, filename);
 
-    // 1. Download Full HD High-Resolution Wallpaper from CDN first (Fast Vercel Edge CDN)
+    // 0. Instant Cache Check: Return cached HD wallpaper if already downloaded
+    if (destinationFile.exists) {
+      return destinationFile.uri;
+    }
+
+    // 1. Download Full HD High-Resolution Wallpaper from Vercel Edge CDN
     if (hdUrl) {
       try {
         const downloadedFile = await File.downloadFileAsync(hdUrl, destinationFile, { idempotent: true });
         return downloadedFile.uri;
       } catch (err) {
-        console.warn('HD CDN download failed, falling back to local asset:', err);
+        console.warn('HD CDN download timeout/error, using local asset:', err);
       }
     }
 
-    // 2. Fallback to local bundled asset thumbnail if offline
+    // 2. Fallback to local bundled asset thumbnail if offline/timeout
     if (localAssetUri) {
+      if (localAssetUri.startsWith('file://')) {
+        return localAssetUri;
+      }
       try {
         const downloadedFile = await File.downloadFileAsync(localAssetUri, destinationFile, { idempotent: true });
         return downloadedFile.uri;
       } catch (e) {
-        console.warn('Local asset resolve error, using raw uri:', e);
         return localAssetUri;
       }
     }
