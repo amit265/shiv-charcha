@@ -5,7 +5,9 @@ import { PRODUCTION_AD_UNITS } from '@/utils/adConfig';
 
 const AD_FREE_UNTIL_KEY = 'shiv-charcha-ad-free-until';
 const USAGE_COUNTER_KEY = 'shiv-charcha-usage-counter';
-const INTERSTITIAL_COOLDOWN_MS = 120000; // 2 minutes frequency capping
+const INTERSTITIAL_COOLDOWN_MS = 180000; // 3 minutes frequency capping
+const APP_OPEN_COOLDOWN_MS = 240000; // 4 minutes frequency capping
+const GLOBAL_AD_COOLDOWN_MS = 120000; // 2 minutes global silence after ANY full-screen ad
 
 export let AD_FREE_DURATION_MINUTES = 15;
 
@@ -55,6 +57,8 @@ let interstitial: any = null;
 let appOpenAdInstance: any = null;
 let rewardedAdInstance: any = null;
 let lastInterstitialShownTime = 0;
+let lastAppOpenShownTime = 0;
+let lastGlobalAdShownTime = 0;
 let isInterstitialLoading = false;
 let isAppOpenAdLoading = false;
 let isRewardedAdLoading = false;
@@ -111,6 +115,7 @@ export const AdManager = {
 
         appOpenAdInstance.addAdEventListener('closed', () => {
           isAppOpenAdLoading = false;
+          isAdShowing = false;
           this.setAdRecentlyClosed();
           void this.loadAppOpenAd();
         });
@@ -189,6 +194,13 @@ export const AdManager = {
     if (isAdFree) return false;
 
     const now = Date.now();
+
+    // Enforce Global Silence Cooldown (2 minutes after ANY ad format)
+    if (now - lastGlobalAdShownTime < GLOBAL_AD_COOLDOWN_MS) {
+      return false;
+    }
+
+    // Enforce Interstitial Cooldown (3 minutes)
     if (now - lastInterstitialShownTime < INTERSTITIAL_COOLDOWN_MS) {
       return false;
     }
@@ -196,6 +208,7 @@ export const AdManager = {
     if (interstitial.loaded) {
       try {
         lastInterstitialShownTime = now;
+        lastGlobalAdShownTime = now;
         isAdShowing = true;
         interstitial.show();
         return true;
@@ -268,15 +281,31 @@ export const AdManager = {
     const isAdFree = await this.isAdFreeActive();
     if (isAdFree) return false;
 
+    const now = Date.now();
+
+    // Enforce Global Silence Cooldown (2 minutes after ANY ad format)
+    if (now - lastGlobalAdShownTime < GLOBAL_AD_COOLDOWN_MS) {
+      return false;
+    }
+
+    // Enforce App Open Ad Cooldown (4 minutes)
+    if (now - lastAppOpenShownTime < APP_OPEN_COOLDOWN_MS) {
+      return false;
+    }
+
     if (isAdShowing || wasAdRecentlyClosed) {
       return false;
     }
 
     if (appOpenAdInstance.loaded) {
       try {
+        lastAppOpenShownTime = now;
+        lastGlobalAdShownTime = now;
+        isAdShowing = true;
         appOpenAdInstance.show();
         return true;
       } catch {
+        isAdShowing = false;
         return false;
       }
     } else {
@@ -287,9 +316,10 @@ export const AdManager = {
 
   setAdRecentlyClosed() {
     wasAdRecentlyClosed = true;
+    lastGlobalAdShownTime = Date.now();
     setTimeout(() => {
       wasAdRecentlyClosed = false;
-    }, 5000);
+    }, 10000);
   },
 
   createAndLoadRewardedAd() {
@@ -361,6 +391,7 @@ export const AdManager = {
       onRewardedAdEarnedCallback = onRewardEarned;
       onRewardedAdClosedCallback = onClosed;
       try {
+        lastGlobalAdShownTime = Date.now();
         isAdShowing = true;
         rewardedAdInstance.show();
         return true;

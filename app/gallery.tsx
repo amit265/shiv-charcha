@@ -13,7 +13,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
+import * as MediaLibrary from 'expo-media-library/legacy';
 import * as Sharing from 'expo-sharing';
 import { File, Paths } from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
