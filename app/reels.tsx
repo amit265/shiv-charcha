@@ -13,8 +13,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
-// @ts-ignore
-// eslint-disable-next-line import/no-unresolved
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
@@ -88,8 +86,7 @@ function NativeReelVideo({ videoUrl, isPlaying }: { videoUrl: string; isPlaying:
     <VideoView
       style={styles.fullWebView}
       player={player}
-      allowsFullscreen={false}
-      showsVideoControls={false}
+      nativeControls={false}
       contentFit="cover"
     />
   );
