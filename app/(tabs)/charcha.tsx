@@ -16,7 +16,7 @@ import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPro
 import { Analytics } from '@/services/analytics/analytics';
 import { SmartBanner } from '@/components/common/SmartBanner';
 
-type FilterCategory = 'all' | 'understand' | 'books' | 'audio' | 'sadhna';
+type FilterCategory = 'all' | 'understand' | 'faq' | 'books' | 'audio' | 'sadhna';
 
 export default function ShivCharchaScreen() {
   const router = useRouter();
@@ -105,12 +105,15 @@ export default function ShivCharchaScreen() {
     });
   };
 
-  // Filtered lists based on search
-  const filteredTeachings = teachingTopics.filter(
-    (t) =>
+  // Filtered lists based on search and active filter
+  const filteredTeachings = teachingTopics.filter((t) => {
+    const matchesSearch =
       t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.summary.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      t.summary.toLowerCase().includes(searchQuery.toLowerCase());
+    if (!matchesSearch) return false;
+    if (activeFilter === 'faq') return t.category === 'faq';
+    return true;
+  });
 
   const filteredBooks = booksLibrary.filter(
     (b) =>
@@ -495,6 +498,23 @@ export default function ShivCharchaScreen() {
           </ScrollView>
         </View>
 
+        {/* SHIV CHARCHA GOSTHI BANNER */}
+        <TouchableOpacity
+          style={[styles.gosthiBanner, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
+          onPress={() => router.push('/gosthi' as any)}
+          activeOpacity={0.88}
+        >
+          <View style={styles.gosthiBannerRow}>
+            <Text style={{ fontSize: 32 }}>🏡</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.gosthiBannerTitle, { color: theme.primary }]}>घर पर शिव चर्चा गोष्ठी आयोजित करें ➔</Text>
+              <Text style={[styles.gosthiBannerSub, { color: theme.textSecondary }]}>
+                45-मिनट गोष्ठी टाइमर व सुंदर व्हाट्सएप निमंत्रण कार्ड बनाएँ
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
         {/* SEARCH BAR & CATEGORY FILTER PILLS */}
         <View style={styles.searchRow}>
           <TextInput
@@ -544,6 +564,15 @@ export default function ShivCharchaScreen() {
           >
             <Text style={[styles.filterPillText, { color: activeFilter === 'understand' ? theme.textWhite : theme.textPrimary }]}>
               💡 3 सूत्र व विषय
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.filterPill, activeFilter === 'faq' && { backgroundColor: theme.primary, borderColor: theme.accent }]}
+            onPress={() => setActiveFilter('faq')}
+          >
+            <Text style={[styles.filterPillText, { color: activeFilter === 'faq' ? theme.textWhite : theme.textPrimary }]}>
+              ❓ शंका समाधान
             </Text>
           </TouchableOpacity>
 
@@ -1333,6 +1362,28 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 2,
     textAlign: 'center',
+  },
+
+  /* Gosthi Banner Styles */
+  gosthiBanner: {
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1.5,
+    marginBottom: 16,
+    ...shadows.soft,
+  },
+  gosthiBannerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  gosthiBannerTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  gosthiBannerSub: {
+    fontSize: 11,
+    marginTop: 2,
   },
 
   /* Search Counter Styles */

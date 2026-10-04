@@ -126,8 +126,17 @@ export default function TeachingDetailScreen() {
             </View>
           )}
 
+          {/* Category Badge if FAQ */}
+          {topic.category === 'faq' && (
+            <View style={[styles.faqBadge, { backgroundColor: theme.surfaceElevated, borderColor: theme.accent }]}>
+              <Text style={[styles.faqBadgeText, { color: theme.primary }]}>❓ शंका समाधान (प्रश्न व उत्तर)</Text>
+            </View>
+          )}
+
           {/* Full Text */}
-          <Text style={[styles.sectionHeading, { color: theme.primary }]}>📖 विस्तृत विवेचन:</Text>
+          <Text style={[styles.sectionHeading, { color: theme.primary }]}>
+            {topic.category === 'faq' ? '📖 विस्तृत समाधान & उत्तर:' : '📖 विस्तृत विवेचन:'}
+          </Text>
           <FormattedText text={topic.fullContent} style={[styles.fullText, { color: theme.textPrimary, fontSize: 15 * fontScale, lineHeight: 24 * fontScale }]} />
 
           {/* Share Button */}
@@ -292,6 +301,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   fontScaleBtnText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  faqBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginTop: 14,
+    marginBottom: 4,
+  },
+  faqBadgeText: {
     fontSize: 12,
     fontWeight: 'bold',
   },

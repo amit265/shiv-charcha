@@ -227,8 +227,13 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 if (status?.error) {
                   console.warn('expo-audio native status error:', status.error);
                   handleAudioPlaybackError();
-                } else if (status?.currentTime !== undefined) {
-                  setPosition(Math.floor(status.currentTime));
+                } else {
+                  if (status?.currentTime !== undefined) {
+                    setPosition(Math.floor(status.currentTime));
+                  }
+                  if (status?.duration && status.duration > 0) {
+                    setDuration(Math.floor(status.duration));
+                  }
                 }
               });
             }
@@ -239,7 +244,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             setCurrentTrack(track);
             setIsMiniPlayerVisible(true);
             setIsPlaying(true);
-            setDuration(track.duration || 0);
+            if (player.duration && player.duration > 0) {
+              setDuration(Math.floor(player.duration));
+            } else {
+              setDuration(track.duration || 0);
+            }
             StorageService.recordAudioPlayed();
           } catch (err) {
             console.warn('Native expo-audio track stream error:', err);
