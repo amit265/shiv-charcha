@@ -16,10 +16,29 @@ export const MAHAVYOMA_BHAKTI_YT_URL = 'https://youtube.com/@mahavyomabhakti';
 
 export class ReelsService {
   /**
-   * Returns curated list of Shiv Charcha Reels.
-   * Fetches remote catalog from Mahavyoma Studio Website API endpoint with cached & local fallbacks.
+   * Returns cached reels instantly from AsyncStorage or local bundled fallback.
+   * Runs instantly to eliminate screen loading delays on screen open.
    */
-  static async getReels(): Promise<ShivReel[]> {
+  static async getCachedReels(): Promise<ShivReel[]> {
+    try {
+      const cached = await AsyncStorage.getItem(CACHED_REELS_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed as ShivReel[];
+        }
+      }
+    } catch {
+      // Ignore cache error
+    }
+    return shivReelsCatalog;
+  }
+
+  /**
+   * Syncs latest remote reels catalog in background.
+   * Enforces max item limit (LRU cache eviction) to prevent memory bloat when 100s of videos exist.
+   */
+  static async syncRemoteReels(maxCacheItems = 50): Promise<ShivReel[] | null> {
     const fetchFromUrl = async (url: string): Promise<ShivReel[] | null> => {
       try {
         const controller = new AbortController();
@@ -35,39 +54,32 @@ export class ReelsService {
           const remoteData = await response.json();
           const items = Array.isArray(remoteData) ? remoteData : remoteData?.reels;
           if (Array.isArray(items) && items.length > 0) {
-            await AsyncStorage.setItem(CACHED_REELS_KEY, JSON.stringify(items));
-            return items as ShivReel[];
+            // Cap items to maxCacheItems to optimize memory & disk usage
+            const capped = items.slice(0, maxCacheItems) as ShivReel[];
+            await AsyncStorage.setItem(CACHED_REELS_KEY, JSON.stringify(capped));
+            return capped;
           }
         }
       } catch {
-        // Continue fallback
+        // Fallback silently
       }
       return null;
     };
 
-    // 1. Fetch from primary website API URL
-    const primaryData = await fetchFromUrl(REMOTE_REELS_JSON_URL);
-    if (primaryData) return primaryData;
+    const primary = await fetchFromUrl(REMOTE_REELS_JSON_URL);
+    if (primary) return primary;
 
-    // 2. Fetch from secondary website API endpoint fallback
-    const fallbackData = await fetchFromUrl(REMOTE_REELS_API_FALLBACK);
-    if (fallbackData) return fallbackData;
+    return fetchFromUrl(REMOTE_REELS_API_FALLBACK);
+  }
 
-    // 2. Try loading cached remote reels if available
-    try {
-      const cached = await AsyncStorage.getItem(CACHED_REELS_KEY);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed as ShivReel[];
-        }
-      }
-    } catch {
-      // Ignore cache parse error
-    }
-
-    // 3. Fallback to local catalog
-    return shivReelsCatalog;
+  /**
+   * Returns curated list of Shiv Charcha Reels.
+   */
+  static async getReels(): Promise<ShivReel[]> {
+    const cached = await this.getCachedReels();
+    // Fire-and-forget background sync
+    this.syncRemoteReels().catch(() => {});
+    return cached;
   }
 
   /**

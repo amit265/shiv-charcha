@@ -184,27 +184,45 @@ export default function ShivReelsScreen() {
   useEffect(() => {
     Analytics.logScreen('ShivReelsScreen');
     let isMounted = true;
-    (async () => {
-      setIsLoading(true);
-      const rawReels = await ReelsService.getReels();
-      const liked = await ReelsService.getLikedReelIds();
-      if (!isMounted) return;
-      setLikedIds(liked);
 
+    const buildFeed = (reels: ShivReel[]): FeedItem[] => {
       const feed: FeedItem[] = [];
-      rawReels.forEach((reel, index) => {
+      reels.forEach((reel, index) => {
         feed.push({ type: 'reel', data: reel });
         if ((index + 1) % 4 === 0) {
           feed.push({ type: 'ad', id: `ad-${index}` });
         }
       });
+      return feed;
+    };
 
-      setItemsList(feed);
-      if (rawReels.length > 0) {
-        setActiveReelId(rawReels[0].id);
+    (async () => {
+      // 1. Instantly load local/cached reels (0ms delay on open)
+      const cachedReels = await ReelsService.getCachedReels();
+      const liked = await ReelsService.getLikedReelIds();
+
+      if (!isMounted) return;
+      setLikedIds(liked);
+
+      const initialFeed = buildFeed(cachedReels);
+      setItemsList(initialFeed);
+
+      if (cachedReels.length > 0) {
+        setActiveReelId(cachedReels[0].id);
       }
       setIsLoading(false);
+
+      // 2. Perform silent background sync for remote catalog updates
+      try {
+        const remoteReels = await ReelsService.syncRemoteReels();
+        if (isMounted && remoteReels && remoteReels.length > 0) {
+          setItemsList(buildFeed(remoteReels));
+        }
+      } catch {
+        // Silently preserve cached/local feed
+      }
     })();
+
     return () => {
       isMounted = false;
     };
@@ -317,6 +335,10 @@ export default function ShivReelsScreen() {
           decelerationRate="fast"
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={VIEWABILITY_CONFIG}
+          windowSize={3}
+          initialNumToRender={2}
+          maxToRenderPerBatch={2}
+          removeClippedSubviews={Platform.OS === 'android'}
           getItemLayout={(_, index) => ({
             length: REEL_HEIGHT,
             offset: REEL_HEIGHT * index,
