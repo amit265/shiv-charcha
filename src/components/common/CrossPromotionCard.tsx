@@ -16,12 +16,12 @@ export type Promotion = {
 
 // Bundled local icons as fallback (guaranteed to render even offline)
 const LOCAL_ICONS: Record<string, any> = {
-  'hindi-calendar-2027': require('../../../assets/images/cross-promo/hindi-calendar-2027.png'),
-  'shiv-charcha': require('../../../assets/images/cross-promo/shiv-charcha.png'),
-  'vrat-sathi': require('../../../assets/images/cross-promo/vrat-sathi.png'),
-  'shakti-peetha': require('../../../assets/images/cross-promo/shakti-peetha.png'),
-  'jyotirlinga': require('../../../assets/images/cross-promo/jyotirlinga.png'),
-  'bihar-explorer': require('../../../assets/images/cross-promo/bihar-explorer.png'),
+  'hindi-calendar-2027': require('../../../assets/images/cross-promo/hindi-calendar-2027.webp'),
+  'shiv-charcha': require('../../../assets/images/cross-promo/shiv-charcha.webp'),
+  'vrat-sathi': require('../../../assets/images/cross-promo/vrat-sathi.webp'),
+  'shakti-peetha': require('../../../assets/images/cross-promo/shakti-peetha.webp'),
+  'jyotirlinga': require('../../../assets/images/cross-promo/jyotirlinga.webp'),
+  'bihar-explorer': require('../../../assets/images/cross-promo/bihar-explorer.webp'),
 };
 
 type CrossPromotionCardProps = {
