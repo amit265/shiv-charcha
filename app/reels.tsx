@@ -19,6 +19,7 @@ import { shadows } from '@/theme/colors';
 import { ShivReel } from '@/content/reelsCatalog';
 import { ReelsService } from '@/services/reelsService';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
+import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { Analytics } from '@/services/analytics/analytics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -178,11 +179,13 @@ export default function ShivReelsScreen() {
   const [itemsList, setItemsList] = useState<FeedItem[]>([]);
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const [activeReelId, setActiveReelId] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     Analytics.logScreen('ShivReelsScreen');
     let isMounted = true;
     (async () => {
+      setIsLoading(true);
       const rawReels = await ReelsService.getReels();
       const liked = await ReelsService.getLikedReelIds();
       if (!isMounted) return;
@@ -200,6 +203,7 @@ export default function ShivReelsScreen() {
       if (rawReels.length > 0) {
         setActiveReelId(rawReels[0].id);
       }
+      setIsLoading(false);
     })();
     return () => {
       isMounted = false;
@@ -221,7 +225,11 @@ export default function ShivReelsScreen() {
         const currentItem = viewableItems[0].item as FeedItem;
         if (currentItem && currentItem.type === 'reel') {
           setActiveReelId(currentItem.data.id);
+        } else {
+          setActiveReelId(''); // PAUSE VIDEO AUDIO WHEN AD CARD IS VIEWED!
         }
+      } else {
+        setActiveReelId('');
       }
     },
     []
@@ -293,24 +301,29 @@ export default function ShivReelsScreen() {
         </View>
       </SafeAreaView>
 
-      {/* REELS VERTICAL FEED */}
-      <FlatList
-        data={itemsList}
-        renderItem={renderReelItem}
-        keyExtractor={(item) => (item.type === 'reel' ? item.data.id : item.id)}
-        pagingEnabled
-        showsVerticalScrollIndicator={false}
-        snapToInterval={REEL_HEIGHT}
-        snapToAlignment="start"
-        decelerationRate="fast"
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={VIEWABILITY_CONFIG}
-        getItemLayout={(_, index) => ({
-          length: REEL_HEIGHT,
-          offset: REEL_HEIGHT * index,
-          index,
-        })}
-      />
+      {/* LOADING SCREEN */}
+      {isLoading ? (
+        <LoadingScreen message="शिव चर्चा रील्स लोड हो रही हैं..." />
+      ) : (
+        /* REELS VERTICAL FEED */
+        <FlatList
+          data={itemsList}
+          renderItem={renderReelItem}
+          keyExtractor={(item) => (item.type === 'reel' ? item.data.id : item.id)}
+          pagingEnabled
+          showsVerticalScrollIndicator={false}
+          snapToInterval={REEL_HEIGHT}
+          snapToAlignment="start"
+          decelerationRate="fast"
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={VIEWABILITY_CONFIG}
+          getItemLayout={(_, index) => ({
+            length: REEL_HEIGHT,
+            offset: REEL_HEIGHT * index,
+            index,
+          })}
+        />
+      )}
     </View>
   );
 }
