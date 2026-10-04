@@ -9,6 +9,7 @@ import {
   ViewToken,
   StatusBar,
   Platform,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -138,6 +139,21 @@ function SingleReelView({
             <Text style={{ fontSize: 20 }}>📲</Text>
           </View>
           <Text style={styles.actionLabelText}>शेयर</Text>
+        </TouchableOpacity>
+
+        {/* INSTAGRAM FOLLOW */}
+        <TouchableOpacity
+          style={styles.actionIconButton}
+          onPress={() => {
+            Analytics.track('click_instagram_follow');
+            Linking.openURL('https://www.instagram.com/mahavyomabhakti/');
+          }}
+          activeOpacity={0.8}
+        >
+          <View style={[styles.actionIconCircle, { backgroundColor: '#E1306C' }]}>
+            <Text style={{ fontSize: 18 }}>📸</Text>
+          </View>
+          <Text style={styles.actionLabelText}>Insta फॉलो</Text>
         </TouchableOpacity>
 
         {/* YOUTUBE SUBSCRIBE */}

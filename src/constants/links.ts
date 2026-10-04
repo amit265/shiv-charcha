@@ -33,6 +33,16 @@ export const APP_LINKS = {
   assetLinksJsonUrl: 'https://mahavyomastudio.com/.well-known/assetlinks.json',
 } as const;
 
+export const MEDIA_LINKS = {
+  r2PublicBaseUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev',
+  r2AudioBaseUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio',
+} as const;
+
+export const SOCIAL_LINKS = {
+  instagramUrl: 'https://www.instagram.com/mahavyomabhakti/',
+  youtubeChannelUrl: 'https://youtube.com/@Mahavyomabhakti',
+} as const;
+
 export const CROSS_PROMO_APPS = [
   {
     id: 'hindi-calendar-2027',

@@ -22,7 +22,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'नागेंद्रहाराय त्रिलोचनाय... ॐ नमः शिवाय महिमा',
     author: 'आदि शंकराचार्य',
     image: 'shiva-panchakshara-stotram',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_panchakshara_stotram.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/shiva_panchakshara_stotram.mp3',
     audioDuration: 240,
     summaryHindi:
       'जगद्गुरु आदि शंकराचार्य रचित यह 5 श्लोकों का परम पावन स्तवन \'ॐ नमः शिवाय\' मंत्र के पाँचों अक्षरों (न, म, शि, वा, य) की अलौकिक महिमा और शिव के मंगल स्वरूप का वर्णन करता है।',
@@ -61,7 +61,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'लंकापति रावण रचित अलौकिक ओजस्वी शिव स्तुति',
     author: 'रावण (परम शिवभक्त)',
     image: 'shiva-tandava-stotram',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_tandava_stotram.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/shiva_tandava_stotram.mp3',
     audioDuration: 300,
     summaryHindi:
       'जब रावण ने कैलाश पर्वत को उठाने का दुस्साहस किया, तब शिवजी ने अपने पादांगुष्ठ से कैलाश को दबा दिया। अपार पीड़ा में रावण ने अत्यंत ओजस्वी छन्दों में यह 15 श्लोकों का स्तोत्र रचा, जिससे प्रसन्न होकर शिवजी ने उसे वरदान और चंद्रहास खड्ग प्रदान किया।',
@@ -136,7 +136,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'गंधर्वराज पुष्पदंत रचित सर्वोत्तम शिव स्तुति',
     author: 'पुष्पदंत (गंधर्वराज)',
     image: 'shiva-mahimna-stotram',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_mahimna_stotram.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/shiva_mahimna_stotram.mp3',
     audioDuration: 360,
     summaryHindi:
       'गंधर्वराज पुष्पदंत ने शिवजी के कोप से अपनी अदृश्य होने की दिव्य शक्ति खो देने पर यह अति पावन स्तुति रची थी। आचार्यों ने इसे स्तोत्रों में मुकुटमणि माना है।',
@@ -211,7 +211,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'गोस्वामी तुलसीदास रचित रामचरितमानस उत्तरकांड का पावन स्तोत्र',
     author: 'गोस्वामी तुलसीदास (उत्तरकांड)',
     image: 'rudrashtakam',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/rudrashtakam.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/rudrashtakam.mp3',
     audioDuration: 240,
     summaryHindi:
       'गोस्वामी तुलसीदासजी द्वारा रचित आठ छन्दों का यह परम पावन स्तोत्र भगवान रुद्र की सर्वांगीण महिमा, निर्गुण व सगुण रूप की वंदना करता है। रामचरितमानस में काकभुशुंडि के गुरु ने शिवजी को प्रसन्न करने हेतु यह स्तुति गाई थी।',
@@ -262,7 +262,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'ऋग्वेदोक्त एवं यजुर्वेदोक्त अमोघ अमरता मंत्र',
     author: 'महर्षि मार्कण्डेय व शुक्राचार्य',
     image: 'mahamrityunjaya-mantra',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/mahamrityunjaya_mantra.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/mahamrityunjaya_mantra.mp3',
     audioDuration: 180,
     summaryHindi:
       'यजुर्वेद और ऋग्वेद का यह महामंत्र अकाल मृत्यु के भय को मिटाता है, रोगों का नाश करता है और साधक को मोक्ष प्रदान करता है। महर्षि मार्कंडेय ने इसी मंत्र से यमराज पर विजय पाई थी।',
@@ -285,7 +285,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'महर्षि वशिष्ठ रचित दरिद्रता व ऋण नाशक स्तुति',
     author: 'महर्षि वशिष्ठ',
     image: 'daridrya-dahana-stotram',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/daridrya_dahana_stotram.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/daridrya_dahana_stotram.mp3',
     audioDuration: 210,
     summaryHindi:
       'सप्तर्षि महर्षि वशिष्ठ जी द्वारा रचित यह 8 श्लोकों का स्तोत्र जीवन के भौतिक व आध्यात्मिक दारिद्र्य (गरीबी, ऋण, दुख) को अग्नि की भाँति भस्म कर अक्षय समृद्धि प्रदान करता है।',
@@ -332,7 +332,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'जगद्गुरु आदि शंकराचार्य रचित शिवलिंग स्तवन',
     author: 'आदि शंकराचार्य',
     image: 'lingashtakam',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/lingashtakam.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/lingashtakam.mp3',
     audioDuration: 210,
     summaryHindi:
       'जगद्गुरु आदि शंकराचार्य रचित यह आठ श्लोकों का स्तवन शिवलिंग की पवित्रता, महिमा और सर्वपापहारी स्वरूप की महिमा गाता है। अभिषेक के समय इसका पाठ अत्यंत फलदायी है।',
@@ -379,7 +379,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'जय गणेश गिरिजासुवन... शिव चालीसा पाठ',
     author: 'सनातन भक्ति परंपरा',
     image: 'shiv-chalisa',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiv_chalisa.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/shiv_chalisa.mp3',
     audioDuration: 300,
     summaryHindi:
       'भगवान शिव की कृपा पाने के लिए 40 चौपाइयों और दोहों का यह सिद्ध पाठ अत्यंत सरल और अमोघ है। नित्य शिव चालीसा का पाठ करने से भय, दुख, दारिद्र्य और रोग नष्ट होते हैं।',
@@ -434,7 +434,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'सौराष्ट्रे सोमनाथं च... १२ ज्योतिर्लिंगों का नित्य स्मरण',
     author: 'आदि शंकराचार्य',
     image: 'dwadasa-jyotirlinga-stotram',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/dwadasa_jyotirlinga_stotram.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/dwadasa_jyotirlinga_stotram.mp3',
     audioDuration: 210,
     summaryHindi:
       'भगवान शिव के 12 पावन ज्योतिर्लिंगों के नाम, स्थान और महिमा को समेटे हुए यह स्तोत्र प्रातःकाल पढ़ने से 7 जन्मों के पापों का नाश होता है।',
@@ -465,7 +465,7 @@ export const shivaStotras: ShivaStotra[] = [
     subtitle: 'शिवजी के १०८ दिव्य पावन नाम मय अर्थ',
     author: 'शिव महापुराण',
     image: 'shiva-ashtottara-shatanama',
-    audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/shiva_ashtottara_shatanama.mp3',
+    audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/shiva_ashtottara_shatanama.mp3',
     audioDuration: 300,
     summaryHindi:
       'भगवान शिव के 108 पावन नामों की नामावली। प्रत्येक नाम महादेव की अनूठी लीला, गुण और स्वरूप का प्रकटीकरण करता है। पूजन समय 108 नाम पाठ अत्यंत फलदायी है।',

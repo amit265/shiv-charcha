@@ -180,7 +180,7 @@ export const ShivlingPujaCanvas: React.FC = () => {
         title: 'ॐ नमः शिवाय (शिव धुन)',
         category: 'mantra',
         artist: 'शिव चर्चा भक्ति धारा',
-        audioUrl: 'https://mahavyomastudio.com/apps/shiv-charcha/audio/108_om_namah_shivaya_chant.mp3',
+        audioUrl: 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/audio/108_om_namah_shivaya_chant.mp3',
         coverImage: '',
         duration: 300,
       });
