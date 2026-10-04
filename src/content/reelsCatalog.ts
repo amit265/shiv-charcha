@@ -11,6 +11,14 @@ export interface ShivReel {
   youtubeUrl: string;
 }
 
+export function getReelThumbnailUrl(reel: ShivReel): string {
+  if (reel.thumbnailUrl) return reel.thumbnailUrl;
+  if (reel.youtubeVideoId) {
+    return `https://img.youtube.com/vi/${reel.youtubeVideoId}/hqdefault.jpg`;
+  }
+  return '';
+}
+
 export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-6BDmszb4pa8",

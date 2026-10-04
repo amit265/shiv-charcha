@@ -165,7 +165,30 @@ async function syncYouTubeToR2() {
 
       fs.writeFileSync(reelsJsonPath, JSON.stringify(reels, null, 2));
 
-      const catalogCode = `export interface ShivReel {\n  id: string;\n  youtubeVideoId: string;\n  videoUrl?: string;\n  title: string;\n  subTitle: string;\n  category: 'sutras' | 'gosthi' | 'sahib_ji' | 'mahadev';\n  likesCount: number;\n  sharesCount: number;\n  teachingId?: string;\n  youtubeUrl: string;\n}\n\nexport const shivReelsCatalog: ShivReel[] = ${JSON.stringify(reels, null, 2)};\n`;
+      const catalogCode = `export interface ShivReel {
+  id: string;
+  youtubeVideoId: string;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+  title: string;
+  subTitle: string;
+  category: 'sutras' | 'gosthi' | 'sahib_ji' | 'mahadev';
+  likesCount: number;
+  sharesCount: number;
+  teachingId?: string;
+  youtubeUrl: string;
+}
+
+export function getReelThumbnailUrl(reel: ShivReel): string {
+  if (reel.thumbnailUrl) return reel.thumbnailUrl;
+  if (reel.youtubeVideoId) {
+    return \`https://img.youtube.com/vi/\${reel.youtubeVideoId}/hqdefault.jpg\`;
+  }
+  return '';
+}
+
+export const shivReelsCatalog: ShivReel[] = ${JSON.stringify(reels, null, 2)};
+`;
 
       fs.writeFileSync(reelsCatalogPath, catalogCode);
 
