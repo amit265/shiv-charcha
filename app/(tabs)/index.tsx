@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -12,6 +12,7 @@ import { pravachanLibrary } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
 
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { StorageService, getFormattedUserName } from '@/services/storage';
 import { OnboardingModal } from '@/components/common/OnboardingModal';
 import { getTodayPanchang } from '@/services/panchangService';
@@ -19,6 +20,53 @@ import { FormattedText } from '@/components/common/FormattedText';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
+import { ReelsService } from '@/services/reelsService';
+import { ShivReel } from '@/content/reelsCatalog';
+
+function FloatingMiniReelPlayer({
+  reel,
+  onPress,
+  onClose,
+}: {
+  reel: ShivReel;
+  onPress: () => void;
+  onClose: () => void;
+}) {
+  const { theme } = useTheme();
+  const player = useVideoPlayer(reel.videoUrl || '', (p: any) => {
+    p.loop = true;
+    p.muted = true;
+    p.play();
+  });
+
+  return (
+    <View style={[styles.floatingMiniContainer, { borderColor: theme.accent }]}>
+      <TouchableOpacity activeOpacity={0.9} style={styles.floatingMiniTouchArea} onPress={onPress}>
+        {reel.videoUrl ? (
+          <VideoView style={styles.floatingMiniVideo} player={player} nativeControls={false} contentFit="cover" />
+        ) : (
+          <View style={styles.floatingMiniFallback}>
+            <Text style={{ color: '#FFF', fontSize: 10 }}>🎬 शिव रील</Text>
+          </View>
+        )}
+        <View style={[styles.floatingMiniBadge, { backgroundColor: theme.primary }]}>
+          <Text style={styles.floatingMiniBadgeText} numberOfLines={1}>
+            🎬 रील्स खोलें ➔
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onClose}
+        style={styles.floatingMiniCloseBtn}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      >
+        <Text style={styles.floatingMiniCloseText}>✕</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -31,6 +79,29 @@ export default function HomeScreen() {
   const [sutraStreak, setSutraStreak] = useState<number>(0);
   const [past7Days, setPast7Days] = useState<{ date: string; dayName: string; completed: boolean }[]>([]);
   const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
+  const [reelsCatalog, setReelsCatalog] = useState<ShivReel[]>([]);
+  const [showMiniModal, setShowMiniModal] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      const cached = await ReelsService.getCachedReels();
+      if (isMounted && cached && cached.length > 0) {
+        setReelsCatalog(cached);
+      }
+      try {
+        const synced = await ReelsService.syncRemoteReels();
+        if (isMounted && synced && synced.length > 0) {
+          setReelsCatalog(synced);
+        }
+      } catch {
+        // Silently keep cached
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const todayMsg = dailyMessages[0];
   const todayBhajan = audioLibrary[0];
@@ -320,6 +391,45 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
+        {/* PROMINENT SHIV CHARCHA REELS SHOWCASE SECTION */}
+        <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
+          <View style={styles.reelsShowcaseHeaderRow}>
+            <View>
+              <Text style={[styles.reelsShowcaseBadge, { backgroundColor: theme.accent, color: theme.primaryDark }]}>
+                वीडियो ज्ञान
+              </Text>
+              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🎬 शिव चर्चा रील्स</Text>
+            </View>
+            <TouchableOpacity onPress={() => router.push('/reels' as any)} activeOpacity={0.8}>
+              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी देखें ➔</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
+            साहब श्री हरिंद्रानंद जी के 3 सूत्र, गोष्ठी व शिव विचार वीडियो रील्स में देखें
+          </Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScrollRow}>
+            {reelsCatalog.map((reel) => (
+              <TouchableOpacity
+                key={reel.id}
+                style={[styles.reelThumbCard, { borderColor: theme.borderGold }]}
+                onPress={() => router.push('/reels' as any)}
+                activeOpacity={0.85}
+              >
+                <View style={styles.reelThumbBg}>
+                  <Text style={styles.reelPlayIcon}>▶️</Text>
+                </View>
+                <View style={styles.reelThumbOverlay}>
+                  <Text style={styles.reelThumbTitle} numberOfLines={2}>
+                    {reel.title}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
         {/* SECTION: TODAY'S SHIV GURU MESSAGE (WITH PROMINENT WHATSAPP SHARE) */}
         <View style={[styles.sectionCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <View style={styles.sectionHeaderRow}>
@@ -531,6 +641,15 @@ export default function HomeScreen() {
         onClose={() => setShowOnboarding(false)}
         onComplete={handleOnboardingComplete}
       />
+
+      {/* FLOATING MINI REEL PLAYER MODAL (BOTTOM-RIGHT CORNER) */}
+      {showMiniModal && reelsCatalog.length > 0 && reelsCatalog[0].videoUrl && (
+        <FloatingMiniReelPlayer
+          reel={reelsCatalog[0]}
+          onPress={() => router.push('/reels' as any)}
+          onClose={() => setShowMiniModal(false)}
+        />
+      )}
     </View>
   );
 }
@@ -1068,5 +1187,136 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 15,
     opacity: 0.9,
+  },
+
+  /* REELS SHOWCASE & FLOATING MINI PLAYER STYLES */
+  reelsShowcaseCard: {
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 18,
+    borderWidth: 1.5,
+    ...shadows.medium,
+  },
+  reelsShowcaseHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  reelsShowcaseBadge: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+    marginBottom: 2,
+  },
+  reelsShowcaseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  reelsShowcaseAllBtn: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  reelsShowcaseSub: {
+    fontSize: 12,
+    opacity: 0.9,
+    marginBottom: 12,
+    lineHeight: 16,
+  },
+  reelsScrollRow: {
+    gap: 10,
+  },
+  reelThumbCard: {
+    width: 110,
+    height: 160,
+    borderRadius: 14,
+    borderWidth: 1.2,
+    backgroundColor: '#0B132B',
+    overflow: 'hidden',
+    justifyContent: 'space-between',
+  },
+  reelThumbBg: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reelPlayIcon: {
+    fontSize: 24,
+  },
+  reelThumbOverlay: {
+    padding: 6,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  reelThumbTitle: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+    lineHeight: 13,
+  },
+
+  floatingMiniContainer: {
+    position: 'absolute',
+    bottom: 24,
+    right: 14,
+    width: 120,
+    height: 195,
+    borderRadius: 18,
+    borderWidth: 1.8,
+    backgroundColor: '#000000',
+    overflow: 'hidden',
+    zIndex: 999,
+    ...shadows.medium,
+  },
+  floatingMiniTouchArea: {
+    width: '100%',
+    height: '100%',
+  },
+  floatingMiniVideo: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000000',
+  },
+  floatingMiniFallback: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#0B132B',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  floatingMiniCloseBtn: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  floatingMiniCloseText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  floatingMiniBadge: {
+    position: 'absolute',
+    bottom: 6,
+    left: 6,
+    right: 6,
+    paddingVertical: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  floatingMiniBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });

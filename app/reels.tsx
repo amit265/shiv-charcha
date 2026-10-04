@@ -99,7 +99,7 @@ function SingleReelView({
       <View style={styles.bottomInfoOverlay}>
         <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
           <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
-            🎬 15s शिव रील • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
+            🌸 {reel.category === 'sutras' ? '3 सूत्र चर्चा' : reel.category === 'gosthi' ? 'शिव गोष्ठी' : 'शिव गुरु विचार'}
           </Text>
         </View>
         <Text style={styles.reelTitleText}>{reel.title}</Text>
@@ -298,23 +298,16 @@ export default function ShivReelsScreen() {
     <View style={styles.mainWrapper}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* FLOATING TOP HEADER */}
+      {/* FLOATING TOP CLOSE BUTTON */}
       <SafeAreaView style={styles.floatingHeaderArea}>
         <View style={styles.floatingHeaderRow}>
           <TouchableOpacity
-            style={[styles.floatingBackBtn, { backgroundColor: 'rgba(0,0,0,0.5)', borderColor: theme.borderGold }]}
+            style={[styles.floatingCloseBtn, { backgroundColor: 'rgba(0,0,0,0.6)', borderColor: theme.borderGold }]}
             onPress={() => router.back()}
             activeOpacity={0.8}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           >
-            <Text style={[styles.floatingBackText, { color: theme.textGold }]}>← शिव चर्चा</Text>
-          </TouchableOpacity>
-          <Text style={styles.floatingTitleText}>🎬 शिव चर्चा रील्स</Text>
-          <TouchableOpacity
-            style={[styles.floatingSubscribeBtn, { backgroundColor: '#FF0000' }]}
-            onPress={() => ReelsService.openYouTubeChannel()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.floatingSubscribeText}>► YT चैनल</Text>
+            <Text style={styles.floatingCloseText}>✕</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -366,35 +359,20 @@ const styles = StyleSheet.create({
     height: 52,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     paddingHorizontal: 16,
   },
-  floatingBackBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
+  floatingCloseBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
     borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  floatingBackText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-  },
-  floatingTitleText: {
+  floatingCloseText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
-  floatingSubscribeBtn: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 14,
-  },
-  floatingSubscribeText: {
-    color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   reelContainer: {
