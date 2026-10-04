@@ -108,9 +108,10 @@ async function syncYouTubeToR2() {
         const objectKey = `${videoId}.mp4`;
         const existsInR2 = await checkFileExistsInR2(objectKey);
 
-        let videoUrl = `${R2_PUBLIC_BASE_URL}/${objectKey}`;
+        let videoUrl;
 
         if (existsInR2) {
+          videoUrl = `${R2_PUBLIC_BASE_URL}/${objectKey}`;
           console.log(`  ✓ Already in Cloudflare R2: ${videoUrl}`);
         } else {
           console.log(`  ⚡ Not in Cloudflare R2 yet. Initiating download & upload...`);
@@ -133,7 +134,7 @@ async function syncYouTubeToR2() {
         reels.push({
           id: `reel-${videoId}`,
           youtubeVideoId: videoId,
-          videoUrl: videoUrl,
+          ...(videoUrl ? { videoUrl } : {}),
           title: title,
           subTitle: cleanSubTitle,
           category: category,

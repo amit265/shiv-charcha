@@ -22,7 +22,7 @@ async function checkFileExistsInR2(key) {
   try {
     await s3Client.send(new HeadObjectCommand({ Bucket: BUCKET_NAME, Key: key }));
     return true;
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }
@@ -68,7 +68,7 @@ async function runUploadSync() {
         console.log(`  ✅ Uploaded: ${publicUrl}`);
       } else {
         console.log(`  ℹ️ [Pending Upload] ${objectKey} - Place MP4 in assets/reels/${objectKey}`);
-        item.videoUrl = `${R2_PUBLIC_BASE_URL}/${objectKey}`;
+        delete item.videoUrl;
       }
     }
   }

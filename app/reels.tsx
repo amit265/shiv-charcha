@@ -39,8 +39,8 @@ const getReelHtml = (videoId: string, isPlaying: boolean) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; background: #000; overflow: hidden; }
-    html, body { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-    .container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    html, body { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #000; }
+    .container { position: relative; width: 100vw; height: 100vh; overflow: hidden; background: #000; }
     iframe {
       position: absolute;
       top: 50%;
@@ -55,7 +55,7 @@ const getReelHtml = (videoId: string, isPlaying: boolean) => `
 <body>
   <div class="container">
     <iframe
-      src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${isPlaying ? 1 : 0}&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1"
+      src="https://www.youtube.com/embed/${videoId}?autoplay=${isPlaying ? 1 : 0}&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen
     ></iframe>
@@ -64,7 +64,15 @@ const getReelHtml = (videoId: string, isPlaying: boolean) => `
 </html>
 `;
 
-function NativeReelVideo({ videoUrl, isPlaying }: { videoUrl: string; isPlaying: boolean }) {
+function NativeReelVideo({
+  videoUrl,
+  isPlaying,
+  onError,
+}: {
+  videoUrl: string;
+  isPlaying: boolean;
+  onError?: () => void;
+}) {
   const player = useVideoPlayer(videoUrl, (p: any) => {
     p.loop = true;
     if (isPlaying) {
@@ -73,6 +81,17 @@ function NativeReelVideo({ videoUrl, isPlaying }: { videoUrl: string; isPlaying:
       p.pause();
     }
   });
+
+  useEffect(() => {
+    const subscription = player.addListener('statusChange', (payload: { status: string; error?: any }) => {
+      if (payload.status === 'error' || payload.error) {
+        if (onError) onError();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, [player, onError]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -89,6 +108,105 @@ function NativeReelVideo({ videoUrl, isPlaying }: { videoUrl: string; isPlaying:
       nativeControls={false}
       contentFit="cover"
     />
+  );
+}
+
+function SingleReelView({
+  reel,
+  isPlaying,
+  isLiked,
+  onToggleLike,
+}: {
+  reel: ShivReel;
+  isPlaying: boolean;
+  isLiked: boolean;
+  onToggleLike: (id: string) => void;
+}) {
+  const router = useRouter();
+  const { theme } = useTheme();
+  const [nativeError, setNativeError] = useState(false);
+
+  return (
+    <View style={styles.reelContainer}>
+      {/* NATIVE MP4 VIDEO PLAYER OR FALLBACK YOUTUBE WEBVIEW EMBED */}
+      {reel.videoUrl && !nativeError ? (
+        <NativeReelVideo
+          videoUrl={reel.videoUrl}
+          isPlaying={isPlaying}
+          onError={() => setNativeError(true)}
+        />
+      ) : (
+        <WebView
+          source={{ html: getReelHtml(reel.youtubeVideoId, isPlaying) }}
+          style={styles.fullWebView}
+          scrollEnabled={false}
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          androidLayerType="hardware"
+          originWhitelist={['*']}
+        />
+      )}
+
+      {/* BOTTOM LEFT OVERLAY INFO */}
+      <View style={styles.bottomInfoOverlay}>
+        <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
+          <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
+            🎬 15s शिव रील • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
+          </Text>
+        </View>
+        <Text style={styles.reelTitleText}>{reel.title}</Text>
+        <Text style={styles.reelSubText}>{reel.subTitle}</Text>
+
+        {reel.teachingId && (
+          <TouchableOpacity
+            style={[styles.teachingLinkBtn, { backgroundColor: 'rgba(230, 81, 0, 0.9)', borderColor: theme.accent }]}
+            onPress={() => router.push(`/teaching/${reel.teachingId}` as any)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.teachingLinkText}>📖 विस्तृत लेख पढ़ें ➔</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {/* RIGHT SIDEBAR FLOATING ACTIONS */}
+      <View style={styles.rightActionsOverlay}>
+        {/* LIKE BUTTON */}
+        <TouchableOpacity
+          style={styles.actionIconButton}
+          onPress={() => onToggleLike(reel.id)}
+          activeOpacity={0.8}
+        >
+          <View style={[styles.actionIconCircle, { backgroundColor: isLiked ? '#EF4444' : 'rgba(0,0,0,0.6)' }]}>
+            <Text style={{ fontSize: 20 }}>{isLiked ? '❤️' : '🤍'}</Text>
+          </View>
+          <Text style={styles.actionLabelText}>{reel.likesCount + (isLiked ? 1 : 0)}</Text>
+        </TouchableOpacity>
+
+        {/* WHATSAPP SHARE */}
+        <TouchableOpacity
+          style={styles.actionIconButton}
+          onPress={() => ReelsService.shareReel(reel)}
+          activeOpacity={0.8}
+        >
+          <View style={[styles.actionIconCircle, { backgroundColor: '#25D366' }]}>
+            <Text style={{ fontSize: 20 }}>📲</Text>
+          </View>
+          <Text style={styles.actionLabelText}>शेयर</Text>
+        </TouchableOpacity>
+
+        {/* YOUTUBE SUBSCRIBE */}
+        <TouchableOpacity
+          style={styles.actionIconButton}
+          onPress={() => ReelsService.openYouTubeChannel()}
+          activeOpacity={0.8}
+        >
+          <View style={[styles.actionIconCircle, { backgroundColor: '#FF0000' }]}>
+            <Text style={{ fontSize: 18 }}>🔔</Text>
+          </View>
+          <Text style={styles.actionLabelText}>सब्सक्राइब</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -179,82 +297,12 @@ export default function ShivReelsScreen() {
     const isPlaying = activeReelId === reel.id;
 
     return (
-      <View style={styles.reelContainer}>
-        {/* NATIVE MP4 VIDEO PLAYER OR FALLBACK EMBED */}
-        {reel.videoUrl ? (
-          <NativeReelVideo videoUrl={reel.videoUrl} isPlaying={isPlaying} />
-        ) : (
-          <WebView
-            source={{ html: getReelHtml(reel.youtubeVideoId, isPlaying) }}
-            style={styles.fullWebView}
-            scrollEnabled={false}
-            allowsInlineMediaPlayback
-            mediaPlaybackRequiresUserAction={false}
-            androidLayerType="hardware"
-            originWhitelist={['*']}
-          />
-        )}
-
-        {/* BOTTOM LEFT OVERLAY INFO */}
-        <View style={styles.bottomInfoOverlay}>
-          <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
-            <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
-              🎬 15s शिव रील • {reel.category === 'sutras' ? '3 सूत्र' : reel.category === 'gosthi' ? 'गोष्ठी' : 'साहब विचार'}
-            </Text>
-          </View>
-          <Text style={styles.reelTitleText}>{reel.title}</Text>
-          <Text style={styles.reelSubText}>{reel.subTitle}</Text>
-
-          {reel.teachingId && (
-            <TouchableOpacity
-              style={[styles.teachingLinkBtn, { backgroundColor: 'rgba(230, 81, 0, 0.9)', borderColor: theme.accent }]}
-              onPress={() => router.push(`/teaching/${reel.teachingId}` as any)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.teachingLinkText}>📖 विस्तृत लेख पढ़ें ➔</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* RIGHT SIDEBAR FLOATING ACTIONS */}
-        <View style={styles.rightActionsOverlay}>
-          {/* LIKE BUTTON */}
-          <TouchableOpacity
-            style={styles.actionIconButton}
-            onPress={() => handleToggleLike(reel.id)}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.actionIconCircle, { backgroundColor: isLiked ? '#EF4444' : 'rgba(0,0,0,0.6)' }]}>
-              <Text style={{ fontSize: 20 }}>{isLiked ? '❤️' : '🤍'}</Text>
-            </View>
-            <Text style={styles.actionLabelText}>{reel.likesCount + (isLiked ? 1 : 0)}</Text>
-          </TouchableOpacity>
-
-          {/* WHATSAPP SHARE */}
-          <TouchableOpacity
-            style={styles.actionIconButton}
-            onPress={() => ReelsService.shareReel(reel)}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.actionIconCircle, { backgroundColor: '#25D366' }]}>
-              <Text style={{ fontSize: 20 }}>📲</Text>
-            </View>
-            <Text style={styles.actionLabelText}>शेयर</Text>
-          </TouchableOpacity>
-
-          {/* YOUTUBE SUBSCRIBE */}
-          <TouchableOpacity
-            style={styles.actionIconButton}
-            onPress={() => ReelsService.openYouTubeChannel()}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.actionIconCircle, { backgroundColor: '#FF0000' }]}>
-              <Text style={{ fontSize: 18 }}>🔔</Text>
-            </View>
-            <Text style={styles.actionLabelText}>सब्सक्राइब</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <SingleReelView
+        reel={reel}
+        isPlaying={isPlaying}
+        isLiked={isLiked}
+        onToggleLike={handleToggleLike}
+      />
     );
   };
 

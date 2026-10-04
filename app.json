@@ -103,7 +103,8 @@
             ]
           }
         }
-      ]
+      ],
+      "expo-video"
     ],
     "owner": "mindcraftlearning",
     "updates": {
