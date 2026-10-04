@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -52,7 +52,7 @@ export default function ShareStudioScreen() {
         {/* Full-Screen Reels Mode Feature Banner */}
         <TouchableOpacity
           style={[styles.reelsBanner, { backgroundColor: theme.cardBgMaroon, borderColor: theme.accent }]}
-          onPress={() => router.push('/reels' as any)}
+          onPress={() => router.push('/quote-reels' as any)}
           activeOpacity={0.9}
         >
           <View style={styles.reelsBannerLeft}>

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageBackground, TextInput } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -12,6 +12,8 @@ import { safeShare } from '@/services/shareService';
 import { StorageService, getFirstSutraText, getDiscipleTitle, defaultPreferences } from '@/services/storage';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
+import { shivaBackgrounds } from '@/constants/shivaImages';
+import { quotesList } from '@/content/quotes';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
@@ -478,34 +480,54 @@ export default function ShivCharchaScreen() {
 
         {/* PROMINENT SHIV CHARCHA REELS & SUVICHAR REELS SHOWCASE SECTION */}
         <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
-          {/* DUAL REELS MODE 1: 🌸 100+ SUVICHAR QUOTES REELS BANNER */}
-          <TouchableOpacity
-            style={[styles.quoteReelsBannerCard, { borderColor: theme.borderGold }]}
-            onPress={() => router.push('/quote-reels' as any)}
-            activeOpacity={0.9}
-          >
-            <View style={styles.reelsShowcaseHeaderRow}>
-              <View>
-                <Text style={[styles.reelsShowcaseBadge, { backgroundColor: '#FFD700', color: '#3A0007' }]}>
-                  🌸 100+ सुविचार रील्स
-                </Text>
-                <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>
-                  🌸 100+ शिव सुविचार रील्स
-                </Text>
-              </View>
-              <View style={[styles.launchQuoteReelsPill, { backgroundColor: theme.accent }]}>
-                <Text style={[styles.launchQuoteReelsText, { color: theme.primaryDark }]}>प्ले ➔</Text>
-              </View>
+          {/* DUAL REELS MODE 1: 🌸 100+ SUVICHAR QUOTES REELS SHOWCASE */}
+          <View style={styles.reelsShowcaseHeaderRow}>
+            <View>
+              <Text style={[styles.reelsShowcaseBadge, { backgroundColor: '#FFD700', color: '#3A0007' }]}>
+                🌸 100+ सुविचार रील्स
+              </Text>
+              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🌸 100+ शिव सुविचार रील्स</Text>
             </View>
-            <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
-              शिव गुरु भक्ति, 3 सूत्र व अध्यात्म के 100+ पावन विचार सुंदर वॉलपेपर एवं स्वाइप रील्स में देखें
-            </Text>
-            <View style={styles.quoteReelsTagsRow}>
-              <Text style={styles.quoteReelTag}>🖼️ HD वॉलपेपर</Text>
-              <Text style={styles.quoteReelTag}>📥 डाउनलोड</Text>
-              <Text style={styles.quoteReelTag}>🟢 व्हाट्सएप शेयर</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/quote-reels' as any)} activeOpacity={0.8}>
+              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी 100+ रील्स ➔</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
+            शिव गुरु भक्ति, 3 सूत्र व अध्यात्म के 100+ पावन विचार सुंदर HD वॉलपेपर रील्स में देखें
+          </Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScrollRow}>
+            {quotesList.slice(0, 8).map((quoteItem, idx) => {
+              const bgSource = shivaBackgrounds[idx % shivaBackgrounds.length];
+              return (
+                <TouchableOpacity
+                  key={quoteItem.id}
+                  style={[styles.quoteThumbCard, { borderColor: theme.borderGold }]}
+                  onPress={() => router.push({ pathname: '/quote-reels', params: { startQuoteId: quoteItem.id } } as any)}
+                  activeOpacity={0.85}
+                >
+                  <ImageBackground source={bgSource} style={styles.quoteThumbBgImage} resizeMode="cover">
+                    <View style={styles.quoteThumbDarkOverlay} />
+                    <View style={styles.quoteThumbBadge}>
+                      <Text style={styles.quoteThumbBadgeText}>🌸 {quoteItem.category}</Text>
+                    </View>
+                    <View style={styles.quoteThumbContent}>
+                      <Text style={styles.quoteThumbText} numberOfLines={3}>
+                        {`"${quoteItem.quote}"`}
+                      </Text>
+                      <Text style={styles.quoteThumbAuthor} numberOfLines={1}>
+                        — {quoteItem.author}
+                      </Text>
+                    </View>
+                    <View style={styles.quoteThumbPlayIconRow}>
+                      <Text style={styles.quoteThumbPlayIcon}>🌸 रील्स देखें ➔</Text>
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
 
           <View style={styles.reelsDivider} />
 
@@ -1681,6 +1703,66 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderWidth: 1.5,
     ...shadows.medium,
+  },
+  quoteThumbCard: {
+    width: 140,
+    height: 185,
+    borderRadius: 14,
+    borderWidth: 1.2,
+    overflow: 'hidden',
+    backgroundColor: '#1E0A10',
+  },
+  quoteThumbBgImage: {
+    width: '100%',
+    height: '100%',
+    padding: 8,
+    justifyContent: 'space-between',
+  },
+  quoteThumbDarkOverlay: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  },
+  quoteThumbBadge: {
+    backgroundColor: 'rgba(255, 215, 0, 0.9)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+  },
+  quoteThumbBadgeText: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#3A0007',
+  },
+  quoteThumbContent: {
+    flex: 1,
+    justifyContent: 'center',
+    marginVertical: 4,
+  },
+  quoteThumbText: {
+    fontSize: 11,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    lineHeight: 15,
+  },
+  quoteThumbAuthor: {
+    fontSize: 9,
+    color: '#FFD700',
+    marginTop: 3,
+    fontWeight: '500',
+  },
+  quoteThumbPlayIconRow: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    borderRadius: 8,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  quoteThumbPlayIcon: {
+    fontSize: 10,
+    color: '#FFD700',
+    fontWeight: 'bold',
   },
   quoteReelsBannerCard: {
     backgroundColor: 'rgba(0, 0, 0, 0.25)',
