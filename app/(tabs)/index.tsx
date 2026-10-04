@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -80,19 +80,30 @@ export default function HomeScreen() {
   const [past7Days, setPast7Days] = useState<{ date: string; dayName: string; completed: boolean }[]>([]);
   const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
   const [reelsCatalog, setReelsCatalog] = useState<ShivReel[]>([]);
+  const [randomReel, setRandomReel] = useState<ShivReel | null>(null);
   const [showMiniModal, setShowMiniModal] = useState<boolean>(true);
 
   useEffect(() => {
     let isMounted = true;
+
+    const pickRandomReel = (reels: ShivReel[]) => {
+      if (reels && reels.length > 0) {
+        const randomIndex = Math.floor(Math.random() * reels.length);
+        setRandomReel(reels[randomIndex]);
+      }
+    };
+
     (async () => {
       const cached = await ReelsService.getCachedReels();
       if (isMounted && cached && cached.length > 0) {
         setReelsCatalog(cached);
+        pickRandomReel(cached);
       }
       try {
         const synced = await ReelsService.syncRemoteReels();
         if (isMounted && synced && synced.length > 0) {
           setReelsCatalog(synced);
+          pickRandomReel(synced);
         }
       } catch {
         // Silently keep cached
@@ -642,10 +653,10 @@ export default function HomeScreen() {
         onComplete={handleOnboardingComplete}
       />
 
-      {/* FLOATING MINI REEL PLAYER MODAL (BOTTOM-RIGHT CORNER) */}
-      {showMiniModal && reelsCatalog.length > 0 && reelsCatalog[0].videoUrl && (
+      {/* FLOATING MINI REEL PLAYER MODAL (BOTTOM-RIGHT CORNER ABOVE TAB BAR) */}
+      {showMiniModal && randomReel && randomReel.videoUrl && (
         <FloatingMiniReelPlayer
-          reel={reelsCatalog[0]}
+          reel={randomReel}
           onPress={() => router.push('/reels' as any)}
           onClose={() => setShowMiniModal(false)}
         />
@@ -1259,7 +1270,7 @@ const styles = StyleSheet.create({
 
   floatingMiniContainer: {
     position: 'absolute',
-    bottom: 24,
+    bottom: Platform.OS === 'ios' ? 95 : 85,
     right: 14,
     width: 120,
     height: 195,
