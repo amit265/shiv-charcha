@@ -4,84 +4,61 @@ This guide explains how to fetch new YouTube Shorts from your YouTube channel, d
 
 ---
 
-## 🚀 Method 1: 1-Click GitHub Action (Automated & Cloud-Based)
+## 🔑 Important: Cloudflare R2 Credentials & GitHub Secrets
 
-You can run the sync workflow directly from GitHub without installing anything on your computer!
+To upload video files to Cloudflare R2, credentials are required.
 
-### Step 1: Open GitHub Repository
-1. Go to your repository on GitHub: `https://github.com/amit265/shiv-charcha`
-2. Click on the **Actions** tab at the top.
-
-### Step 2: Run Workflow
-1. Select **"Sync YouTube Shorts to Cloudflare R2"** from the left sidebar workflows.
-2. Click **Run workflow** -> Select `main` branch -> Click **Run workflow**.
-
-### What Happens Automatically:
-- GitHub runner fetches YouTube channel RSS feed.
-- It detects new Shorts (`#shorts` or short vertical videos).
-- Downloads MP4 using `yt-dlp`.
-- Uploads MP4 to Cloudflare R2 bucket (`mahavyoma-media`).
-- Commits and pushes the updated `src/content/reelsCatalog.ts` and `assets/data/reels.json` catalog back to the repository.
-- All app users get the new reels automatically!
-
-*(Note: Ensure repository secrets `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` are configured in GitHub Settings -> Secrets and variables -> Actions)*.
+### Your Cloudflare R2 Credentials (from `.env`):
+- **R2_ACCESS_KEY_ID**: `a42fe4a695d4e8340c5d9ce9661014d1`
+- **R2_SECRET_ACCESS_KEY**: `762206220ebcda7fd86922583b655909f3ae46cb12d678ca95f85a9b61ecc373`
 
 ---
 
-## 💻 Method 2: Local Terminal Command (Run on Computer)
+## ⚡ Option A: Local Terminal Command (Zero GitHub Setup Required)
 
-You can also run the sync script locally from your terminal:
+If you don't want to set up Secrets on GitHub, you can run the sync command directly on your computer. It reads `.env` automatically!
 
-### Prerequisites:
-Make sure `yt-dlp` is installed on your OS:
-- **Linux/macOS**: `sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp`
+### Step 1: Ensure `yt-dlp` is Installed
+- **Linux / macOS**: `sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp`
 - **Windows**: `winget install yt-dlp`
 
-### Run Command:
+### Step 2: Run Command in Terminal
 ```bash
 npm run sync:reels
 ```
 
 ### What `npm run sync:reels` Does:
 1. Executes `scripts/sync-youtube-to-r2.js`.
-2. Checks Cloudflare R2 bucket to skip existing videos.
-3. Downloads new YouTube Shorts MP4 files.
-4. Uploads them to `https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev`.
+2. Reads credentials from `.env`.
+3. Downloads new Shorts from YouTube using `yt-dlp`.
+4. Uploads MP4 files to Cloudflare R2 bucket (`mahavyoma-media`).
 5. Updates `src/content/reelsCatalog.ts` and `assets/data/reels.json`.
 
 ---
 
-## 🌐 Method 3: Remote JSON Update (Instant Server CDN Sync)
+## 🚀 Option B: 1-Click GitHub Action (Cloud Automated)
 
-If you host your dynamic catalog on your website server (`mahavyomastudio.com`):
+To use GitHub Action to sync automatically in the cloud:
 
-1. Open your remote JSON file:
-   `https://mahavyomastudio.com/apps/shiv-charcha/data/reels.json`
+### Step 1: Add Secrets in GitHub (One-Time Setup)
+1. Go to your GitHub Repository: `https://github.com/amit265/shiv-charcha`
+2. Click **Settings** (top bar) -> **Secrets and variables** -> **Actions**.
+3. Click **New repository secret** and add:
+   - Secret 1: `R2_ACCESS_KEY_ID` = `a42fe4a695d4e8340c5d9ce9661014d1`
+   - Secret 2: `R2_SECRET_ACCESS_KEY` = `762206220ebcda7fd86922583b655909f3ae46cb12d678ca95f85a9b61ecc373`
 
-2. Append the new reel:
-```json
-[
-  {
-    "id": "reel-011",
-    "title": "तीसरा सूत्र: 108 बार नमः शिवाय जाप की महिमा",
-    "subTitle": "साहब श्री हरिंद्रानंद जी का पावन संदेश",
-    "category": "sutras",
-    "youtubeVideoId": "YOUR_SHORTS_VIDEO_ID",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/YOUR_SHORTS_VIDEO_ID.mp4",
-    "likesCount": 380,
-    "sharesCount": 120
-  }
-]
-```
+### Step 2: Run GitHub Action
+1. Go to **Actions** tab in GitHub.
+2. Select **"Sync YouTube Shorts to Cloudflare R2"**.
+3. Click **Run workflow** -> **Run workflow**.
 
-3. Save and upload `reels.json` to your server.
-4. Active app users will instantly get the new reels on their next app open!
+*(GitHub Action also runs automatically every 6 hours once Secrets are added).*
 
 ---
 
 ## 📌 File Locations Reference
 
+- **Local Credentials**: [`.env`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/.env)
 - **Sync Script**: [`scripts/sync-youtube-to-r2.js`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/scripts/sync-youtube-to-r2.js)
 - **GitHub Action**: [`.github/workflows/sync-reels.yml`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/.github/workflows/sync-reels.yml)
-- **Local Catalog**: [`src/content/reelsCatalog.ts`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/src/content/reelsCatalog.ts)
-- **JSON Feed**: `assets/data/reels.json`
+- **Catalog File**: [`src/content/reelsCatalog.ts`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/src/content/reelsCatalog.ts)
