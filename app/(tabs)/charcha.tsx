@@ -181,23 +181,6 @@ export default function ShivCharchaScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* SHIV SANSAR SPOTLIGHT BANNER */}
-        <TouchableOpacity
-          style={[styles.sansarBanner, { backgroundColor: theme.primaryDark, borderColor: theme.accent }]}
-          onPress={() => router.push('/(tabs)/sansar' as any)}
-          activeOpacity={0.88}
-        >
-          <View style={styles.sansarBannerContent}>
-            <View style={[styles.sansarBadge, { backgroundColor: theme.accent }]}>
-              <Text style={[styles.sansarBadgeText, { color: theme.primaryDark }]}>🔱 पावन महादेव ज्ञानकोश</Text>
-            </View>
-            <Text style={[styles.sansarTitle, { color: theme.textGold }]}>शिव संसार में प्रवेश करें ➔</Text>
-            <Text style={[styles.sansarSub, { color: theme.textWhite }]}>
-              कथाएँ • 12 ज्योतिर्लिंग • 51 शक्ति पीठ • शिव परिवार • प्रतीक व डिजिटल यात्रा
-            </Text>
-          </View>
-        </TouchableOpacity>
-
         {/* DAILY 3 SUTRA PRACTICE TRACKER */}
         <View style={[styles.trackerCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
           <TouchableOpacity
@@ -924,35 +907,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  sansarBanner: {
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 16,
-    borderWidth: 1.5,
-    ...shadows.medium,
-  },
-  sansarBannerContent: {},
-  sansarBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 6,
-    marginBottom: 6,
-  },
-  sansarBadgeText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-  },
-  sansarTitle: {
-    fontSize: 19,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  sansarSub: {
-    fontSize: 12,
-    lineHeight: 17,
-    opacity: 0.9,
-  },
+
 
   /* Tracker Styles */
   trackerCard: {
