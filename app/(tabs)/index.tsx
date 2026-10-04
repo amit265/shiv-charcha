@@ -20,6 +20,7 @@ import { FormattedText } from '@/components/common/FormattedText';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReelsService } from '@/services/reelsService';
 import { ShivReel, getReelThumbnailUrl } from '@/content/reelsCatalog';
 
@@ -33,14 +34,17 @@ function FloatingMiniReelPlayer({
   onClose: () => void;
 }) {
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   const player = useVideoPlayer(reel.videoUrl || '', (p: any) => {
     p.loop = true;
     p.muted = true;
     p.play();
   });
 
+  const dynamicBottomOffset = Math.max(insets.bottom + 75, Platform.OS === 'android' ? 105 : 100);
+
   return (
-    <View style={[styles.floatingMiniContainer, { borderColor: theme.accent }]}>
+    <View style={[styles.floatingMiniContainer, { bottom: dynamicBottomOffset, borderColor: theme.accent }]}>
       <TouchableOpacity activeOpacity={0.9} style={styles.floatingMiniTouchArea} onPress={onPress}>
         {reel.videoUrl ? (
           <VideoView style={styles.floatingMiniVideo} player={player} nativeControls={false} contentFit="cover" />
@@ -1412,10 +1416,9 @@ const styles = StyleSheet.create({
 
   floatingMiniContainer: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 95 : 85,
     right: 14,
-    width: 120,
-    height: 195,
+    width: 110,
+    height: 175,
     borderRadius: 18,
     borderWidth: 1.8,
     backgroundColor: '#000000',
