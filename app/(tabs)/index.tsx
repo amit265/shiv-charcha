@@ -411,17 +411,49 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* PROMINENT SHIV CHARCHA REELS SHOWCASE SECTION */}
+        {/* PROMINENT SHIV CHARCHA REELS & SUVICHAR REELS SHOWCASE SECTION */}
         <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
+          {/* DUAL REELS MODE 1: 🌸 100+ SUVICHAR QUOTES REELS BANNER */}
+          <TouchableOpacity
+            style={[styles.quoteReelsBannerCard, { borderColor: theme.borderGold }]}
+            onPress={() => router.push('/quote-reels' as any)}
+            activeOpacity={0.9}
+          >
+            <View style={styles.reelsShowcaseHeaderRow}>
+              <View>
+                <Text style={[styles.reelsShowcaseBadge, { backgroundColor: '#FFD700', color: '#3A0007' }]}>
+                  🌸 100+ सुविचार रील्स
+                </Text>
+                <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>
+                  🌸 100+ शिव सुविचार रील्स
+                </Text>
+              </View>
+              <View style={[styles.launchQuoteReelsPill, { backgroundColor: theme.accent }]}>
+                <Text style={[styles.launchQuoteReelsText, { color: theme.primaryDark }]}>प्ले ➔</Text>
+              </View>
+            </View>
+            <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
+              शिव गुरु भक्ति, 3 सूत्र व अध्यात्म के 100+ पावन विचार सुंदर वॉलपेपर एवं स्वाइप रील्स में देखें
+            </Text>
+            <View style={styles.quoteReelsTagsRow}>
+              <Text style={styles.quoteReelTag}>🖼️ HD वॉलपेपर</Text>
+              <Text style={styles.quoteReelTag}>📥 डाउनलोड</Text>
+              <Text style={styles.quoteReelTag}>🟢 व्हाट्सएप शेयर</Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.reelsDivider} />
+
+          {/* DUAL REELS MODE 2: 🎬 SHIV VIDEO REELS */}
           <View style={styles.reelsShowcaseHeaderRow}>
             <View>
               <Text style={[styles.reelsShowcaseBadge, { backgroundColor: theme.accent, color: theme.primaryDark }]}>
-                वीडियो ज्ञान
+                वीडियो रील्स (15s)
               </Text>
-              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🎬 शिव चर्चा रील्स</Text>
+              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🎬 शिव वीडियो रील्स</Text>
             </View>
             <TouchableOpacity onPress={() => router.push('/reels' as any)} activeOpacity={0.8}>
-              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी देखें ➔</Text>
+              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी वीडियो ➔</Text>
             </TouchableOpacity>
           </View>
 
@@ -663,15 +695,23 @@ export default function HomeScreen() {
               onPress={handleShareQuote}
               activeOpacity={0.85}
             >
-              <Text style={[styles.shareTeaserBtnText, { color: '#FFFFFF' }]}>🟢 व्हाट्सएप शेयर</Text>
+              <Text style={[styles.shareTeaserBtnText, { color: '#FFFFFF' }]}>🟢 व्हाट्सएप</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.shareTeaserOutlineBtn, { borderColor: theme.accent, backgroundColor: theme.accent }]}
+              onPress={() => router.push('/quote-reels' as any)}
+              activeOpacity={0.85}
+            >
+              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.primaryDark }]}>🌸 100+ रील्स</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.shareTeaserOutlineBtn, { borderColor: theme.borderGold, backgroundColor: 'rgba(255,255,255,0.15)' }]}
               onPress={() => router.push('/gallery' as any)}
               activeOpacity={0.85}
             >
-              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.primaryDark }]}>🎨 सुविचार कार्ड</Text>
+              <Text style={[styles.shareTeaserOutlineBtnText, { color: '#FFFFFF' }]}>🎨 वॉलपेपर</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1258,6 +1298,41 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderWidth: 1.5,
     ...shadows.medium,
+  },
+  quoteReelsBannerCard: {
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    marginBottom: 12,
+  },
+  launchQuoteReelsPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  launchQuoteReelsText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  quoteReelsTagsRow: {
+    flexDirection: 'row',
+    gap: 6,
+    flexWrap: 'wrap',
+    marginTop: 4,
+  },
+  quoteReelTag: {
+    fontSize: 10,
+    color: '#FFE082',
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  reelsDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
+    marginVertical: 12,
   },
   reelsShowcaseHeaderRow: {
     flexDirection: 'row',
