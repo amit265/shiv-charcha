@@ -41,8 +41,6 @@ export default function GalleryScreen() {
   const [selectedWallpaper, setSelectedWallpaper] = useState<WallpaperItem | null>(null);
   const [showMockClock, setShowMockClock] = useState<boolean>(true);
   const [showGuideModal, setShowGuideModal] = useState<boolean>(false);
-  const [showSetModal, setShowSetModal] = useState<boolean>(false);
-  const [wallpaperTargetItem, setWallpaperTargetItem] = useState<WallpaperItem | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const triggerHaptic = () => {
@@ -144,7 +142,6 @@ export default function GalleryScreen() {
       );
     } finally {
       setIsSaving(false);
-      setShowSetModal(false);
     }
   };
 
@@ -494,11 +491,7 @@ export default function GalleryScreen() {
               <View style={styles.modalActionButtonsRow}>
                 <TouchableOpacity
                   style={[styles.modalActionBtnSave, { backgroundColor: theme.accent }]}
-                  onPress={() => {
-                    triggerHaptic();
-                    setWallpaperTargetItem(selectedWallpaper);
-                    setShowSetModal(true);
-                  }}
+                  onPress={() => handleApplyDirectWallpaper(selectedWallpaper, 'both')}
                   activeOpacity={0.85}
                   disabled={isSaving}
                 >
@@ -531,63 +524,6 @@ export default function GalleryScreen() {
           </View>
         </Modal>
       )}
-
-      {/* DIRECT WALLPAPER TARGET SELECTION MODAL */}
-      <Modal
-        visible={showSetModal && Boolean(wallpaperTargetItem)}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setShowSetModal(false)}
-      >
-        <View style={styles.guideModalOverlay}>
-          <View style={[styles.guideModalCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
-            <Text style={[styles.guideTitle, { color: theme.primary }]}>✨ वॉलपेपर कहाँ सेट करें?</Text>
-            <Text style={{ fontSize: 13, color: theme.textSecondary, textAlign: 'center', marginBottom: 16 }}>
-              {wallpaperTargetItem?.title}
-            </Text>
-
-            <TouchableOpacity
-              style={[styles.setOptionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'home')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.setOptionBtnText, { color: theme.primary }]}>📱 होम स्क्रीन पर लगाएँ</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.setOptionBtn, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}
-              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'lock')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.setOptionBtnText, { color: theme.primary }]}>🔒 लॉक स्क्रीन पर लगाएँ</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.setOptionBtn, { backgroundColor: theme.primary, borderColor: theme.accent }]}
-              onPress={() => wallpaperTargetItem && handleApplyDirectWallpaper(wallpaperTargetItem, 'both')}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.setOptionBtnText, { color: theme.textWhite }]}>✨ दोनों स्क्रीन पर लगाएँ (Home + Lock)</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.setOptionBtn, { backgroundColor: 'transparent', borderColor: theme.border }]}
-              onPress={() => wallpaperTargetItem && handleSaveToGallery(wallpaperTargetItem)}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.setOptionBtnText, { color: theme.textSecondary }]}>⬇️ केवल फोन गैलरी में सहेजें</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.guideCloseBtn, { backgroundColor: 'rgba(0,0,0,0.1)', marginTop: 8 }]}
-              onPress={() => setShowSetModal(false)}
-              activeOpacity={0.85}
-            >
-              <Text style={[styles.guideCloseBtnText, { color: theme.textPrimary }]}>✕ रद्द करें</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       {/* WALLPAPER APPLICATION GUIDANCE MODAL */}
       <Modal
