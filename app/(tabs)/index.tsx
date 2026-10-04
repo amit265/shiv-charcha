@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageBackground, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { useTheme } from '@/context/ThemeContext';
@@ -10,7 +10,7 @@ import { sacredDates } from '@/content/dates';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { pravachanLibrary } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
-import { quotesList, getRandomQuote, ShivQuote } from '@/content/quotes';
+import { getRandomQuote, ShivQuote } from '@/content/quotes';
 import { safeShare } from '@/services/shareService';
 
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -19,7 +19,6 @@ import { OnboardingModal } from '@/components/common/OnboardingModal';
 import { getTodayPanchang } from '@/services/panchangService';
 import { FormattedText } from '@/components/common/FormattedText';
 import { resolveImageSource } from '@/constants/imageAssets';
-import { shivaBackgrounds } from '@/constants/shivaImages';
 import { LoadingScreen } from '@/components/common/LoadingScreen';
 import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 import { ReelsService } from '@/services/reelsService';
@@ -412,64 +411,43 @@ export default function HomeScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* PROMINENT SHIV CHARCHA REELS & SUVICHAR REELS SHOWCASE SECTION */}
-        <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
-          {/* DUAL REELS MODE 1: 🌸 100+ SUVICHAR QUOTES REELS SHOWCASE */}
+        {/* SEPARATE SECTION CARD 1: 🌸 100+ SUVICHAR REELS (BANNER CARD) */}
+        <TouchableOpacity
+          style={[styles.quoteReelsStandaloneCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}
+          onPress={() => router.push('/quote-reels' as any)}
+          activeOpacity={0.9}
+        >
           <View style={styles.reelsShowcaseHeaderRow}>
             <View>
               <Text style={[styles.reelsShowcaseBadge, { backgroundColor: '#FFD700', color: '#3A0007' }]}>
-                🌸 100+ सुविचार रील्स
+                🌸 100+ फुल-स्क्रीन रील्स
               </Text>
-              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🌸 100+ शिव सुविचार रील्स</Text>
+              <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>
+                🌸 100+ पावन शिव सुविचार रील्स
+              </Text>
             </View>
-            <TouchableOpacity onPress={() => router.push('/quote-reels' as any)} activeOpacity={0.8}>
-              <Text style={[styles.reelsShowcaseAllBtn, { color: theme.textGold }]}>सभी 100+ रील्स ➔</Text>
-            </TouchableOpacity>
+            <View style={[styles.launchQuoteReelsBtn, { backgroundColor: theme.accent }]}>
+              <Text style={[styles.launchQuoteReelsBtnText, { color: theme.primaryDark }]}>प्ले करें ➔</Text>
+            </View>
           </View>
 
           <Text style={[styles.reelsShowcaseSub, { color: theme.textWhite }]}>
-            शिव गुरु भक्ति, 3 सूत्र व अध्यात्म के 100+ पावन विचार सुंदर HD वॉलपेपर रील्स में देखें
+            शिव गुरु भक्ति, 3 सूत्र व अध्यात्म के 100+ पावन विचार सुंदर HD वॉलपेपर, संगीत, चित्र डाउनलोड व व्हाट्सएप शेयर के साथ स्वाइप रील्स में देखें
           </Text>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.reelsScrollRow}>
-            {quotesList.slice(0, 8).map((quoteItem, idx) => {
-              const bgSource = shivaBackgrounds[idx % shivaBackgrounds.length];
-              return (
-                <TouchableOpacity
-                  key={quoteItem.id}
-                  style={[styles.quoteThumbCard, { borderColor: theme.borderGold }]}
-                  onPress={() => router.push({ pathname: '/quote-reels', params: { startQuoteId: quoteItem.id } } as any)}
-                  activeOpacity={0.85}
-                >
-                  <ImageBackground source={bgSource} style={styles.quoteThumbBgImage} resizeMode="cover">
-                    <View style={styles.quoteThumbDarkOverlay} />
-                    <View style={styles.quoteThumbBadge}>
-                      <Text style={styles.quoteThumbBadgeText}>🌸 {quoteItem.category}</Text>
-                    </View>
-                    <View style={styles.quoteThumbContent}>
-                      <Text style={styles.quoteThumbText} numberOfLines={3}>
-                        {`"${quoteItem.quote}"`}
-                      </Text>
-                      <Text style={styles.quoteThumbAuthor} numberOfLines={1}>
-                        — {quoteItem.author}
-                      </Text>
-                    </View>
-                    <View style={styles.quoteThumbPlayIconRow}>
-                      <Text style={styles.quoteThumbPlayIcon}>🌸 रील्स देखें ➔</Text>
-                    </View>
-                  </ImageBackground>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+          <View style={styles.quoteReelsTagsRow}>
+            <Text style={styles.quoteReelTag}>🖼️ 20+ HD वॉलपेपर</Text>
+            <Text style={styles.quoteReelTag}>📥 चित्र डाउनलोड</Text>
+            <Text style={styles.quoteReelTag}>🟢 व्हाट्सएप शेयर</Text>
+          </View>
+        </TouchableOpacity>
 
-          <View style={styles.reelsDivider} />
-
-          {/* DUAL REELS MODE 2: 🎬 SHIV VIDEO REELS */}
+        {/* SEPARATE SECTION CARD 2: 🎬 SHIV VIDEO REELS SHOWCASE */}
+        <View style={[styles.reelsShowcaseCard, { backgroundColor: theme.cardBgMaroon, borderColor: theme.borderGold }]}>
           <View style={styles.reelsShowcaseHeaderRow}>
             <View>
               <Text style={[styles.reelsShowcaseBadge, { backgroundColor: theme.accent, color: theme.primaryDark }]}>
-                वीडियो रील्स (15s)
+                🎬 15s वीडियो रील्स
               </Text>
               <Text style={[styles.reelsShowcaseTitle, { color: theme.textGold }]}>🎬 शिव वीडियो रील्स</Text>
             </View>
@@ -1313,6 +1291,22 @@ const styles = StyleSheet.create({
   },
 
   /* REELS SHOWCASE & FLOATING MINI PLAYER STYLES */
+  quoteReelsStandaloneCard: {
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    ...shadows.medium,
+  },
+  launchQuoteReelsBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  launchQuoteReelsBtnText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   reelsShowcaseCard: {
     borderRadius: 20,
     padding: 16,

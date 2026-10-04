@@ -36,13 +36,20 @@ const VIEWABILITY_CONFIG = {
 function NativeReelVideo({
   videoUrl,
   isPlaying,
+  isMuted,
+  isUserPaused,
+  onTogglePlayPause,
 }: {
   videoUrl: string;
   isPlaying: boolean;
+  isMuted: boolean;
+  isUserPaused: boolean;
+  onTogglePlayPause: () => void;
 }) {
   const player = useVideoPlayer(videoUrl, (p: any) => {
     p.loop = true;
-    if (isPlaying) {
+    p.muted = isMuted;
+    if (isPlaying && !isUserPaused) {
       p.play();
     } else {
       p.pause();
@@ -50,20 +57,42 @@ function NativeReelVideo({
   });
 
   useEffect(() => {
-    if (isPlaying) {
+    try {
+      // eslint-disable-next-line react-hooks/immutability
+      player.muted = isMuted;
+    } catch {
+      // Ignore audio mutation error
+    }
+  }, [isMuted, player]);
+
+  useEffect(() => {
+    if (isPlaying && !isUserPaused) {
       player.play();
     } else {
       player.pause();
     }
-  }, [isPlaying, player]);
+  }, [isPlaying, isUserPaused, player]);
 
   return (
-    <VideoView
-      style={styles.fullVideo}
-      player={player}
-      nativeControls={false}
-      contentFit="cover"
-    />
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.fullVideoTouchArea}
+      onPress={onTogglePlayPause}
+    >
+      <VideoView
+        style={styles.fullVideo}
+        player={player}
+        nativeControls={false}
+        contentFit="cover"
+      />
+      {isUserPaused && (
+        <View style={styles.centerPauseOverlay} pointerEvents="none">
+          <View style={styles.pauseCircle}>
+            <Text style={styles.pauseIconText}>▶️</Text>
+          </View>
+        </View>
+      )}
+    </TouchableOpacity>
   );
 }
 
@@ -80,6 +109,10 @@ function SingleReelView({
 }) {
   const router = useRouter();
   const { theme } = useTheme();
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isUserPaused, setIsUserPaused] = useState<boolean>(false);
+
+  const activeUserPaused = isPlaying ? isUserPaused : false;
 
   return (
     <View style={styles.reelContainer}>
@@ -88,6 +121,9 @@ function SingleReelView({
         <NativeReelVideo
           videoUrl={reel.videoUrl}
           isPlaying={isPlaying}
+          isMuted={isMuted}
+          isUserPaused={activeUserPaused}
+          onTogglePlayPause={() => setIsUserPaused((prev) => !prev)}
         />
       ) : (
         <View style={styles.noVideoFallback}>
@@ -96,7 +132,7 @@ function SingleReelView({
       )}
 
       {/* BOTTOM LEFT OVERLAY INFO */}
-      <View style={styles.bottomInfoOverlay}>
+      <View style={styles.bottomInfoOverlay} pointerEvents="box-none">
         <View style={[styles.categoryBadge, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
           <Text style={[styles.categoryBadgeText, { color: theme.textWhite }]}>
             🌸 {reel.category === 'sutras' ? '3 सूत्र चर्चा' : reel.category === 'gosthi' ? 'शिव गोष्ठी' : 'शिव गुरु विचार'}
@@ -118,6 +154,18 @@ function SingleReelView({
 
       {/* RIGHT SIDEBAR FLOATING ACTIONS */}
       <View style={styles.rightActionsOverlay}>
+        {/* MUTE / UNMUTE SOUND BUTTON */}
+        <TouchableOpacity
+          style={styles.actionIconButton}
+          onPress={() => setIsMuted((prev) => !prev)}
+          activeOpacity={0.8}
+        >
+          <View style={[styles.actionIconCircle, { backgroundColor: isMuted ? '#EF4444' : 'rgba(0,0,0,0.6)' }]}>
+            <Text style={{ fontSize: 20 }}>{isMuted ? '🔇' : '🔊'}</Text>
+          </View>
+          <Text style={styles.actionLabelText}>{isMuted ? 'म्यूट' : 'आवाज़'}</Text>
+        </TouchableOpacity>
+
         {/* LIKE BUTTON */}
         <TouchableOpacity
           style={styles.actionIconButton}
@@ -411,10 +459,37 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: '#000000',
   },
+  fullVideoTouchArea: {
+    width: SCREEN_WIDTH,
+    height: REEL_HEIGHT,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   fullVideo: {
     width: SCREEN_WIDTH,
     height: REEL_HEIGHT,
     backgroundColor: '#000000',
+  },
+  centerPauseOverlay: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+  },
+  pauseCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FFD700',
+  },
+  pauseIconText: {
+    fontSize: 28,
+    marginLeft: 3,
   },
   noVideoFallback: {
     width: SCREEN_WIDTH,
