@@ -4,9 +4,9 @@ import { useTheme } from '../../context/ThemeContext';
 import { colors, shadows } from '../../theme/colors';
 
 // Custom Asset PNG Images
-const DIYA_IMG = require('../../../assets/images/pooja/diya.png');
-const GARLAND_IMG = require('../../../assets/images/pooja/garland.png');
-const WATER_IMG = require('../../../assets/images/pooja/water.png');
+const DIYA_IMG = require('../../../assets/images/pooja/diya.webp');
+const GARLAND_IMG = require('../../../assets/images/pooja/garland.webp');
+const WATER_IMG = require('../../../assets/images/pooja/water.webp');
 
 interface ShivlingShrineProps {
   diyaLit: boolean;
