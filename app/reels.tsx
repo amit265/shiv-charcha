@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { WebView } from 'react-native-webview';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
@@ -32,46 +31,12 @@ const VIEWABILITY_CONFIG = {
   itemVisiblePercentThreshold: 70,
 };
 
-const getReelHtml = (videoId: string, isPlaying: boolean) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; background: #000; overflow: hidden; }
-    html, body { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #000; }
-    .container { position: relative; width: 100vw; height: 100vh; overflow: hidden; background: #000; }
-    iframe {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100vw;
-      height: 100vh;
-      transform: translate(-50%, -50%) scale(1.35);
-      border: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <iframe
-      src="https://www.youtube.com/embed/${videoId}?autoplay=${isPlaying ? 1 : 0}&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
-  </div>
-</body>
-</html>
-`;
-
 function NativeReelVideo({
   videoUrl,
   isPlaying,
-  onError,
 }: {
   videoUrl: string;
   isPlaying: boolean;
-  onError?: () => void;
 }) {
   const player = useVideoPlayer(videoUrl, (p: any) => {
     p.loop = true;
@@ -83,17 +48,6 @@ function NativeReelVideo({
   });
 
   useEffect(() => {
-    const subscription = player.addListener('statusChange', (payload: { status: string; error?: any }) => {
-      if (payload.status === 'error' || payload.error) {
-        if (onError) onError();
-      }
-    });
-    return () => {
-      subscription.remove();
-    };
-  }, [player, onError]);
-
-  useEffect(() => {
     if (isPlaying) {
       player.play();
     } else {
@@ -103,7 +57,7 @@ function NativeReelVideo({
 
   return (
     <VideoView
-      style={styles.fullWebView}
+      style={styles.fullVideo}
       player={player}
       nativeControls={false}
       contentFit="cover"
@@ -124,27 +78,19 @@ function SingleReelView({
 }) {
   const router = useRouter();
   const { theme } = useTheme();
-  const [nativeError, setNativeError] = useState(false);
 
   return (
     <View style={styles.reelContainer}>
-      {/* NATIVE MP4 VIDEO PLAYER OR FALLBACK YOUTUBE WEBVIEW EMBED */}
-      {reel.videoUrl && !nativeError ? (
+      {/* NATIVE CLOUDFLARE R2 MP4 VIDEO PLAYER */}
+      {reel.videoUrl ? (
         <NativeReelVideo
           videoUrl={reel.videoUrl}
           isPlaying={isPlaying}
-          onError={() => setNativeError(true)}
         />
       ) : (
-        <WebView
-          source={{ html: getReelHtml(reel.youtubeVideoId, isPlaying) }}
-          style={styles.fullWebView}
-          scrollEnabled={false}
-          allowsInlineMediaPlayback
-          mediaPlaybackRequiresUserAction={false}
-          androidLayerType="hardware"
-          originWhitelist={['*']}
-        />
+        <View style={styles.noVideoFallback}>
+          <Text style={styles.noVideoText}>वीडियो उपलब्ध कराया जा रहा है...</Text>
+        </View>
       )}
 
       {/* BOTTOM LEFT OVERLAY INFO */}
@@ -406,10 +352,22 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: '#000000',
   },
-  fullWebView: {
+  fullVideo: {
     width: SCREEN_WIDTH,
     height: REEL_HEIGHT,
     backgroundColor: '#000000',
+  },
+  noVideoFallback: {
+    width: SCREEN_WIDTH,
+    height: REEL_HEIGHT,
+    backgroundColor: '#0B132B',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noVideoText: {
+    color: '#E2E8F0',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   bottomInfoOverlay: {
     position: 'absolute',
