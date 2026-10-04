@@ -14,8 +14,20 @@
 
 set -e  # Exit immediately on any error
 
-BUILD_PROFILE="${1:-production}"
+TARGET_TRACK="${1:-}"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Load .env variables (including EXPO_TOKEN & Cloudflare R2 keys)
+if [ -f "$PROJECT_DIR/.env" ]; then
+  set -a
+  source "$PROJECT_DIR/.env"
+  set +a
+fi
+
+# Export EXPO_TOKEN if set
+export EXPO_TOKEN="${EXPO_TOKEN:-kJA0tDq4EGgMIsDIU4MuepZhMW5hZXYVXGQuiqdH}"
+
+BUILD_PROFILE="production"
 
 # Read current version from app.json
 CURRENT_VERSION=$(node -e "console.log(require('./app.json').expo.version)")
@@ -29,18 +41,26 @@ echo "  Build profile  : $BUILD_PROFILE"
 echo "  Current version: $CURRENT_VERSION"
 echo ""
 
-echo "Where would you like to submit this build?"
-echo "  1) Internal Testing (Recommended)"
-echo "  2) Production (Direct Release)"
-echo -n "Select option [1/2]: "
-read SUBMIT_CHOICE
-
-if [ "$SUBMIT_CHOICE" == "2" ]; then
+if [ "$TARGET_TRACK" == "production" ]; then
   SUBMIT_PROFILE="production"
   SUBMIT_TRACK="Production"
-else
+elif [ "$TARGET_TRACK" == "internal" ]; then
   SUBMIT_PROFILE="internal"
   SUBMIT_TRACK="Internal Testing"
+else
+  echo "Where would you like to submit this build?"
+  echo "  1) Internal Testing (Recommended)"
+  echo "  2) Production (Direct Release)"
+  echo -n "Select option [1/2]: "
+  read SUBMIT_CHOICE
+
+  if [ "$SUBMIT_CHOICE" == "2" ]; then
+    SUBMIT_PROFILE="production"
+    SUBMIT_TRACK="Production"
+  else
+    SUBMIT_PROFILE="internal"
+    SUBMIT_TRACK="Internal Testing"
+  fi
 fi
 
 echo ""

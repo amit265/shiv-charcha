@@ -57,6 +57,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "release": "bash build-and-submit.sh",
+    "release:internal": "bash build-and-submit.sh internal",
+    "release:production": "bash build-and-submit.sh production",
     "release:promote": "node scripts/promote-to-production.js",
     "version": "node scripts/set-version.js",
     "sync:reels": "node scripts/sync-youtube-to-r2.js"
