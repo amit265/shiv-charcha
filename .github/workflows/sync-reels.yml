@@ -1,9 +1,7 @@
 name: Sync YouTube Shorts to Cloudflare R2
 
 on:
-  schedule:
-    - cron: '0 */6 * * *' # Automatically run every 6 hours
-  workflow_dispatch: # Allow 1-click manual trigger from GitHub UI
+  workflow_dispatch: # Manual 1-click trigger from GitHub Actions tab
 
 jobs:
   sync-reels:

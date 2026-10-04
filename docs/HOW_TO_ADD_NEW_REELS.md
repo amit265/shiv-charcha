@@ -47,12 +47,12 @@ To use GitHub Action to sync automatically in the cloud:
    - Secret 1: `R2_ACCESS_KEY_ID` = `a42fe4a695d4e8340c5d9ce9661014d1`
    - Secret 2: `R2_SECRET_ACCESS_KEY` = `762206220ebcda7fd86922583b655909f3ae46cb12d678ca95f85a9b61ecc373`
 
-### Step 2: Run GitHub Action
+### Step 2: Run GitHub Action Manually
 1. Go to **Actions** tab in GitHub.
 2. Select **"Sync YouTube Shorts to Cloudflare R2"**.
 3. Click **Run workflow** -> **Run workflow**.
 
-*(GitHub Action also runs automatically every 6 hours once Secrets are added).*
+*(Workflow runs on-demand when triggered manually).*
 
 ---
 
