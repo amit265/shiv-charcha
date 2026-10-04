@@ -13,6 +13,8 @@ import { StorageService, getFirstSutraText, getDiscipleTitle, defaultPreferences
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { resolveImageSource } from '@/constants/imageAssets';
 import { ContextualCrossPromotion } from '@/components/common/ContextualCrossPromotion';
+import { LoadingScreen } from '@/components/common/LoadingScreen';
+import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 import { Analytics } from '@/services/analytics/analytics';
 
 type CategoryHub = 'all' | 'sutras' | 'understanding' | 'daily_life' | 'faq' | 'books' | 'audio' | 'sadhna';
@@ -47,6 +49,7 @@ const categoryInfoMap: Record<string, { title: string; icon: string; desc: strin
 export default function ShivCharchaScreen() {
   const router = useRouter();
   const { theme } = useTheme();
+  const isReady = useDeferredTabMount(20);
   const { playTrack } = useAudio();
   const [activeHub, setActiveHub] = useState<CategoryHub>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -160,6 +163,15 @@ export default function ShivCharchaScreen() {
   );
 
   const isDetailedListView = activeHub !== 'all' || searchQuery.trim().length > 0;
+
+  if (!isReady) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Header title="शिव चर्चा • 3 सूत्र व ज्ञान" subtitle="साहब श्री हरिंद्रानंद जी का पावन संदेश" />
+        <LoadingScreen message="शिव चर्चा साहित्य लोड हो रहा है..." fullScreen={false} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>

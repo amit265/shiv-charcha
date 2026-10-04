@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Header } from '@/components/common/Header';
 import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { SmartBanner } from '@/components/common/SmartBanner';
@@ -10,12 +9,14 @@ import { shadows } from '@/theme/colors';
 import { pravachanLibrary, PravachanItem } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
 import { safeShare } from '@/services/shareService';
+import { LoadingScreen } from '@/components/common/LoadingScreen';
+import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 
 type AudioFilter = 'all' | 'sahab_shri' | 'didi_maa' | 'mantra' | 'bhajans';
 
 export default function AudioHubScreen() {
-  const router = useRouter();
   const { theme } = useTheme();
+  const isReady = useDeferredTabMount(20);
   const { playTrack, currentTrack, isPlaying } = useAudio();
   const [activeFilter, setActiveFilter] = useState<AudioFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +43,15 @@ export default function AudioHubScreen() {
       message: `🎧 *शिव चर्चा ऑडियो*: "${item.title}"\n${item.subtitle || ''}\n- ${item.artist || 'शिव चर्चा'}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
     });
   };
+
+  if (!isReady) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Header title="ऑडियो अमृत वाणी" subtitle="साहब श्री व दीदी माँ के प्रवचन व भजन" showBack />
+        <LoadingScreen message="ऑडियो लाइब्रेरी लोड हो रही है..." fullScreen={false} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>

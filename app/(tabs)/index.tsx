@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Header } from '@/components/common/Header';
@@ -17,11 +17,13 @@ import { OnboardingModal } from '@/components/common/OnboardingModal';
 import { getTodayPanchang } from '@/services/panchangService';
 import { FormattedText } from '@/components/common/FormattedText';
 import { resolveImageSource } from '@/constants/imageAssets';
-import { SmartBanner } from '@/components/common/SmartBanner';
+import { LoadingScreen } from '@/components/common/LoadingScreen';
+import { useDeferredTabMount } from '@/hooks/useDeferredTabMount';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { theme } = useTheme();
+  const isReady = useDeferredTabMount(20);
   const { playTrack } = useAudio();
   const panchang = getTodayPanchang();
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -93,6 +95,15 @@ export default function HomeScreen() {
       message: `🗣️ *आज का शिव चर्चा विषय* 🗣️\n\n"${todayPrompt.title}"\n\n${todayPrompt.questionPrompt}\n\n"${todayPrompt.sahibJiQuote}"\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
     });
   };
+
+  if (!isReady) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Header showBack={false} />
+        <LoadingScreen message="शिव गुरु साधना कक्ष खुल रहा है..." fullScreen={false} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
