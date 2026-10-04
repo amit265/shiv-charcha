@@ -90,13 +90,31 @@ export default function ShivReelsScreen() {
   const renderReelItem = ({ item }: { item: FeedItem }) => {
     if (item.type === 'ad') {
       return (
-        <View style={[styles.reelContainer, { backgroundColor: theme.cardBg, justifyContent: 'center', alignItems: 'center' }]}>
-          <View style={[styles.adCard, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
-            <Text style={[styles.adCardTitle, { color: theme.primary }]}>🌸 हर हर महादेव 🙏</Text>
+        <View style={[styles.reelContainer, { backgroundColor: '#0F172A', justifyContent: 'center', alignItems: 'center' }]}>
+          <View style={[styles.adCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
+            <View style={[styles.adBadge, { backgroundColor: theme.accent }]}>
+              <Text style={[styles.adBadgeText, { color: theme.primaryDark }]}>📢 प्रायोजित संदेश / विज्ञापन</Text>
+            </View>
+            <Text style={[styles.adCardTitle, { color: theme.textGold }]}>🌸 ॐ नमः शिवाय 🙏</Text>
             <Text style={[styles.adCardSub, { color: theme.textSecondary }]}>
-              शिव शिष्यता के प्रचार-प्रसार में सहयोग करें
+              शिव शिष्यता व ज्ञान के प्रचार-प्रसार में सहयोग करें
             </Text>
-            <SmartBanner />
+
+            <View style={styles.bannerWrapper}>
+              <SmartBanner />
+            </View>
+
+            <TouchableOpacity
+              style={[styles.continueReelsBtn, { backgroundColor: theme.primary, borderColor: theme.borderGold }]}
+              onPress={() => {
+                // User can swipe down or tap to continue
+              }}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.continueReelsText, { color: theme.textWhite }]}>
+                ⬇️ नीचे स्वाइप कर रील्स देखना जारी रखें
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       );
@@ -358,21 +376,53 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   adCard: {
-    width: '90%',
+    width: SCREEN_WIDTH - 32,
+    maxWidth: 360,
     padding: 20,
-    borderRadius: 20,
+    borderRadius: 24,
     borderWidth: 1.5,
     alignItems: 'center',
+    overflow: 'hidden',
     ...shadows.medium,
+  },
+  adBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  adBadgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
   },
   adCardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   adCardSub: {
     fontSize: 12,
     textAlign: 'center',
     marginBottom: 16,
+    lineHeight: 18,
+  },
+  bannerWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    minHeight: 60,
+    marginBottom: 16,
+  },
+  continueReelsBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  continueReelsText: {
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });

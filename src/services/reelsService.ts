@@ -4,20 +4,57 @@ import { ShivReel, shivReelsCatalog } from '../content/reelsCatalog';
 import { safeShare } from './shareService';
 
 const LIKED_REELS_KEY = '@shiv_charcha_liked_reels';
+const CACHED_REELS_KEY = '@shiv_charcha_remote_reels_json';
+
+// Remote JSON URL hosted on GitHub raw repository - edit this file anytime to update reels instantly in app!
+export const REMOTE_REELS_JSON_URL =
+  'https://raw.githubusercontent.com/amit265/shiv-charcha/main/assets/data/reels.json';
+
 export const MAHAVYOMA_BHAKTI_YT_URL = 'https://youtube.com/@mahavyomabhakti';
 
 export class ReelsService {
   /**
    * Returns curated list of Shiv Charcha Reels.
-   * Can fetch remote catalog from CDN / GitHub Raw in future.
+   * Fetches remote catalog from API/JSON endpoint with cached & local fallbacks.
    */
   static async getReels(): Promise<ShivReel[]> {
     try {
-      // Return curated catalog
-      return shivReelsCatalog;
+      // 1. Fetch remote JSON catalog with 4s timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+      const response = await fetch(REMOTE_REELS_JSON_URL, {
+        signal: controller.signal,
+        headers: { 'Cache-Control': 'no-cache' },
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const remoteData = await response.json();
+        if (Array.isArray(remoteData) && remoteData.length > 0) {
+          await AsyncStorage.setItem(CACHED_REELS_KEY, JSON.stringify(remoteData));
+          return remoteData as ShivReel[];
+        }
+      }
     } catch {
-      return shivReelsCatalog;
+      // Network offline or fetch failed - proceed to fallback cache
     }
+
+    // 2. Try loading cached remote reels if available
+    try {
+      const cached = await AsyncStorage.getItem(CACHED_REELS_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed as ShivReel[];
+        }
+      }
+    } catch {
+      // Ignore cache parse error
+    }
+
+    // 3. Fallback to local catalog
+    return shivReelsCatalog;
   }
 
   /**
