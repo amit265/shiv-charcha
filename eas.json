@@ -7,7 +7,7 @@
     "development": {
       "distribution": "internal",
       "env": {
-        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=2g -XX:+UseG1GC",
+        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC",
         "NODE_OPTIONS": "--max-old-space-size=4096"
       },
       "android": {
@@ -21,7 +21,7 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=2g -XX:+UseG1GC",
+        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC",
         "NODE_OPTIONS": "--max-old-space-size=4096"
       },
       "android": {
@@ -33,7 +33,7 @@
       "distribution": "store",
       "channel": "production",
       "env": {
-        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=2g -XX:+UseG1GC",
+        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC",
         "NODE_OPTIONS": "--max-old-space-size=4096"
       },
       "android": {
@@ -54,7 +54,7 @@
         "image": "latest"
       },
       "env": {
-        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=2g -XX:+UseG1GC",
+        "GRADLE_OPTS": "-Xmx6g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC",
         "NODE_OPTIONS": "--max-old-space-size=4096"
       }
     }
