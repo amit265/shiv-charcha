@@ -3,8 +3,8 @@ const path = require('path');
 const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 // Cloudflare R2 Credentials
-const R2_ACCESS_KEY_ID = 'cfat_VUo4nkHqRZc1IziJFAEvl3SqCOkDntYPztQvuh4L6b834ecd';
-const R2_SECRET_ACCESS_KEY = '0ad22150d53bb28c0c3fc15d7e27b00a29f7483c3f6a10f4852af0377e91c10d';
+const R2_ACCESS_KEY_ID = 'a42fe4a695d4e8340c5d9ce9661014d1';
+const R2_SECRET_ACCESS_KEY = '762206220ebcda7fd86922583b655909f3ae46cb12d678ca95f85a9b61ecc373';
 const R2_ENDPOINT = 'https://d1bbcb7c4477e8979c796e121b27912e.r2.cloudflarestorage.com';
 const BUCKET_NAME = 'mahavyoma-media';
 const R2_PUBLIC_BASE_URL = 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev';
