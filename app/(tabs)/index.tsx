@@ -10,7 +10,6 @@ import { sacredDates } from '@/content/dates';
 import { getTodayCharchaPrompt } from '@/content/charchaPrompts';
 import { pravachanLibrary } from '@/content/pravachanLibrary';
 import { useAudio } from '@/context/AudioContext';
-import { getRandomQuote, ShivQuote } from '@/content/quotes';
 import { safeShare } from '@/services/shareService';
 
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -80,17 +79,9 @@ export default function HomeScreen() {
   const [sutraStreak, setSutraStreak] = useState<number>(0);
   const [past7Days, setPast7Days] = useState<{ date: string; dayName: string; completed: boolean }[]>([]);
   const [dailySutras, setDailySutras] = useState({ sutra1: false, sutra2: false, sutra3: false });
-  const [currentQuote, setCurrentQuote] = useState<ShivQuote>(getRandomQuote());
   const [reelsCatalog, setReelsCatalog] = useState<ShivReel[]>([]);
   const [randomReel, setRandomReel] = useState<ShivReel | null>(null);
   const [showMiniModal, setShowMiniModal] = useState<boolean>(true);
-
-  const handleShareQuote = async () => {
-    await safeShare({
-      title: 'शिव चर्चा पावन विचार',
-      message: `🌸 *शिव चर्चा पावन सुविचार* 🌸\n\n"${currentQuote.quote}"\n\n— ${currentQuote.author}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
-    });
-  };
 
   useEffect(() => {
     let isMounted = true;
@@ -607,33 +598,6 @@ export default function HomeScreen() {
         </View>
 
         {/* SECTION: BHAKTI EXPERIENCE GRID */}
-        <View style={styles.experienceSection}>
-          <Text style={[styles.sectionTitle, { color: theme.primary }]}>आज का भक्ति अनुभव 🌺</Text>
-          <Text style={[styles.sectionSub, { color: theme.textMuted }]}>शिव गुरु के श्री चरणों में सेवा व साधना अर्पित करें</Text>
-
-          <View style={styles.experienceGrid}>
-            <TouchableOpacity
-              style={[styles.experienceCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}
-              onPress={() => router.push('/puja' as any)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.expIcon}>🌸</Text>
-              <Text style={[styles.expTitle, { color: theme.textGold }]}>शिव लिंग पूजा</Text>
-              <Text style={[styles.expSub, { color: theme.textWhite }]}>पुष्प, बेलपत्र व जल चढ़ाएँ</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.experienceCard, { backgroundColor: theme.primaryLight, borderColor: theme.accent }]}
-              onPress={() => router.push('/jap' as any)}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.expIcon}>📿</Text>
-              <Text style={[styles.expTitle, { color: theme.textGold }]}>108 जाप साधना</Text>
-              <Text style={[styles.expSub, { color: theme.textWhite }]}>नमः शिवाय माला जाप</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
         {/* SECTION: TODAY'S BHAJAN */}
         <View style={[styles.sectionCard, { backgroundColor: theme.cardBg, borderColor: theme.border }]}>
           <Text style={[styles.sectionTitle, { color: theme.primary }]}>आज का भजन 🎵</Text>
@@ -669,51 +633,6 @@ export default function HomeScreen() {
             <Text style={[styles.arrowIcon, { color: theme.textWhite }]}>➔</Text>
           </View>
         </TouchableOpacity>
-
-        {/* SECTION: SHIV CHARCHA RANDOM QUOTE & STATUS CARD */}
-        <View style={[styles.shareTeaserCard, { backgroundColor: theme.primary, borderColor: theme.accent }]}>
-          <View style={styles.quoteCardHeaderRow}>
-            <View style={[styles.quoteBadgePill, { backgroundColor: theme.accent }]}>
-              <Text style={[styles.quoteBadgeText, { color: theme.primaryDark }]}>✨ आज का पावन सुविचार</Text>
-            </View>
-            <TouchableOpacity onPress={() => setCurrentQuote(getRandomQuote())} activeOpacity={0.7}>
-              <Text style={[styles.refreshQuoteText, { color: theme.textGold }]}>🔄 दूसरा सुविचार</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={[styles.quoteTextDisplay, { color: theme.textWhite }]}>
-            {`"${currentQuote.quote}"`}
-          </Text>
-          <Text style={[styles.quoteAuthorDisplay, { color: theme.textGold }]}>
-            — {currentQuote.author}
-          </Text>
-
-          <View style={styles.teaserBtnRow}>
-            <TouchableOpacity
-              style={[styles.shareTeaserBtn, { backgroundColor: '#25D366' }]}
-              onPress={handleShareQuote}
-              activeOpacity={0.85}
-            >
-              <Text style={[styles.shareTeaserBtnText, { color: '#FFFFFF' }]}>🟢 व्हाट्सएप</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.shareTeaserOutlineBtn, { borderColor: theme.accent, backgroundColor: theme.accent }]}
-              onPress={() => router.push('/quote-reels' as any)}
-              activeOpacity={0.85}
-            >
-              <Text style={[styles.shareTeaserOutlineBtnText, { color: theme.primaryDark }]}>🌸 100+ रील्स</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.shareTeaserOutlineBtn, { borderColor: theme.borderGold, backgroundColor: 'rgba(255,255,255,0.15)' }]}
-              onPress={() => router.push('/gallery' as any)}
-              activeOpacity={0.85}
-            >
-              <Text style={[styles.shareTeaserOutlineBtnText, { color: '#FFFFFF' }]}>🎨 वॉलपेपर</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </ScrollView>
 
       {/* GENTLE ONBOARDING MODAL ON COLD START */}
