@@ -16,6 +16,7 @@ import {
 import * as MediaLibrary from 'expo-media-library/legacy';
 import * as Sharing from 'expo-sharing';
 import { File, Paths } from 'expo-file-system';
+import { Image as ExpoImage } from 'expo-image';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Header } from '@/components/common/Header';
@@ -117,18 +118,29 @@ export default function GalleryScreen() {
         const destLabel = destination === 'home' ? 'होम स्क्रीन' : destination === 'lock' ? 'लॉक स्क्रीन' : 'होम व लॉक स्क्रीन';
         Alert.alert(
           '🌸 हर हर महादेव!',
-          `"${item.title}" वॉलपेपर आपकी ${destLabel} पर सफलतापूर्वक सेट कर दिया गया है!`,
+          `"${item.title}" (HD) आपकी ${destLabel} पर सफलतापूर्वक सेट कर दिया गया है!`,
           [{ text: 'जय हो! 🙏' }]
         );
       } else {
-        await handleSaveToGallery(item);
+        // Save HD image to gallery & show clean guidance without opening Share Sheet
+        if (Platform.OS !== 'web') {
+          await MediaLibrary.saveToLibraryAsync(localFileUri);
+        }
+        Alert.alert(
+          '🌸 HD वॉलपेपर सहेजा गया!',
+          `"${item.title}" HD चित्र आपकी फोन फोटो गैलरी में सहेज लिया गया है।\n\nआप अपने फोन की सेटिंग्स -> वॉलपेपर से इसे होम या लॉक स्क्रीन पर लगा सकते हैं।`,
+          [
+            { text: 'वॉलपेपर लगाने की विधि ➔', onPress: () => setShowGuideModal(true) },
+            { text: 'ठीक है' },
+          ]
+        );
       }
     } catch (error) {
       console.warn('Direct wallpaper error:', error);
       Alert.alert(
-        'सूचना',
-        'चित्र को आपकी फोटो गैलरी में सहेजा जा रहा है, ताकि आप सेटिंग्स से लगा सकें।',
-        [{ text: 'सहेजें', onPress: () => handleSaveToGallery(item) }]
+        'त्रुटि',
+        'चित्र आपकी फोटो गैलरी में सहेजने में विफल। कृपया पुन: प्रयास करें।',
+        [{ text: 'बंद करें' }]
       );
     } finally {
       setIsSaving(false);
@@ -188,10 +200,12 @@ export default function GalleryScreen() {
   const handleShareWallpaper = async (item: WallpaperItem) => {
     triggerHaptic();
     try {
+      const shareText = `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\n📱 *ऐप डाउनलोड करें*: https://mahavyomastudio.com/apps/shiv-charcha\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`;
+
       if (Platform.OS === 'web') {
         await safeShare({
           title: item.title,
-          message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+          message: shareText,
         });
         return;
       }
@@ -202,20 +216,21 @@ export default function GalleryScreen() {
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(localFileUri, {
           mimeType: 'image/jpeg',
-          dialogTitle: `🌸 ${item.title} - शिव चर्चा`,
+          dialogTitle: shareText,
           UTI: 'public.jpeg',
         });
       } else {
         await safeShare({
           title: item.title,
-          message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+          message: shareText,
+          url: localFileUri,
         });
       }
     } catch (e) {
       console.warn('Share wallpaper error:', e);
       await safeShare({
         title: item.title,
-        message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
+        message: `🌸 *शिव चर्चा पावन वॉलपेपर*: "${item.title}"\n\n${item.description || ''}\n\n📱 *ऐप डाउनलोड करें*: https://mahavyomastudio.com/apps/shiv-charcha\n\nशिव चर्चा ऐप - हर हर महादेव 🙏`,
       });
     }
   };
@@ -420,11 +435,13 @@ export default function GalleryScreen() {
           <View style={styles.fullScreenModalBg}>
             <StatusBar hidden />
 
-            {/* Background Fullscreen Wallpaper */}
-            <Image
-              source={shivaBackgrounds[selectedWallpaper.imageIndex || 0]}
+            {/* Background Fullscreen Wallpaper - Loads crisp HD original image with smooth transition */}
+            <ExpoImage
+              source={shivaHdUrls[selectedWallpaper.imageIndex || 0]}
+              placeholder={shivaBackgrounds[selectedWallpaper.imageIndex || 0]}
+              contentFit="cover"
+              transition={350}
               style={styles.fullScreenImage}
-              resizeMode="cover"
             />
 
             {/* Mock Phone Lock-Screen Clock & Date Widget Overlay */}
