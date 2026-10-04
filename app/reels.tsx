@@ -153,7 +153,7 @@ function SingleReelView({
           <View style={[styles.actionIconCircle, { backgroundColor: '#E1306C' }]}>
             <Text style={{ fontSize: 18 }}>📸</Text>
           </View>
-          <Text style={styles.actionLabelText}>Insta फॉलो</Text>
+          <Text style={styles.actionLabelText}>फॉलो</Text>
         </TouchableOpacity>
 
         {/* YOUTUBE SUBSCRIBE */}

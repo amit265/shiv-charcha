@@ -2,9 +2,23 @@ const fs = require('fs');
 const path = require('path');
 const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
+// Load local .env if present
+const envPath = path.join(__dirname, '../.env');
+if (fs.existsSync(envPath)) {
+  const envLines = fs.readFileSync(envPath, 'utf-8').split('\n');
+  for (const line of envLines) {
+    const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+    if (match) {
+      const key = match[1];
+      const val = match[2] ? match[2].trim().replace(/^['"]|['"]$/g, '') : '';
+      process.env[key] = process.env[key] || val;
+    }
+  }
+}
+
 // Cloudflare R2 Credentials
-const R2_ACCESS_KEY_ID = 'a42fe4a695d4e8340c5d9ce9661014d1';
-const R2_SECRET_ACCESS_KEY = '762206220ebcda7fd86922583b655909f3ae46cb12d678ca95f85a9b61ecc373';
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
 const R2_ENDPOINT = 'https://d1bbcb7c4477e8979c796e121b27912e.r2.cloudflarestorage.com';
 const BUCKET_NAME = 'mahavyoma-media';
 const R2_PUBLIC_BASE_URL = 'https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev';
