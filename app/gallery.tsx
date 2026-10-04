@@ -164,8 +164,8 @@ export default function GalleryScreen() {
         return;
       }
 
-      // Request media library permission
-      const { status } = await MediaLibrary.requestPermissionsAsync();
+      // Request media library write permission (without requesting read permissions)
+      const { status } = await MediaLibrary.requestPermissionsAsync(true);
       if (status !== 'granted') {
         Alert.alert(
           'अनुमति आवश्यक है',
