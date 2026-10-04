@@ -1,0 +1,48 @@
+name: Sync YouTube Shorts to Cloudflare R2
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Automatically run every 6 hours
+  workflow_dispatch: # Allow 1-click manual trigger from GitHub UI
+
+jobs:
+  sync-reels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install yt-dlp
+        run: |
+          sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp
+          sudo chmod a+rx /usr/local/bin/yt-dlp
+          yt-dlp --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run YouTube Shorts to R2 Sync Script
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: npm run sync:reels
+
+      - name: Commit & Push updated Reels Catalog
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/reels.json src/content/reelsCatalog.ts
+          if git diff --staged --quiet; then
+            echo "No new reels found. Catalog is up to date."
+          else
+            git commit -m "chore(reels): auto-sync YouTube Shorts to Cloudflare R2 catalog"
+            git push
+          fi

@@ -1,38 +1,64 @@
-# 🎬 How to Add New YouTube Shorts & Video Reels to Shiv Charcha App
+# 🎬 How to Fetch, Download & Add New YouTube Shorts to Shiv Charcha App
 
-This guide explains step-by-step how to add new YouTube Shorts or vertical short videos to the **Shiv Charcha Video Reels** catalog.
+This guide explains how to fetch new YouTube Shorts from your YouTube channel, download the MP4 videos, upload them to Cloudflare R2 CDN, and update the app catalog automatically.
 
 ---
 
-## 📌 Reel Data Structure
+## 🚀 Method 1: 1-Click GitHub Action (Automated & Cloud-Based)
 
-Each reel in the app follows the `ShivReel` interface structure:
+You can run the sync workflow directly from GitHub without installing anything on your computer!
 
-```typescript
-export interface ShivReel {
-  id: string;              // Unique ID (e.g., 'reel-011', 'reel-012')
-  title: string;           // Hindi title shown on reel
-  subTitle: string;        // Subtitle / brief description
-  category: 'sutras' | 'gosthi' | 'vichar'; // Reel category
-  youtubeVideoId: string;  // YouTube Video ID (e.g., 'dQw4w9WgXcQ' from https://youtu.be/dQw4w9WgXcQ)
-  videoUrl?: string;       // Direct MP4 video URL (optional, e.g., Cloudflare R2 MP4 link)
-  likesCount: number;      // Initial likes count (e.g., 250)
-  teachingId?: string;     // Linked article ID (optional, e.g., 't-three-sutras')
-  tags?: string[];         // Tag keywords (e.g., ['शिव', '3सूत्र'])
-}
+### Step 1: Open GitHub Repository
+1. Go to your repository on GitHub: `https://github.com/amit265/shiv-charcha`
+2. Click on the **Actions** tab at the top.
+
+### Step 2: Run Workflow
+1. Select **"Sync YouTube Shorts to Cloudflare R2"** from the left sidebar workflows.
+2. Click **Run workflow** -> Select `main` branch -> Click **Run workflow**.
+
+### What Happens Automatically:
+- GitHub runner fetches YouTube channel RSS feed.
+- It detects new Shorts (`#shorts` or short vertical videos).
+- Downloads MP4 using `yt-dlp`.
+- Uploads MP4 to Cloudflare R2 bucket (`mahavyoma-media`).
+- Commits and pushes the updated `src/content/reelsCatalog.ts` and `assets/data/reels.json` catalog back to the repository.
+- All app users get the new reels automatically!
+
+*(Note: Ensure repository secrets `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` are configured in GitHub Settings -> Secrets and variables -> Actions)*.
+
+---
+
+## 💻 Method 2: Local Terminal Command (Run on Computer)
+
+You can also run the sync script locally from your terminal:
+
+### Prerequisites:
+Make sure `yt-dlp` is installed on your OS:
+- **Linux/macOS**: `sudo curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && sudo chmod a+rx /usr/local/bin/yt-dlp`
+- **Windows**: `winget install yt-dlp`
+
+### Run Command:
+```bash
+npm run sync:reels
 ```
 
+### What `npm run sync:reels` Does:
+1. Executes `scripts/sync-youtube-to-r2.js`.
+2. Checks Cloudflare R2 bucket to skip existing videos.
+3. Downloads new YouTube Shorts MP4 files.
+4. Uploads them to `https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev`.
+5. Updates `src/content/reelsCatalog.ts` and `assets/data/reels.json`.
+
 ---
 
-## ⚡ Method 1: Remote Dynamic Update (Recommended - No App Re-build Required)
+## 🌐 Method 3: Remote JSON Update (Instant Server CDN Sync)
 
-You can add new reels dynamically without publishing a new APK or app update to the Play Store!
+If you host your dynamic catalog on your website server (`mahavyomastudio.com`):
 
-1. Open your remote JSON catalog file hosted on your server/CDN at:
+1. Open your remote JSON file:
    `https://mahavyomastudio.com/apps/shiv-charcha/data/reels.json`
 
-2. Add a new reel object into the JSON array:
-
+2. Append the new reel:
 ```json
 [
   {
@@ -40,54 +66,22 @@ You can add new reels dynamically without publishing a new APK or app update to 
     "title": "तीसरा सूत्र: 108 बार नमः शिवाय जाप की महिमा",
     "subTitle": "साहब श्री हरिंद्रानंद जी का पावन संदेश",
     "category": "sutras",
-    "youtubeVideoId": "YOUR_YOUTUBE_SHORTS_ID",
-    "videoUrl": "https://pub-your-r2-bucket.r2.dev/reels/shorts_011.mp4",
+    "youtubeVideoId": "YOUR_SHORTS_VIDEO_ID",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/YOUR_SHORTS_VIDEO_ID.mp4",
     "likesCount": 380,
-    "teachingId": "t-three-sutras",
-    "tags": ["तीसरा सूत्र", "जाप", "शिव"]
+    "sharesCount": 120
   }
 ]
 ```
 
-3. Save and upload the file to your server.
-4. **Done!** The app automatically syncs the remote JSON catalog in the background and presents the new reels to all users.
+3. Save and upload `reels.json` to your server.
+4. Active app users will instantly get the new reels on their next app open!
 
 ---
 
-## 💻 Method 2: Local Code Update (Bundled Fallback Catalog)
+## 📌 File Locations Reference
 
-To add reels directly inside the codebase so they are bundled with the app build:
-
-1. Open the file:
-   `src/content/reelsCatalog.ts` (Clickable Link: [reelsCatalog.ts](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/src/content/reelsCatalog.ts))
-
-2. Locate `export const shivReelsCatalog: ShivReel[] = [ ... ];`
-
-3. Add your new reel object to the end of the array:
-
-```typescript
-  {
-    id: 'reel-011',
-    title: 'तीसरा सूत्र: 108 बार नमः शिवाय जाप की महिमा',
-    subTitle: 'साहब श्री हरिंद्रानंद जी का पावन संदेश',
-    category: 'sutras',
-    youtubeVideoId: 'YOUR_YOUTUBE_SHORTS_ID',
-    videoUrl: 'https://pub-your-r2-bucket.r2.dev/reels/shorts_011.mp4',
-    likesCount: 380,
-    teachingId: 't-three-sutras',
-    tags: ['तीसरा सूत्र', 'जाप', 'शिव'],
-  },
-```
-
-4. Save the file.
-
----
-
-## 🖼️ How Poster Thumbnails Work Automatically
-
-You **do not** need to create or upload thumbnail images manually!
-The app automatically generates YouTube poster thumbnails using `youtubeVideoId`:
-
-`https://img.youtube.com/vi/${youtubeVideoId}/hqdefault.jpg`
-
-Simply provide the `youtubeVideoId` for any video short, and the thumbnail poster will render automatically across the app!
+- **Sync Script**: [`scripts/sync-youtube-to-r2.js`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/scripts/sync-youtube-to-r2.js)
+- **GitHub Action**: [`.github/workflows/sync-reels.yml`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/.github/workflows/sync-reels.yml)
+- **Local Catalog**: [`src/content/reelsCatalog.ts`](file:///media/amit/Other1/webdevelopment/github/mahavyomastudio-apps/app_02_shiv_charcha/src/content/reelsCatalog.ts)
+- **JSON Feed**: `assets/data/reels.json`

@@ -58,7 +58,8 @@
     "lint": "expo lint",
     "release": "bash build-and-submit.sh",
     "release:promote": "node scripts/promote-to-production.js",
-    "version": "node scripts/set-version.js"
+    "version": "node scripts/set-version.js",
+    "sync:reels": "node scripts/sync-youtube-to-r2.js"
   },
   "private": true
 }
