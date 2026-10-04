@@ -104,14 +104,17 @@ echo ""
 echo "📦 [3/5] Running Expo Prebuild (clean)..."
 echo "------------------------------------------------"
 npx expo prebuild --clean --platform android
+if [ -f "android/gradle.properties" ]; then
+  sed -i 's/^org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx10240m -XX:MaxMetaspaceSize=4096m -XX:+UseG1GC/' android/gradle.properties
+fi
 echo "✅ Prebuild complete."
 echo ""
 
 # ── Step 4: Local Build ───────────────────────────────────
 echo "🔨 [4/5] Running EAS Local Build (profile: $BUILD_PROFILE)..."
 echo "------------------------------------------------"
-export GRADLE_OPTS="-Xmx6g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC"
-export NODE_OPTIONS="--max-old-space-size=4096"
+export GRADLE_OPTS="-Xmx10g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC"
+export NODE_OPTIONS="--max-old-space-size=8192"
 eas build --platform android --profile "$BUILD_PROFILE" --local
 echo "✅ Local build complete."
 echo ""

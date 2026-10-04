@@ -98,7 +98,7 @@
             "enableShrinkResourcesInReleaseBuilds": true,
             "extraProguardRules": "-repackageclasses ''\n-allowaccessmodification\n-optimizationpasses 5",
             "gradleArgs": [
-              "-Dorg.gradle.jvmargs=-Xmx6144m -XX:MaxMetaspaceSize=4096m -XX:+UseG1GC",
+              "-Dorg.gradle.jvmargs=-Xmx10240m -XX:MaxMetaspaceSize=4096m -XX:+UseG1GC",
               "-Dorg.gradle.parallel=true",
               "-x",
               "lintVitalAnalyzeRelease"
