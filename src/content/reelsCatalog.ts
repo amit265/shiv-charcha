@@ -2,7 +2,6 @@ export interface ShivReel {
   id: string;
   youtubeVideoId: string;
   videoUrl?: string;
-  thumbnailUrl?: string;
   title: string;
   subTitle: string;
   category: 'sutras' | 'gosthi' | 'sahib_ji' | 'mahadev';
@@ -10,14 +9,6 @@ export interface ShivReel {
   sharesCount: number;
   teachingId?: string;
   youtubeUrl: string;
-}
-
-export function getReelThumbnailUrl(reel: ShivReel): string {
-  if (reel.thumbnailUrl) return reel.thumbnailUrl;
-  if (reel.youtubeVideoId) {
-    return `https://img.youtube.com/vi/${reel.youtubeVideoId}/hqdefault.jpg`;
-  }
-  return '';
 }
 
 export const shivReelsCatalog: ShivReel[] = [
