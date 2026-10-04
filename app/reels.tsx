@@ -17,7 +17,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { shadows } from '@/theme/colors';
 import { ShivReel } from '@/content/reelsCatalog';
 import { ReelsService } from '@/services/reelsService';
-import { SmartBanner } from '@/components/common/SmartBanner';
+import { NativeAdCard } from '@/components/common/NativeAdCard';
 import { Analytics } from '@/services/analytics/analytics';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -90,7 +90,7 @@ export default function ShivReelsScreen() {
   const renderReelItem = ({ item }: { item: FeedItem }) => {
     if (item.type === 'ad') {
       return (
-        <View style={[styles.reelContainer, { backgroundColor: '#0F172A', justifyContent: 'center', alignItems: 'center' }]}>
+        <View style={[styles.reelContainer, { backgroundColor: '#0B132B', justifyContent: 'center', alignItems: 'center' }]}>
           <View style={[styles.adCard, { backgroundColor: theme.cardBg, borderColor: theme.borderGold }]}>
             <View style={[styles.adBadge, { backgroundColor: theme.accent }]}>
               <Text style={[styles.adBadgeText, { color: theme.primaryDark }]}>📢 प्रायोजित संदेश / विज्ञापन</Text>
@@ -100,21 +100,15 @@ export default function ShivReelsScreen() {
               शिव शिष्यता व ज्ञान के प्रचार-प्रसार में सहयोग करें
             </Text>
 
-            <View style={styles.bannerWrapper}>
-              <SmartBanner />
+            <View style={styles.nativeAdFrame}>
+              <NativeAdCard forceShow={true} />
             </View>
 
-            <TouchableOpacity
-              style={[styles.continueReelsBtn, { backgroundColor: theme.primary, borderColor: theme.borderGold }]}
-              onPress={() => {
-                // User can swipe down or tap to continue
-              }}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.continueReelsText, { color: theme.textWhite }]}>
+            <View style={[styles.continueReelsPill, { backgroundColor: theme.surfaceElevated, borderColor: theme.borderGold }]}>
+              <Text style={[styles.continueReelsText, { color: theme.primary }]}>
                 ⬇️ नीचे स्वाइप कर रील्स देखना जारी रखें
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
       );
@@ -378,10 +372,11 @@ const styles = StyleSheet.create({
   adCard: {
     width: SCREEN_WIDTH - 32,
     maxWidth: 360,
-    padding: 20,
+    padding: 16,
     borderRadius: 24,
     borderWidth: 1.5,
     alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
     ...shadows.medium,
   },
@@ -389,40 +384,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   adBadgeText: {
     fontSize: 10,
     fontWeight: 'bold',
   },
   adCardTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   adCardSub: {
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 18,
+    marginBottom: 8,
+    lineHeight: 16,
   },
-  bannerWrapper: {
-    width: '100%',
+  nativeAdFrame: {
+    width: 310,
+    minHeight: 260,
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical: 6,
+    borderRadius: 16,
     overflow: 'hidden',
-    minHeight: 60,
-    marginBottom: 16,
   },
-  continueReelsBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+  continueReelsPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: 14,
     borderWidth: 1,
     alignItems: 'center',
+    marginTop: 6,
   },
   continueReelsText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
   },
 });
