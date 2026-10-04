@@ -100,6 +100,11 @@ All streaming tracks are fetched directly from the official studio audio server 
 - **Family & Avatars (14+)**: `sansar_shiva_head.mp3`, `sansar_parvati_mother.mp3`, `sansar_ganesha_son.mp3`, `sansar_kartikeya_son.mp3`, `sansar_nandi_devotee.mp3`, `sansar_ashokasundari.mp3`, `sansar_ayappa.mp3`, `sansar_veerabhadra.mp3`, `sansar_mahadev.mp3`, `sansar_neelkanth.mp3`, `sansar_nataraja.mp3`, `sansar_ardhanarishvara.mp3`, `sansar_dakshinamurthy.mp3`, `sansar_kalabhairava.mp3`, `sansar_pashupati.mp3`, `sansar_ekadasha_rudra.mp3`, `sansar_sharabha.mp3`, `sansar_pippalada.mp3`
 - **Symbols, Temples & Festivals**: `symbol_shivling.mp3`, `symbol_trishula.mp3`, `symbol_damru.mp3`, `symbol_rudraksha.mp3`, `symbol_third_eye.mp3`, `symbol_bilva_patra.mp3`, `symbol_tripundra.mp3`, `symbol_crescent_moon.mp3`, `symbol_pashupatinath.mp3`, `symbol_tungnath.mp3`, `symbol_amarnath.mp3`, `symbol_chidambaram.mp3`, `symbol_murudeshwar.mp3`, `symbol_lingaraj.mp3`, `symbol_mahashivratri.mp3`, `symbol_shravan_maas.mp3`, `symbol_pradosh_vrat.mp3`
 
+### F. Remote Ultra-HD Wallpapers & High-Res Image CDN
+Host at: `https://mahavyomastudio.com/apps/shiv-charcha/images/wallpapers/`
+- **HD Wallpaper Images (20)**:
+  `reel_alpine_shrine_at_golden_dawn.jpg`, `reel_ash_sprinkled_shiva_linga_ritual.jpg`, `reel_cinematic_shiva_shrine_with_lotus_offerings.jpg`, `reel_cosmic_shiva_beneath_the_open_sky.jpg`, `reel_cosmic_shiva_beneath_the_stars.jpg`, `reel_crescent_moon_trident_shrine.jpg`, `reel_ganga_aarti_at_dusk.jpg`, `reel_himalayan_sunrise_with_sacred_trident.jpg`, `reel_lord_shiva_beneath_the_himalayan_moon_reel_shiva_quote_01.jpg`, `reel_meditating_at_the_himalayan_sunrise.jpg`, `reel_mystical_damru_beneath_shivas_moonlit_silhouette.jpg`, `reel_mystic_sadhu_beneath_moonlit_himalayas.jpg`, `reel_pilgrimage_to_the_frozen_shrine.jpg`, `reel_rudraksha_mala_at_a_shiva_shrine.jpg`, `reel_sacred_abhisheka_at_the_shiva_shrine.jpg`, `reel_shiva_and_parvati_beneath_the_himalayan_moon.jpg`, `reel_shiva_nataraja_in_cosmic_fire.jpg`, `reel_snowy_himalayan_temple_at_twilight.jpg`, `reel_somnath_temple_at_sunset.jpg`, `reel_twilight_temple_ghats_aglow.jpg`
+
 ---
 
 ## 🌐 4. Server Manifests & Deep Link Endpoints
