@@ -6,11 +6,11 @@ import { safeShare } from './shareService';
 const LIKED_REELS_KEY = '@shiv_charcha_liked_reels';
 const CACHED_REELS_KEY = '@shiv_charcha_remote_reels_json';
 
-// Remote API endpoint on Mahavyoma Studio website
+// Remote API endpoint on GitHub (Raw main branch) with website fallback
 export const REMOTE_REELS_JSON_URL =
-  'https://mahavyomastudio.com/apps/shiv-charcha/data/reels.json';
+  'https://raw.githubusercontent.com/amit265/shiv-charcha/main/assets/data/reels.json';
 export const REMOTE_REELS_API_FALLBACK =
-  'https://mahavyomastudio.com/api/reels.json';
+  'https://mahavyomastudio.com/apps/shiv-charcha/data/reels.json';
 
 export const MAHAVYOMA_BHAKTI_YT_URL = 'https://youtube.com/@mahavyomabhakti';
 
