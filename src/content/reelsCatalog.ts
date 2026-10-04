@@ -24,7 +24,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-6BDmszb4pa8",
     "youtubeVideoId": "6BDmszb4pa8",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/6BDmszb4pa8.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/6BDmszb4pa8.mp4",
     "title": "शिव चर्चा अब आपके मोबाइल पर! #महादेव #शिवगुरु #शिवशिष्य #शिवशिष्य #शिवचर्चा #शिवचर्चा",
     "subTitle": "🙏 शिव गुरु साधना अब आपके मोबाइल पर!",
     "category": "mahadev",
@@ -35,7 +35,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-iIVXj3kV35M",
     "youtubeVideoId": "iIVXj3kV35M",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/iIVXj3kV35M.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/iIVXj3kV35M.mp4",
     "title": "क्या दया माँगने के लिए मंदिर जाना ज़रूरी है?  #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "कई लोग पूछते हैं कि क्या शिव से दया माँगने के लिए मंदिर या विशेष ",
     "category": "mahadev",
@@ -46,7 +46,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-fC2BhUmM7h8",
     "youtubeVideoId": "fC2BhUmM7h8",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/fC2BhUmM7h8.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/fC2BhUmM7h8.mp4",
     "title": "हे शिव, आप मेरे गुरु हैं...” | शिव शिष्यता का भाव  #महादेव #शिवगुरु #शिवचर्चा #शिवशिष्य",
     "subTitle": "क्या आप जानते हैं कि शिव को गुरु मानने का सबसे सरल वाक्य क्या है?",
     "category": "mahadev",
@@ -57,7 +57,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-QWiTUwKY67Q",
     "youtubeVideoId": "QWiTUwKY67Q",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/QWiTUwKY67Q.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/QWiTUwKY67Q.mp4",
     "title": "दया माँगना क्या है? | शिव चर्चा का पहला सूत्र #महादेव #शिवगुरु #शिवचर्चा #शिवशिष्य",
     "subTitle": "शिव चर्चा का पहला सूत्र है — दया माँगना। इसका मतलब यह नहीं है कि ",
     "category": "mahadev",
@@ -68,7 +68,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-l1r87fswRbo",
     "youtubeVideoId": "l1r87fswRbo",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/l1r87fswRbo.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/l1r87fswRbo.mp4",
     "title": "शिव चर्चा का दूसरा सूत्र — चर्चा करना | शिव गुरु #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "शिव चर्चा का दूसरा सूत्र — चर्चा करना | शिव गुरु",
     "category": "mahadev",
@@ -79,7 +79,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-gwQy0L5umUM",
     "youtubeVideoId": "gwQy0L5umUM",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/gwQy0L5umUM.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/gwQy0L5umUM.mp4",
     "title": "शिव चर्चा का तीसरा सूत्र — प्रणाम करना | शिव गुरु #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "शिव चर्चा का तीसरा सूत्र — प्रणाम करना | शिव गुरु",
     "category": "mahadev",
@@ -90,7 +90,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-Kuj5W_8_fhQ",
     "youtubeVideoId": "Kuj5W_8_fhQ",
-    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/Kuj5W_8_fhQ.mp4",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/Kuj5W_8_fhQ.mp4",
     "title": "शिव चर्चा का पहला सूत्र - दया माँगना | शिव गुरु @Mahavyomabhakti",
     "subTitle": "शिव चर्चा का पहला सूत्र है — दया माँगना।",
     "category": "mahadev",
