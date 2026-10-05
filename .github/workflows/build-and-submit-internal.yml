@@ -19,6 +19,15 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
@@ -29,9 +38,22 @@ jobs:
         run: |
           echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > google-service-account.json
 
-      - name: Build and Submit Android AAB to Internal Testing
+      - name: Prebuild Android
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx expo prebuild --clean --platform android
+
+      - name: Build Android AAB Locally (Internal)
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GRADLE_OPTS: "-Xmx10g -XX:MaxMetaspaceSize=4g -XX:+UseG1GC"
           NODE_OPTIONS: "--max-old-space-size=8192"
-        run: eas build --platform android --profile internal --non-interactive --auto-submit
+        run: eas build --platform android --profile internal --local --non-interactive
+
+      - name: Submit AAB to Play Store Internal Track
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          AAB_PATH=$(find . -maxdepth 1 -name "*.aab" | head -n 1)
+          echo "Found AAB at: $AAB_PATH"
+          eas submit --platform android --profile internal --path "$AAB_PATH" --non-interactive
