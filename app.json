@@ -106,7 +106,8 @@
           }
         }
       ],
-      "expo-video"
+      "expo-video",
+      "./plugins/withGradleMemoryAndLint.js"
     ],
     "owner": "mindcraftlearning",
     "updates": {
