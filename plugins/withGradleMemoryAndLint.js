@@ -6,15 +6,20 @@ const { withGradleProperties, withAppBuildGradle } = require('expo/config-plugin
  * 2. Disable lintVital/checkReleaseBuilds in android/app/build.gradle to prevent R8 memory exhaustion
  */
 function withGradleMemoryAndLint(config) {
-  // 1. Force High Memory in android/gradle.properties
+  // 1. Force High Memory & Production Architectures in android/gradle.properties
   config = withGradleProperties(config, (config) => {
     config.modResults = config.modResults.filter(
-      (item) => item.key !== 'org.gradle.jvmargs'
+      (item) => item.key !== 'org.gradle.jvmargs' && item.key !== 'reactNativeArchitectures'
     );
     config.modResults.push({
       type: 'property',
       key: 'org.gradle.jvmargs',
       value: '-Xmx8192m -XX:MaxMetaspaceSize=4096m -XX:+UseG1GC',
+    });
+    config.modResults.push({
+      type: 'property',
+      key: 'reactNativeArchitectures',
+      value: 'arm64-v8a,armeabi-v7a',
     });
     return config;
   });
