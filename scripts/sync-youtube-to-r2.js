@@ -71,8 +71,8 @@ async function isShortVideo(videoId) {
 
 function downloadYouTubeShort(videoId) {
   try {
-    console.log(`  📥 Downloading video from YouTube [${videoId}]...`);
-    const cmd = `yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
+    console.log(`  📥 Downloading H.264 video from YouTube [${videoId}]...`);
+    const cmd = `yt-dlp -f "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio/best[vcodec^=avc1]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
     const videoBuffer = execSync(cmd, { maxBuffer: 100 * 1024 * 1024 });
     return videoBuffer;
   } catch (err) {
@@ -120,7 +120,8 @@ async function syncYouTubeToR2() {
         console.log(`\n🎬 Processing Short: [${videoId}] ${title}`);
 
         const objectKey = `videos/${videoId}.mp4`;
-        const existsInR2 = await checkFileExistsInR2(objectKey);
+        const forceSync = process.argv.includes('--force');
+        const existsInR2 = !forceSync && (await checkFileExistsInR2(objectKey));
 
         let videoUrl;
 
@@ -128,7 +129,7 @@ async function syncYouTubeToR2() {
           videoUrl = `${R2_PUBLIC_BASE_URL}/${objectKey}`;
           console.log(`  ✓ Already in Cloudflare R2: ${videoUrl}`);
         } else {
-          console.log(`  ⚡ Not in Cloudflare R2 yet. Initiating download & upload...`);
+          console.log(`  ⚡ Downloading & uploading H.264 MP4 to Cloudflare R2...`);
           const videoBuffer = downloadYouTubeShort(videoId);
           if (videoBuffer && videoBuffer.length > 0) {
             console.log(`  ⬆️ Uploading ${objectKey} (${(videoBuffer.length / (1024 * 1024)).toFixed(2)} MB) to Cloudflare R2...`);
