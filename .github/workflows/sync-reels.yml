@@ -2,6 +2,8 @@ name: Sync YouTube Shorts to Cloudflare R2
 
 on:
   workflow_dispatch: # Manual 1-click trigger from GitHub Actions tab
+  schedule:
+    - cron: '0 4 */5 * *' # Auto-sync every 5 days at 04:00 UTC (9:30 AM IST)
 
 permissions:
   contents: write
