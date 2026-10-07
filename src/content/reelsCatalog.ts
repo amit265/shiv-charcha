@@ -24,6 +24,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-LRC62kEJvXE",
     "youtubeVideoId": "LRC62kEJvXE",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/LRC62kEJvXE.mp4",
     "title": "तोहरे नाम के सहारा बा 🙏 | भोले बाबा भक्ति गीत | हर हर महादेव #Shorts #महादेव #शिवचर्चा #शिवगुरु",
     "subTitle": "भोले बाबा के नगरी में मनवा मगन हो जाता है। 🙏",
     "category": "mahadev",
