@@ -22,14 +22,24 @@ export function getReelThumbnailUrl(reel: ShivReel): string {
 
 export const shivReelsCatalog: ShivReel[] = [
   {
+    "id": "reel-LRC62kEJvXE",
+    "youtubeVideoId": "LRC62kEJvXE",
+    "title": "तोहरे नाम के सहारा बा 🙏 | भोले बाबा भक्ति गीत | हर हर महादेव #Shorts #महादेव #शिवचर्चा #शिवगुरु",
+    "subTitle": "भोले बाबा के नगरी में मनवा मगन हो जाता है। 🙏",
+    "category": "mahadev",
+    "likesCount": 1200,
+    "sharesCount": 320,
+    "youtubeUrl": "https://youtube.com/shorts/LRC62kEJvXE"
+  },
+  {
     "id": "reel-KQMAaSRCck4",
     "youtubeVideoId": "KQMAaSRCck4",
     "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/KQMAaSRCck4.mp4",
     "title": "ना धन मांगू, ना मन मांगू 🙏 | बस गुरु की दया चाहिए | शिव भजन | #महादेव #शिवचर्चा #शिवगुरु #महादेव",
     "subTitle": "ना धन चाहिए, ना कोई सुख-सामान…",
     "category": "mahadev",
-    "likesCount": 1200,
-    "sharesCount": 320,
+    "likesCount": 1340,
+    "sharesCount": 355,
     "youtubeUrl": "https://youtube.com/shorts/KQMAaSRCck4"
   },
   {
@@ -39,8 +49,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "शिव मेरे गुरु हैं 🙏 | मैं उनका शिष्य हूँ | महादेव भक्ति #Shorts  #महादेव #महादेव #शिवचर्चा #शिवगुरु",
     "subTitle": "शिव मेरे गुरु हैं… मैं उनका शिष्य हूँ। 🙏",
     "category": "mahadev",
-    "likesCount": 1340,
-    "sharesCount": 355,
+    "likesCount": 1480,
+    "sharesCount": 390,
     "youtubeUrl": "https://youtube.com/shorts/zsri1QZ5TBU"
   },
   {
@@ -50,8 +60,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "शिव चर्चा अब आपके मोबाइल पर! #महादेव #शिवगुरु #शिवशिष्य #शिवशिष्य #शिवचर्चा #शिवचर्चा",
     "subTitle": "🙏 शिव गुरु साधना अब आपके मोबाइल पर!",
     "category": "mahadev",
-    "likesCount": 1620,
-    "sharesCount": 425,
+    "likesCount": 1760,
+    "sharesCount": 460,
     "youtubeUrl": "https://youtube.com/shorts/6BDmszb4pa8"
   },
   {
@@ -61,8 +71,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "क्या दया माँगने के लिए मंदिर जाना ज़रूरी है?  #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "कई लोग पूछते हैं कि क्या शिव से दया माँगने के लिए मंदिर या विशेष ",
     "category": "mahadev",
-    "likesCount": 1760,
-    "sharesCount": 460,
+    "likesCount": 1900,
+    "sharesCount": 495,
     "youtubeUrl": "https://youtube.com/shorts/iIVXj3kV35M"
   },
   {
@@ -72,8 +82,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "हे शिव, आप मेरे गुरु हैं...” | शिव शिष्यता का भाव  #महादेव #शिवगुरु #शिवचर्चा #शिवशिष्य",
     "subTitle": "क्या आप जानते हैं कि शिव को गुरु मानने का सबसे सरल वाक्य क्या है?",
     "category": "mahadev",
-    "likesCount": 1900,
-    "sharesCount": 495,
+    "likesCount": 2040,
+    "sharesCount": 530,
     "youtubeUrl": "https://youtube.com/shorts/fC2BhUmM7h8"
   },
   {
@@ -83,8 +93,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "दया माँगना क्या है? | शिव चर्चा का पहला सूत्र #महादेव #शिवगुरु #शिवचर्चा #शिवशिष्य",
     "subTitle": "शिव चर्चा का पहला सूत्र है — दया माँगना। इसका मतलब यह नहीं है कि ",
     "category": "mahadev",
-    "likesCount": 2040,
-    "sharesCount": 530,
+    "likesCount": 2180,
+    "sharesCount": 565,
     "youtubeUrl": "https://youtube.com/shorts/QWiTUwKY67Q"
   },
   {
@@ -94,8 +104,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "शिव चर्चा का दूसरा सूत्र — चर्चा करना | शिव गुरु #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "शिव चर्चा का दूसरा सूत्र — चर्चा करना | शिव गुरु",
     "category": "mahadev",
-    "likesCount": 2320,
-    "sharesCount": 600,
+    "likesCount": 2460,
+    "sharesCount": 635,
     "youtubeUrl": "https://youtube.com/shorts/l1r87fswRbo"
   },
   {
@@ -105,8 +115,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "शिव चर्चा का तीसरा सूत्र — प्रणाम करना | शिव गुरु #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "शिव चर्चा का तीसरा सूत्र — प्रणाम करना | शिव गुरु",
     "category": "mahadev",
-    "likesCount": 2460,
-    "sharesCount": 635,
+    "likesCount": 2600,
+    "sharesCount": 670,
     "youtubeUrl": "https://youtube.com/shorts/gwQy0L5umUM"
   },
   {
@@ -116,8 +126,8 @@ export const shivReelsCatalog: ShivReel[] = [
     "title": "शिव चर्चा का पहला सूत्र - दया माँगना | शिव गुरु @Mahavyomabhakti",
     "subTitle": "शिव चर्चा का पहला सूत्र है — दया माँगना।",
     "category": "mahadev",
-    "likesCount": 2600,
-    "sharesCount": 670,
+    "likesCount": 2740,
+    "sharesCount": 705,
     "youtubeUrl": "https://youtube.com/shorts/Kuj5W_8_fhQ"
   }
 ];
