@@ -72,7 +72,7 @@ async function isShortVideo(videoId) {
 function downloadYouTubeShort(videoId) {
   try {
     console.log(`  📥 Downloading H.264 video from YouTube [${videoId}]...`);
-    const cmd = `yt-dlp -f "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio/best[vcodec^=avc1]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
+    const cmd = `yt-dlp --js-runtimes node -f "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[vcodec^=avc1]+bestaudio/best[vcodec^=avc1]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
     const videoBuffer = execSync(cmd, { maxBuffer: 100 * 1024 * 1024 });
     return videoBuffer;
   } catch (err) {
