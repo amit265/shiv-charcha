@@ -24,6 +24,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-RvCfSZkTrIM",
     "youtubeVideoId": "RvCfSZkTrIM",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/RvCfSZkTrIM.mp4",
     "title": "जो बात मिली गुरु से, वो बात सबको बताऊँ 🙏 | शिव मेरे गुरु हैं #Shorts  #महादेव #शिवचर्चा #शिवगुरु",
     "subTitle": "जो बात गुरु से मिली, उसे अपने तक क्यों रखें?",
     "category": "mahadev",
