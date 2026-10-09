@@ -24,6 +24,7 @@ export const shivReelsCatalog: ShivReel[] = [
   {
     "id": "reel-U5tdliiCG3o",
     "youtubeVideoId": "U5tdliiCG3o",
+    "videoUrl": "https://pub-a5e262d167664d19a4543a1aeb71a9ff.r2.dev/videos/U5tdliiCG3o.mp4",
     "title": "दया मांगू गुरु शिव से 🙏 | नमः शिवाय | शिव गुरु की चर्चा #Shorts  #महादेव #शिवगुरु #शिवचर्चा",
     "subTitle": "मन में शिव का नाम रहे।  ",
     "category": "mahadev",

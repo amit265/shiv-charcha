@@ -70,15 +70,21 @@ async function isShortVideo(videoId) {
 }
 
 function downloadYouTubeShort(videoId) {
-  try {
-    console.log(`  📥 Downloading optimized H.264 video (max 720p) from YouTube [${videoId}]...`);
-    const cmd = `yt-dlp --js-runtimes node --extractor-args "youtube:player_client=tv_embedded,android,ios" -f "bestvideo[height<=720][vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[height<=720][vcodec^=avc1]+bestaudio/best[height<=720][vcodec^=avc1]/best[height<=720]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
-    const videoBuffer = execSync(cmd, { maxBuffer: 100 * 1024 * 1024 });
-    return videoBuffer;
-  } catch (err) {
-    console.error(`  ❌ Failed to download video ${videoId}:`, err.message);
-    return null;
+  const clients = ['android', 'android_vr', 'ios'];
+  for (const client of clients) {
+    try {
+      console.log(`  📥 Downloading video [${videoId}] using client [${client}]...`);
+      const cmd = `yt-dlp --js-runtimes node --extractor-args "youtube:player_client=${client}" -f "bestvideo[height<=720][vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[height<=720][vcodec^=avc1]+bestaudio/best[height<=720][vcodec^=avc1]/best[height<=720]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
+      const videoBuffer = execSync(cmd, { maxBuffer: 100 * 1024 * 1024, stdio: ['pipe', 'pipe', 'ignore'] });
+      if (videoBuffer && videoBuffer.length > 0) {
+        return videoBuffer;
+      }
+    } catch (_err) {
+      console.warn(`  ⚠️ Client [${client}] download attempt failed for ${videoId}. Trying next client...`);
+    }
   }
+  console.error(`  ❌ All download client attempts failed for video ${videoId}`);
+  return null;
 }
 
 async function syncYouTubeToR2() {
