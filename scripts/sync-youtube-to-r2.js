@@ -72,7 +72,7 @@ async function isShortVideo(videoId) {
 function downloadYouTubeShort(videoId) {
   try {
     console.log(`  📥 Downloading optimized H.264 video (max 720p) from YouTube [${videoId}]...`);
-    const cmd = `yt-dlp --js-runtimes node --extractor-args "youtube:player_client=mweb,android,ios" -f "bestvideo[height<=720][vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[height<=720][vcodec^=avc1]+bestaudio/best[height<=720][vcodec^=avc1]/best[height<=720]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
+    const cmd = `yt-dlp --js-runtimes node --extractor-args "youtube:player_client=tv_embedded,android,ios" -f "bestvideo[height<=720][vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a][ext=m4a]/bestvideo[height<=720][vcodec^=avc1]+bestaudio/best[height<=720][vcodec^=avc1]/best[height<=720]/best" --no-warnings --no-playlist -o - "https://www.youtube.com/shorts/${videoId}"`;
     const videoBuffer = execSync(cmd, { maxBuffer: 100 * 1024 * 1024 });
     return videoBuffer;
   } catch (err) {
@@ -89,6 +89,7 @@ async function syncYouTubeToR2() {
   console.log(`======================================================\n`);
 
   const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
+  let failedDownloadsCount = 0;
 
   try {
     console.log(`🔍 Fetching channel RSS feed...`);
@@ -135,6 +136,9 @@ async function syncYouTubeToR2() {
             console.log(`  ⬆️ Uploading ${objectKey} (${(videoBuffer.length / (1024 * 1024)).toFixed(2)} MB) to Cloudflare R2...`);
             videoUrl = await uploadBufferToR2(videoBuffer, objectKey);
             console.log(`  ✅ Successfully uploaded to R2: ${videoUrl}`);
+          } else {
+            console.error(`  ❌ Failed to obtain video buffer for [${videoId}]`);
+            failedDownloadsCount++;
           }
         }
 
@@ -213,12 +217,21 @@ export const shivReelsCatalog: ShivReel[] = ${JSON.stringify(reels, null, 2)};
       console.log(`📄 Updated: assets/data/reels.json`);
       console.log(`📄 Updated: src/content/reelsCatalog.ts`);
       console.log(`🌐 R2 Catalog: ${R2_PUBLIC_BASE_URL}/reels.json`);
+      if (failedDownloadsCount > 0) {
+        console.error(`⚠️ Warning: ${failedDownloadsCount} video(s) failed to download.`);
+      }
       console.log(`======================================================\n`);
     } else {
       console.log('No YouTube Shorts entries found in channel.');
     }
+
+    if (failedDownloadsCount > 0) {
+      console.error(`\n❌ Error: ${failedDownloadsCount} video download(s) failed. Exiting with failure status.`);
+      process.exit(1);
+    }
   } catch (err) {
     console.error('Error during YouTube -> R2 sync:', err);
+    process.exit(1);
   }
 }
 
